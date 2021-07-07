@@ -149,8 +149,10 @@ void Handler::syncOperation(const QJsonObject& payload){
 void Handler::goNext(){
     vcbHandler->next();
     emit updateListViewModel(vcbHandler->getModel());
+    emit updateVcbId(vcbHandler->getVisibleVCBId());
 }
 void Handler::goPrevious(){
     vcbHandler->previous();
     emit updateListViewModel(vcbHandler->getModel());
+    emit updateVcbId(vcbHandler->getVisibleVCBId());
 }

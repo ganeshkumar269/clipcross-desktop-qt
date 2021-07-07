@@ -1,4 +1,4 @@
-Makefile.*
+Makefile*
 usersadmin*
 debug
 release
@@ -9,3 +9,7 @@ object_script*
 *.http
 *.png
 *.user
+
+.vscode
+*.stash
+Makefile

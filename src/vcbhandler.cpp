@@ -42,7 +42,7 @@ Clip VCBHandler::getTopClip(const QString& id){return vcbList[id]->getTopClip();
 QList<QString> VCBHandler::getActiveVCBIds(){return activeVCBIds;}
 QStringListModel* VCBHandler::getModel(){return vcbList[visibleVCBId]->getModel();}
 QStringListModel* VCBHandler::getModel(const QString& id){return vcbList[id]->getModel();}
-
+QString VCBHandler::getVisibleVCBId(){return visibleVCBId;}
 void VCBHandler::onCbDataChanged(){
     Clip currClip(cb->text(),"text",getTimestamp());
     if( getTopClip().hash() != currClip.hash())//format assumed text

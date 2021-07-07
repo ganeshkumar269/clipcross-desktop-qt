@@ -22,7 +22,7 @@ VCB::~VCB(){
 void VCB::addClipToSlm(const Clip& clip)
 {
     slm->insertRow(0,slm->index(0));
-    slm->setData(slm->index(0),clip.value());
+    slm->setData(slm->index(0),formatQString(clip.value()));
     // db->insertClip(clip);
 }
 

@@ -32,6 +32,7 @@
             void makeCBSignal();
             void tokenExpired();
             void updateListViewModel(QStringListModel*);
+            void updateVcbId(QString);
         private Q_SLOTS:
             void onWssTokenExpired();
             void onVCBDataChanged(const Clip&,const QList<QString>&);       

@@ -10,14 +10,16 @@
 #include "authenticate.h"
 #include <QSettings>
 #include <QObject>
-
+#include <QLabel>
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     QWidget mainwindow;
     QVBoxLayout *layout = new QVBoxLayout(&mainwindow);
+    QHBoxLayout *buttons = new QHBoxLayout();
     qDebug() << "[main.cpp] main qDebug Works"; 
     QListView *list = new QListView();
+    QLabel* vcbId = new QLabel();
     // QPushButton *button = new QPushButton("Sign In from Google");
     QPushButton *right = new QPushButton(">");
     QPushButton *left = new QPushButton("<");
@@ -30,11 +32,14 @@ int main(int argc, char *argv[])
 
     sm->insertRow(0,sm->index(0));
     sm->setData(sm->index(0),QString("Test Text"));
+    
+    // list->setFlow(QListView::Flow::TopToBottom);
 
     list->setModel(sm);
-
-    list->setWrapping(true);
+    // list->setWrapping(true);
     list->setAlternatingRowColors(true);
+
+    vcbId->setText("Test VCB");
     // Authenticate authenticate;
     // button->connect(button,&QPushButton::clicked,button,[&](){
     //     qDebug() << "Clicked";
@@ -55,37 +60,21 @@ int main(int argc, char *argv[])
         qDebug() << "Slm" << slm->data(slm->index(0));
     });
     
+    handler.connect(&handler,&Handler::updateVcbId,vcbId,[&](QString vcbIdString){
+        vcbId->setText(vcbIdString);
+    });
     left->connect(left,&QPushButton::clicked,&handler,[&](){
         handler.goPrevious();
     });
     right->connect(right,&QPushButton::clicked,&handler,[&](){
         handler.goNext();
     });
-    // handler.goNext();
-    // authenticate.connect(&authenticate,&Authenticate::authenticated,&authenticate,[&](){
-    //     qDebug() << "Authentication Success" ;
-    //     QSettings s;
-    //     qDebug() << s.value("access_token");
-    //     qDebug() << s.value("refresh_token");
-    //     button->setVisible(false);
-    //     list->setVisible(true);
-    //     handler = new Handler(nullptr);
-    //     handler->setSM(sm);
-    //     handler->connect(handler,&Handler::tokenExpired,&authenticate,[&](){
-    //         authenticate.refreshAccessToken();
-    //     });
-    //     authenticate.connect(&authenticate,&Authenticate::accessTokenRefreshed,
-    //         handler,[&](){
-    //             handler->initWsw();
-    //         });
-    // });
 
-    // Q_UNUSED(handler);
-    
-    // layout->addWidget(button);
-    layout->addWidget(left);
-    layout->addWidget(right);
+    buttons->addWidget(left);
+    buttons->addWidget(right);
+    layout->addLayout(buttons);
     layout->addWidget(list);
+    layout->addWidget(vcbId);
     mainwindow.resize(320, 240);    
     mainwindow.setWindowTitle("Clipboard Manager");
     mainwindow.show();
