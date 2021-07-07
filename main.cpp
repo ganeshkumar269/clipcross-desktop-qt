@@ -14,11 +14,13 @@
 #include <QFontDatabase>
 #include <QPalette>
 #include <QBrush>
+#include "framelesswindow\framelesswindow.h"
 
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    FramelessWindow framelesswindow;
     QWidget mainwindow;
     QVBoxLayout *layout = new QVBoxLayout(&mainwindow);
     QHBoxLayout *buttons = new QHBoxLayout();
@@ -98,11 +100,13 @@ int main(int argc, char *argv[])
     mainwindow.setFont(*mainFont);
     mainwindow.setPalette(defaultPalette);
 
-    mainwindow.setStyleSheet("background-color: #283742; color: #de354c");
+    mainwindow.setStyleSheet("background-color: #283742; color: #b73225");
     mainwindow.resize(360, 440);    
-    mainwindow.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    // mainwindow.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     mainwindow.setWindowTitle("Clipboard Manager");
-    mainwindow.show();
+    framelesswindow.setContent(&mainwindow);
+    framelesswindow.show();
+    // mainwindow.show();
     
     return a.exec();
 }

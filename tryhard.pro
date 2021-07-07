@@ -19,6 +19,12 @@ DEFINES += LOCAL_WSS_TEST
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 # Input
+
+RESOURCES = framelesswindow.qrc
+
+FORMS += include\framelesswindow\framelesswindow.ui \
+
+
 HEADERS += include\database.h \
            $$files(include/qhttp/src/*.h) \
            include\handler.h \
@@ -28,6 +34,8 @@ HEADERS += include\database.h \
            include\clip.h \
            include\vcb.h \
            include\vcbhandler.h \
+           include\framelesswindow\framelesswindow.h \
+           include\framelesswindow\windowdragger.h \
 
 SOURCES += main.cpp \
            src/database.cpp \
@@ -43,3 +51,5 @@ SOURCES += main.cpp \
            src/getQueryParamValue.cpp \
            src/vcb.cpp \
            src/vcbhandler.cpp \
+           include/framelesswindow/framelesswindow.cpp \
+           include/framelesswindow/windowdragger.cpp \
