@@ -3,6 +3,7 @@ usersadmin*
 debug
 release
 test
+trash
 testdatabase
 *.pem
 object_script*

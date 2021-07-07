@@ -11,6 +11,11 @@
 #include <QSettings>
 #include <QObject>
 #include <QLabel>
+#include <QFontDatabase>
+#include <QPalette>
+#include <QBrush>
+
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
@@ -29,6 +34,17 @@ int main(int argc, char *argv[])
     QGuiApplication::setOrganizationDomain("TestOrgDomainName.com");
     QGuiApplication::setApplicationName("Clipboard Manager");
 
+    QPalette defaultPalette;
+    QBrush base; base.setColor(QColor("#283742"));
+    QBrush alternateBase; alternateBase.setColor(QColor("#6784a3"));
+    defaultPalette.setBrush(QPalette::Base,base);
+    defaultPalette.setBrush(QPalette::AlternateBase,alternateBase);
+
+    QFontDatabase::addApplicationFont("./resources/Roboto-Medium.ttf");
+    QFont* mainFont = new QFont("Roboto");
+    mainFont->setBold(true);
+    // mainFont->setPointSize(12);
+
 
     sm->insertRow(0,sm->index(0));
     sm->setData(sm->index(0),QString("Test Text"));
@@ -36,6 +52,8 @@ int main(int argc, char *argv[])
     // list->setFlow(QListView::Flow::TopToBottom);
 
     list->setModel(sm);
+    list->setFont(*mainFont);
+    list->setPalette(defaultPalette);
     // list->setWrapping(true);
     list->setAlternatingRowColors(true);
 
@@ -75,7 +93,14 @@ int main(int argc, char *argv[])
     layout->addLayout(buttons);
     layout->addWidget(list);
     layout->addWidget(vcbId);
-    mainwindow.resize(320, 240);    
+
+
+    mainwindow.setFont(*mainFont);
+    mainwindow.setPalette(defaultPalette);
+
+    mainwindow.setStyleSheet("background-color: #283742; color: #de354c");
+    mainwindow.resize(360, 440);    
+    mainwindow.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
     mainwindow.setWindowTitle("Clipboard Manager");
     mainwindow.show();
     
