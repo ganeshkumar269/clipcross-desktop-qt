@@ -1,0 +1,138 @@
+v1:
+    1.Clipboard -> handleDataChangedEvent 
+    2.Database  -> initDb, getItem, insertItem, removeItem, \updateItem\ 
+    3.main -> add Clipboard, Database and connect them up
+
+
+v2:
+    1.DatabaseClass //look into more optimisation (saw somthing abt rowid optimisation)
+        assume there are no deletions
+        interfaces with local Database
+        queried items can be stored temporarily in memory
+            lets say list view load 100 elements
+            we can store prev 100 elements in mem when we scroll up in list view instead
+            of a query we can get the items from mem
+        Has:
+            insertItem(val,format)
+            getItems(int index,int cnt = 100); 
+                (index,index-100) , assuming latest item has higher index 
+            getTopItem()
+            
+        How are items stored in DB:
+           tempSol: id,value,format,timestamp 
+    2.HandlerClass
+        Has
+            Database
+            WebScoket
+            Clipboard
+            StringHandler
+
+        Constructor:
+            inits db, wss, cb
+        implements 
+            cb::dataChaged signal
+            wss::connected,disconnected,sslerrors
+
+    3.main -> window, stringmodel, handler
+
+
+QWebSocket Behaviour:
+    When no initial conn:
+        disconnets and calls an error = RemoteHostClosedError
+        then socket states
+    Initial Conn Present:
+        State Change to ConnectingState
+        State Change to ConnectedState
+        connected signal called
+        
+v3:
+    authentication 
+    sync between server and client
+
+
+    Authentication: 
+        //use qtkeychain to secure the tokens   
+        //add state(request_token) for more security 
+
+    Sync Between Server and Client: Handler::sync()
+        server has: a buffer for an accnt (stop_o) //assume only one Clipboard for all the devices
+        client has: buffer to cb top (ctop), buffer of last synced clip to server(stop_c)
+                    ctop.timestamp will always be >= stop_c.timestamp
+
+        if(stop_c.timestamp < stop_o.timestamp) //server has a clip client is not still aware of
+            updateClient(stop_o.buffer)
+        if(stop_c.timestamp > stop_o.timestamp) // client has a clip server is not aware of
+            updateServer(ctop.buffer)
+        if both conditions are false client and server are in sync
+
+    Behaviour:
+        when to sync:
+            when the client opens a socketconn,
+            it can initiate a sync flow, where the client recieves data from server
+            and it can do the SyncOperation
+        Where it exists: in Handler
+        Who initiates the sync flow:    WebSocketW onWssConnected sends a {"sync":true} with wsw->sendData
+        How:    WebSocketW signals with syncDataReceieved
+                Hander connects to the signal and takes appropriate action
+
+v4:
+    virtual clipboards
+    work as a windows extention in task bar.
+
+    Virtual Clipboard:
+        class vcb
+            has 
+                identifier // QString user defined
+                QStringListModel
+                QList<Clip> *clips
+                topClip 
+                lastSyncedClip
+                databaseTable
+                add //for now every unique cb update will add a new clip instead of
+                    //searching if a clip already exists
+                    //can be optimised in the future
+        VCBHandler:
+            has:
+                vcbArray[]
+                activeVCBsIndices -> a single clip can be inserted into multiple vcbs
+                visibleIndex -> which is currently held by listView
+                getTopClips // array of topClips of all vcbs
+                update(Clip)
+                clipboard
+            activeVCBsIndices for now is a list of just visibleIndex
+            for now we only support 1 visible index at a time
+            ie any vcb which comes to visibilty is automatically active
+
+            Constructor():
+                get ids,names,indices of all vcbs from database
+                create vcbs with ids
+                set visibleIndex = 0
+            
+            Clip getTopClip():
+                returns topClip of visibleIndex
+
+            QClipboard::dataChanged:
+                update all activeVCBIndices, for now it is just visibleIndex
+                
+            setting a vcb visible automatically makes it active
+                
+            onListViewDoubleClicked:
+                add clip to  vcbs of activeIndices
+            add:
+                add clip to activeIndices
+            vcbDataChanged:
+                sends a signal to handler the clip and the list of active vcbs
+
+        VCBMetadataDB:
+            id,name,index,lastSyncedClipHash
+        
+
+        
+
+
+
+v5:
+    work on the ui/ux
+v6:
+    support more formats.
+    add configurable settings.

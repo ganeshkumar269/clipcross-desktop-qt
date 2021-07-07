@@ -1,0 +1,11 @@
+Makefile.*
+usersadmin*
+debug
+release
+test
+testdatabase
+*.pem
+object_script*
+*.http
+*.png
+*.user
