@@ -43,9 +43,6 @@ int main(int argc, char *argv[])
     defaultPalette.setBrush(QPalette::AlternateBase,alternateBase);
 
     QFontDatabase::addApplicationFont("./resources/Roboto-Medium.ttf");
-    QFont* mainFont = new QFont("Roboto");
-    mainFont->setBold(true);
-    // mainFont->setPointSize(12);
 
 
     sm->insertRow(0,sm->index(0));
@@ -54,7 +51,6 @@ int main(int argc, char *argv[])
     // list->setFlow(QListView::Flow::TopToBottom);
 
     list->setModel(sm);
-    list->setFont(*mainFont);
     list->setPalette(defaultPalette);
     // list->setWrapping(true);
     list->setAlternatingRowColors(true);
@@ -97,14 +93,14 @@ int main(int argc, char *argv[])
     layout->addWidget(vcbId);
 
 
-    mainwindow.setFont(*mainFont);
-    mainwindow.setPalette(defaultPalette);
 
-    mainwindow.setStyleSheet("background-color: #283742; color: #b73225");
+    mainwindow.setStyleSheet("background-color: #283742; color: #aaccff; font-family : roboto");
     mainwindow.resize(360, 440);    
+    mainwindow.setPalette(defaultPalette);
     // mainwindow.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
-    mainwindow.setWindowTitle("Clipboard Manager");
+    framelesswindow.setWindowTitle("clipcross");
     framelesswindow.setContent(&mainwindow);
+    framelesswindow.setPalette(defaultPalette);
     framelesswindow.show();
     // mainwindow.show();
     
