@@ -16,20 +16,24 @@
 #include <QBrush>
 #include "framelesswindow\framelesswindow.h"
 
+#include <iostream>
 
 int main(int argc, char *argv[])
 {
+    qInstallMessageHandler(Logger);
     QApplication a(argc, argv);
     FramelessWindow framelesswindow;
     QWidget mainwindow;
     QVBoxLayout *layout = new QVBoxLayout(&mainwindow);
     QHBoxLayout *buttons = new QHBoxLayout();
     qDebug() << "[main.cpp] main qDebug Works"; 
+    std::cerr << "This is from standard error" << std::endl; 
+    std::cout << "This is from standard output" << std::endl; 
     QListView *list = new QListView();
     QLabel* vcbId = new QLabel();
     // QPushButton *button = new QPushButton("Sign In from Google");
-    QPushButton *right = new QPushButton(">");
-    QPushButton *left = new QPushButton("<");
+    QPushButton *right = new QPushButton(">>");
+    QPushButton *left = new QPushButton("<<");
     QStringListModel *sm = new QStringListModel();
 
     QGuiApplication::setOrganizationName("TestOrgName");
@@ -47,24 +51,15 @@ int main(int argc, char *argv[])
 
     sm->insertRow(0,sm->index(0));
     sm->setData(sm->index(0),QString("Test Text"));
-    
-    // list->setFlow(QListView::Flow::TopToBottom);
 
     list->setModel(sm);
     list->setPalette(defaultPalette);
-    // list->setWrapping(true);
     list->setAlternatingRowColors(true);
 
     vcbId->setText("Test VCB");
-    // Authenticate authenticate;
-    // button->connect(button,&QPushButton::clicked,button,[&](){
-    //     qDebug() << "Clicked";
-    //     authenticate.start();
-    // });
-    // list->setVisible(false);
     
     Handler handler;  
-    // handler.setSM(sm);   
+
     list->connect(list,&QAbstractItemView::doubleClicked,&handler,
         [&](const QModelIndex& ind){
             qDebug()<<"Double Clicked";
@@ -92,17 +87,14 @@ int main(int argc, char *argv[])
     layout->addWidget(list);
     layout->addWidget(vcbId);
 
-
-
     mainwindow.setStyleSheet("background-color: #283742; color: #aaccff; font-family : roboto");
     mainwindow.resize(360, 440);    
     mainwindow.setPalette(defaultPalette);
-    // mainwindow.setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+
     framelesswindow.setWindowTitle("clipcross");
     framelesswindow.setContent(&mainwindow);
     framelesswindow.setPalette(defaultPalette);
     framelesswindow.show();
-    // mainwindow.show();
     
     return a.exec();
 }

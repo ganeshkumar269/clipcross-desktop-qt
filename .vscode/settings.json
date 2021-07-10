@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "qobject": "cpp",
+        "iostream": "cpp"
+    }
+}

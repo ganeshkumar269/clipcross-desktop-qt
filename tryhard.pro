@@ -38,18 +38,14 @@ HEADERS += include\database.h \
            include\framelesswindow\windowdragger.h \
 
 SOURCES += main.cpp \
-           src/database.cpp \
-           src/formatQString.cpp \
+           $$files(src/database/*.cpp) \
+           $$files(src/utils/*.cpp) \
            src/getWssUrl.cpp \
-           src/getRowCount.cpp \
            src/handler.cpp \
            src/websocketw.cpp \
-           src/getMd5Hash.cpp \
-           src/getTimestamp.cpp \
            src/authenticate.cpp \
-           src/getOAuthUrl.cpp \
-           src/getQueryParamValue.cpp \
            src/vcb.cpp \
+           src/getQueryParamValue.cpp \
            src/vcbhandler.cpp \
            include/framelesswindow/framelesswindow.cpp \
            include/framelesswindow/windowdragger.cpp \
