@@ -11,6 +11,7 @@ object_script*
 *.png
 *.user
 
-.vscode
 *.stash
 Makefile
+*.txt
+src/deprecated

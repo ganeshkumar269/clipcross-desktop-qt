@@ -1,6 +1,7 @@
 #include "utils.h"
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QSqlError>
 
 QSqlDatabase getDatabaseConnection(const QString& conn){
     const QString driver("QSQLITE"); //dbName = QSQLITE
@@ -10,8 +11,9 @@ QSqlDatabase getDatabaseConnection(const QString& conn){
         qDebug() << "Driver Not Available";
     QSqlDatabase db = QSqlDatabase::addDatabase(driver,conn);
     db.setDatabaseName("sqliteDatabase");
-    if(!db.open())
+    if(!db.open()){
         qDebug() << "ERROR: " << db.lastError();
+    }
     else{
         qDebug() << "DB opened successfully"; //onopened slot
         QString query_string ="CREATE TABLE IF NOT EXISTS dbv3"
