@@ -11,9 +11,12 @@
             void start();
             bool hasTokensLocally();
             void refreshAccessToken();
+            void logout();
+            void login();
         Q_SIGNALS:
             void authenticated();
             void accessTokenRefreshed();
+            void loggedout();
         private:
             qhttp::server::QHttpServer *server;
     };  

@@ -33,12 +33,17 @@
             void tokenExpired();
             void updateListViewModel(QStringListModel*);
             void updateVcbId(QString);
+
+        public Q_SLOTS: 
+            void startAuthentication();
+            void startLogout();
+            void startLogin();
+
         private Q_SLOTS:
             void onWssTokenExpired();
             void onVCBDataChanged(const Clip&,const QList<QString>&);       
             void onWswClipReceived(const Clip&,const QList<QString>&); 
             // void onModelUpdate(QStringListModel*);
-
         private:
             // Database *db;
             WebSocketW *wsw;
