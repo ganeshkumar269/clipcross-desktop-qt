@@ -11,5 +11,7 @@ QUrl getWssUrl(){
     #endif
     qDebug() << "[getWssUrl.cpp ] domain" << domain;
     QSettings s; 
-    return QUrl(domain + "?id_token=" + s.value("id_token").toString() + "&device_id=" + s.value("device_id").toString());
+    auto url = QUrl(domain + "?id_token=" + s.value("id_token").toString() + "&device_id=" + s.value("device_id").toString());
+    qDebug() << __FILE__ << " url: " << url.toString();
+    return url;
 }

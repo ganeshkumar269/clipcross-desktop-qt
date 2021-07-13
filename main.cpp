@@ -25,7 +25,8 @@ int main(int argc, char *argv[])
     FramelessWindow framelesswindow;
     QWidget mainwindow;
     QVBoxLayout *layout = new QVBoxLayout(&mainwindow);
-    QHBoxLayout *buttons = new QHBoxLayout();
+    QHBoxLayout *dirButtons = new QHBoxLayout();
+    QHBoxLayout *loginLogoutButtons = new QHBoxLayout();
     qDebug() << "[main.cpp] main qDebug Works"; 
     std::cerr << "This is from standard error" << std::endl; 
     std::cout << "This is from standard output" << std::endl; 
@@ -34,6 +35,8 @@ int main(int argc, char *argv[])
     // QPushButton *button = new QPushButton("Sign In from Google");
     QPushButton *right = new QPushButton(">>");
     QPushButton *left = new QPushButton("<<");
+    QPushButton *login = new QPushButton("Login");
+    QPushButton *logout = new QPushButton("Logout");
     QStringListModel *sm = new QStringListModel();
 
     QGuiApplication::setOrganizationName("TestOrgName");
@@ -47,7 +50,6 @@ int main(int argc, char *argv[])
     defaultPalette.setBrush(QPalette::AlternateBase,alternateBase);
 
     QFontDatabase::addApplicationFont("./resources/Roboto-Medium.ttf");
-
 
     sm->insertRow(0,sm->index(0));
     sm->setData(sm->index(0),QString("Test Text"));
@@ -65,6 +67,7 @@ int main(int argc, char *argv[])
             qDebug()<<"Double Clicked";
             qDebug() << sm->data(ind);
     });
+
     handler.connect(&handler,&Handler::updateListViewModel,list,[&](QStringListModel* slm){
         qDebug() << "ListViewModel updated";
         list->setModel(slm);
@@ -74,16 +77,24 @@ int main(int argc, char *argv[])
     handler.connect(&handler,&Handler::updateVcbId,vcbId,[&](QString vcbIdString){
         vcbId->setText(vcbIdString);
     });
+
     left->connect(left,&QPushButton::clicked,&handler,[&](){
         handler.goPrevious();
     });
+
     right->connect(right,&QPushButton::clicked,&handler,[&](){
         handler.goNext();
     });
 
-    buttons->addWidget(left);
-    buttons->addWidget(right);
-    layout->addLayout(buttons);
+    login->connect(login, &QPushButton::clicked, &handler,&Handler::startLogin);
+    logout->connect(logout, &QPushButton::clicked, &handler,&Handler::startLogout);
+
+    dirButtons->addWidget(left);
+    dirButtons->addWidget(right);
+    loginLogoutButtons->addWidget(login);
+    loginLogoutButtons->addWidget(logout);
+    layout->addLayout(dirButtons);
+    layout->addLayout(loginLogoutButtons);
     layout->addWidget(list);
     layout->addWidget(vcbId);
 

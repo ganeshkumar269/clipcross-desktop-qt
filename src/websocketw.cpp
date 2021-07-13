@@ -95,9 +95,6 @@ void WebSocketW::onWssDisconnected()
         if(o.contains("expired_token") && o["expired_token"].toBool() == true)
             emit wssTokenExpired();
     }
-    
-
-    // emit wswDisconnected(wss->closeCode(),wss->closeReason());
 }
 
 void WebSocketW::onWssStateChanged(QAbstractSocket::SocketState state){
