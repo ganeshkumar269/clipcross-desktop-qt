@@ -1,8 +1,8 @@
 #include "authenticate.h"
-#include "qhttpserver.hpp"
-#include "qhttpserverconnection.hpp"
-#include "qhttpserverrequest.hpp"
-#include "qhttpserverresponse.hpp"
+#include "qhttp/qhttpserver.hpp"
+#include "qhttp/qhttpserverconnection.hpp"
+#include "qhttp/qhttpserverrequest.hpp"
+#include "qhttp/qhttpserverresponse.hpp"
 #include <QDesktopServices>
 #include "utils.h"
 #include <QJsonDocument>

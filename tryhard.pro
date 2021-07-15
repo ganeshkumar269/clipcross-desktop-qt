@@ -6,11 +6,13 @@ TEMPLATE = app
 TARGET = tryhard
 INCLUDEPATH += .
 INCLUDEPATH += ./include/
-INCLUDEPATH += ./include/qhttp/src/
-LIBS += -LC:\Users\ADMIN\Documents\projects\qtTest\test\qhttp\xbin\ -lqhttp
+INCLUDEPATH += ./dependencies/
+LIBS += -L./dependencies/qhttp/ -lqhttp
 CONFIG += debug
 OUTPUT += Console
 DEFINES += LOCAL_WSS_TEST 
+QMAKE_CXXFLAGS += -fpermissive
+
 # You can make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
 # Please consult the documentation of the deprecated API in order to know
@@ -20,13 +22,14 @@ DEFINES += LOCAL_WSS_TEST
 
 # Input
 
-RESOURCES = framelesswindow.qrc
+RESOURCES = framelesswindow.qrc darkstyle.qrc 
 
-FORMS += include\framelesswindow\framelesswindow.ui \
+FORMS += dependencies\framelesswindow\framelesswindow.ui \
 
 
-HEADERS += include\database.h \
-           $$files(include/qhttp/src/*.h) \
+HEADERS += $$files(dependencies/qhttp/src/*.hpp) \
+           $$files(dependencies/qhttp/src/*.h) \
+           include\database.h \
            include\handler.h \
            include\utils.h \
            include\websocketw.h \
@@ -34,8 +37,10 @@ HEADERS += include\database.h \
            include\clip.h \
            include\vcb.h \
            include\vcbhandler.h \
-           include\framelesswindow\framelesswindow.h \
-           include\framelesswindow\windowdragger.h \
+           dependencies\framelesswindow\framelesswindow.h \
+           dependencies\framelesswindow\windowdragger.h \
+           dependencies\framelesswindow\DarkStyle.h \
+           dependencies\simpleQtLogger\simpleQtLogger.h \
 
 SOURCES += main.cpp \
            $$files(src/database/*.cpp) \
@@ -47,5 +52,8 @@ SOURCES += main.cpp \
            src/vcb.cpp \
            src/getQueryParamValue.cpp \
            src/vcbhandler.cpp \
-           include/framelesswindow/framelesswindow.cpp \
-           include/framelesswindow/windowdragger.cpp \
+           dependencies\framelesswindow\framelesswindow.cpp \
+           dependencies\framelesswindow\windowdragger.cpp \
+           dependencies\framelesswindow\DarkStyle.cpp \
+           dependencies\simpleQtLogger\simpleQtLogger.cpp \
+           #debug/qrc_darkstyle.cpp \

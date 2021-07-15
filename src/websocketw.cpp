@@ -5,9 +5,6 @@
 #include <QtNetwork/QSslError>
 #include <QUrl>
 #include <QAbstractSocket>
-#include "rapidjson/document.h"
-#include "rapidjson/stringbuffer.h"
-#include "rapidjson/writer.h"
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>

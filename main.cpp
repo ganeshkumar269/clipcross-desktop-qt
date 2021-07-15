@@ -15,13 +15,16 @@
 #include <QPalette>
 #include <QBrush>
 #include "framelesswindow\framelesswindow.h"
+#include "simpleQtLogger/simpleQtLogger.h"
+#include "framelesswindow/DarkStyle.h"
 
 #include <iostream>
 
 int main(int argc, char *argv[])
 {
-    qInstallMessageHandler(Logger);
     QApplication a(argc, argv);
+    simpleqtlogger::SimpleQtLogger::createInstance(&a)->setLogFileName("main.log", 10*1000*1000, 20);
+    QApplication::setStyle(new DarkStyle);
     FramelessWindow framelesswindow;
     QWidget mainwindow;
     QVBoxLayout *layout = new QVBoxLayout(&mainwindow);

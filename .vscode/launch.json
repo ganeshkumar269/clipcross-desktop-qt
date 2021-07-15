@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}\\debug\\tryhard.exe",
-            "args": ["1>","standardout.txt","2>","standarerror.txt"],
+            // "args": ["1>","standardout.txt","2>","standarerror.txt"],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
             "environment": [],
