@@ -23,16 +23,42 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    simpleqtlogger::SimpleQtLogger::createInstance(&a)->setLogFileName("main.log", 10*1000*1000, 20);
+    QWidget mainwindow;
+
+    simpleqtlogger::ENABLE_LOG_SINK_FILE = true;
+    simpleqtlogger::ENABLE_LOG_SINK_CONSOLE = true;
+    simpleqtlogger::ENABLE_LOG_SINK_QDEBUG = true;
+    simpleqtlogger::ENABLE_LOG_SINK_SIGNAL = true;
+
+    simpleqtlogger::ENABLE_FUNCTION_STACK_TRACE = true;
+    simpleqtlogger::ENABLE_CONSOLE_COLOR = true;
+    simpleqtlogger::ENABLE_CONSOLE_TRIMMED = true;
+    simpleqtlogger::ENABLE_CONSOLE_LOG_FILE_STATE = true;
+
+    simpleqtlogger::ENABLE_LOG_LEVELS.logLevel_DEBUG = true;
+    simpleqtlogger::ENABLE_LOG_LEVELS.logLevel_FUNCTION = true;
+
+    simpleqtlogger::EnableLogLevels enableLogLevels_console = simpleqtlogger::ENABLE_LOG_LEVELS;
+    simpleqtlogger::EnableLogLevels enableLogLevels_file = simpleqtlogger::ENABLE_LOG_LEVELS;
+    simpleqtlogger::EnableLogLevels enableLogLevels_qDebug = simpleqtlogger::ENABLE_LOG_LEVELS;
+
+    simpleqtlogger::SimpleQtLogger::createInstance(&mainwindow);
+    simpleqtlogger::SimpleQtLogger::getInstance()->setLogFileName("main.log", 10*1000*1000, 20);
+    simpleqtlogger::SimpleQtLogger::getInstance()->setLogLevels_file(enableLogLevels_file);
+    simpleqtlogger::SimpleQtLogger::getInstance()->setLogLevels_console(enableLogLevels_console);
+    simpleqtlogger::SimpleQtLogger::getInstance()->setLogLevels_qDebug(enableLogLevels_qDebug);
+
+    qDebug() << "[main.cpp] main qDebug Works"; 
+
+    std::cerr << "This is from standard error" << std::endl; 
+    std::cout << "This is from standard output" << std::endl; 
+
     QApplication::setStyle(new DarkStyle);
     FramelessWindow framelesswindow;
-    QWidget mainwindow;
     QVBoxLayout *layout = new QVBoxLayout(&mainwindow);
     QHBoxLayout *dirButtons = new QHBoxLayout();
     QHBoxLayout *loginLogoutButtons = new QHBoxLayout();
-    qDebug() << "[main.cpp] main qDebug Works"; 
-    std::cerr << "This is from standard error" << std::endl; 
-    std::cout << "This is from standard output" << std::endl; 
+
     QListView *list = new QListView();
     QLabel* vcbId = new QLabel();
     // QPushButton *button = new QPushButton("Sign In from Google");
@@ -67,12 +93,12 @@ int main(int argc, char *argv[])
 
     list->connect(list,&QAbstractItemView::doubleClicked,&handler,
         [&](const QModelIndex& ind){
-            qDebug()<<"Double Clicked";
+            L_INFO("Double Clicked");
             qDebug() << sm->data(ind);
     });
 
     handler.connect(&handler,&Handler::updateListViewModel,list,[&](QStringListModel* slm){
-        qDebug() << "ListViewModel updated";
+        L_INFO("ListViewModel updated");
         list->setModel(slm);
         qDebug() << "Slm" << slm->data(slm->index(0));
     });
@@ -109,6 +135,7 @@ int main(int argc, char *argv[])
     framelesswindow.setContent(&mainwindow);
     framelesswindow.setPalette(defaultPalette);
     framelesswindow.show();
-    
+    //  simpleqtlogger::SimpleQtLogger::getInstance()->setParent(&framelesswindow);
+ 
     return a.exec();
 }
