@@ -11,6 +11,8 @@
 #include <QNetworkReply>
 #include <QObject>
 QT_USE_NAMESPACE
+// #include "log4qt/logger.h"
+// auto logger = Log4Qt::Logger::rootLogger(); 
 
 Authenticate::Authenticate(QObject*parent):QObject(parent){
     qDebug() << __FILE__ << __FUNCTION__ << __LINE__;

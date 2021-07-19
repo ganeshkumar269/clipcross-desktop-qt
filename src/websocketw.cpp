@@ -14,6 +14,8 @@
     WebSokcetW -> wss
         
 */
+// #include "log4qt/logger.h"
+// auto logger = Log4Qt::Logger::rootLogger(); 
 
 WebSocketW::WebSocketW(QObject* parent):QObject(parent){
     qDebug() << "[websocketw.cpp] WebSocketW Constructor";
@@ -101,7 +103,7 @@ void WebSocketW::onSslErrors(const QList<QSslError>& errors)
 { 
     qDebug() << "SSL  Errors";
     for(const QSslError& i : errors){
-        qDebug() << "SslError: " << i ; 
+        qDebug() << "SslError: " << i.errorString() ; 
     }
 }
 
@@ -216,7 +218,7 @@ void WebSocketW::initSyncFlow(){
 }
 
 void WebSocketW::onPong(quint64 elapsedTime, const QByteArray &payload){
-    qDebug() << "websokcetw.cpp onPong payload: " << payload;
+    qDebug() << "websokcetw.cpp onPong payload: " << payload.toStdString().c_str();
 }
 
 // void WebSocketW::syncWithServer(){

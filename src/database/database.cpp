@@ -10,8 +10,10 @@
 #include <QSqlRecord>
 #include <QSqlField>
 #include "utils.h"
-
+#include "log4qt/logger.h"
 QT_USE_NAMESPACE
+
+// auto logger = Log4Qt::Logger::rootLogger(); 
 
 Database::Database(const QString& _id,QObject* parent):id(_id),QObject(parent){
     const QString driver("QSQLITE"); //dbName = QSQLITE
@@ -22,7 +24,7 @@ Database::Database(const QString& _id,QObject* parent):id(_id),QObject(parent){
     db = QSqlDatabase::addDatabase(driver,id);
     db.setDatabaseName("testdatabase");
     if(!db.open())
-        qDebug() << "ERROR: " << db.lastError();
+        qDebug() << "ERROR: " << db.lastError().text();
     else{
         qDebug() << "DB opened successfully"; //onopened slot
         QString query_string ="CREATE TABLE IF NOT EXISTS " + id + 
@@ -79,36 +81,8 @@ QList<Clip>* Database::retrieveClips(const QList<QString>& cols,uint limit,uint 
     return res;
 }
 
-// QList<QList<QVariant>>* Database::retrieveClips(uint index,uint cnt){
-//     QList<QList<QVariant>>* res = nullptr;
-//     return retrieve("dbv2",{"value","format"});
-//     // return res;
-// }
-
-
 
 bool Database::insertClip(const Clip& clip){
-    // return insert("dbv2",{"timestamp","value","format","hash"},
-    //         {clip.timestamp,clip.value,clip.format,clip.hash});
-
-    // QString cols_string(""),values_string("");
-    // for(int i = 0; i < cols.size(); i++) 
-    //     cols_string.append("\""+ cols.at(i) + "\"" + (i == cols.size() - 1 ? " " : ","));
-    // for(int i = 0; i < values.size(); i++) 
-    //     values_string.append("\"" + values.at(i) + "\"" + (i == values.size() - 1 ? " " : ","));
-    
-    // QSqlQuery query(db);
-
-
-    // QString query_string = "INSERT INTO :tableName VALUES(:timestamp,:value,:format,:hash)"; 
-    // query.prepare("INSERT INTO :tableName VALUES(:timestamp,:value,:format,:hash)");
-
-    // query.bindValue(":tableName",id);
-    // query.bindValue(":timestamp",clip.timestamp());
-    // query.bindValue(":value",clip.value());
-    // query.bindValue(":format",clip.format());
-    // query.bindValue(":hash",clip.hash());
-
     auto query = db.exec("insert into " + id + " values(" + 
                         QString::number(clip.timestamp()) + 
                         ",\"" + clip.value() + 

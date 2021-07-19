@@ -15,43 +15,79 @@
 #include <QPalette>
 #include <QBrush>
 #include "framelesswindow\framelesswindow.h"
-#include "simpleQtLogger/simpleQtLogger.h"
 #include "framelesswindow/DarkStyle.h"
-
+#include <QLoggingCategory>
 #include <iostream>
+
+#include "log4qt/logger.h"
+#include "log4qt/propertyconfigurator.h"
+#include "log4qt/loggerrepository.h"
+#include "log4qt/consoleappender.h"
+#include "log4qt/ttcclayout.h"
+#include "log4qt/logmanager.h"
+#include "log4qt/fileappender.h"
+
+Q_LOGGING_CATEGORY(category1, "test.category1")
+
+void setUpLogger(){
+    auto logger = Log4Qt::Logger::rootLogger();
+    auto *layout = new Log4Qt::TTCCLayout();
+    layout->setName(QStringLiteral("My Layout"));
+    layout->activateOptions();
+    // Create a console appender
+    Log4Qt::ConsoleAppender *consoleAppender = new Log4Qt::ConsoleAppender(layout, Log4Qt::ConsoleAppender::STDOUT_TARGET);
+    consoleAppender->setName(QStringLiteral("My Appender"));
+    consoleAppender->activateOptions();
+    // Add appender on root logger
+    logger->addAppender(consoleAppender);
+    // Create a file appender
+    Log4Qt::FileAppender *fileAppender = new Log4Qt::FileAppender(layout, QCoreApplication::applicationDirPath() + "/main.log", true);
+    fileAppender->setName(QStringLiteral("My file appender"));
+    fileAppender->activateOptions();
+    // Add appender on root logger
+    logger->addAppender(fileAppender);
+    // Set level to info
+    logger->setLevel(Log4Qt::Level::DEBUG_INT);
+}
+
+void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    QByteArray localMsg = msg.toLocal8Bit();
+    const char *file = context.file ? context.file : "";
+    const char *function = context.function ? context.function : "";
+    auto logger = Log4Qt::Logger::rootLogger();
+    switch (type) {
+    case QtDebugMsg:
+        logger->debug() << file << " " << function << ":" << context.line  << " " << localMsg.constData();
+        break;
+    case QtInfoMsg:
+        logger->info() << file << " " << function << ":" << context.line  << " " << localMsg.constData();
+        break;
+    case QtWarningMsg:
+        logger->warn() << file << " " << function << ":" << context.line  << " " << localMsg.constData();
+        break;
+    case QtCriticalMsg:
+        logger->error() << file << " " << function << ":" << context.line  << " " << localMsg.constData();
+        break;
+    case QtFatalMsg:
+        logger->fatal() << file << " " << function << ":" << context.line  << " " << localMsg.constData();
+        break;
+    }
+}
 
 int main(int argc, char *argv[])
 {
+    qInstallMessageHandler(myMessageOutput);
     QApplication a(argc, argv);
     QWidget mainwindow;
 
-    simpleqtlogger::ENABLE_LOG_SINK_FILE = true;
-    simpleqtlogger::ENABLE_LOG_SINK_CONSOLE = true;
-    simpleqtlogger::ENABLE_LOG_SINK_QDEBUG = true;
-    simpleqtlogger::ENABLE_LOG_SINK_SIGNAL = true;
+    setUpLogger();
 
-    simpleqtlogger::ENABLE_FUNCTION_STACK_TRACE = true;
-    simpleqtlogger::ENABLE_CONSOLE_COLOR = true;
-    simpleqtlogger::ENABLE_CONSOLE_TRIMMED = true;
-    simpleqtlogger::ENABLE_CONSOLE_LOG_FILE_STATE = true;
-
-    simpleqtlogger::ENABLE_LOG_LEVELS.logLevel_DEBUG = true;
-    simpleqtlogger::ENABLE_LOG_LEVELS.logLevel_FUNCTION = true;
-
-    simpleqtlogger::EnableLogLevels enableLogLevels_console = simpleqtlogger::ENABLE_LOG_LEVELS;
-    simpleqtlogger::EnableLogLevels enableLogLevels_file = simpleqtlogger::ENABLE_LOG_LEVELS;
-    simpleqtlogger::EnableLogLevels enableLogLevels_qDebug = simpleqtlogger::ENABLE_LOG_LEVELS;
-
-    simpleqtlogger::SimpleQtLogger::createInstance(&mainwindow);
-    simpleqtlogger::SimpleQtLogger::getInstance()->setLogFileName("main.log", 10*1000*1000, 20);
-    simpleqtlogger::SimpleQtLogger::getInstance()->setLogLevels_file(enableLogLevels_file);
-    simpleqtlogger::SimpleQtLogger::getInstance()->setLogLevels_console(enableLogLevels_console);
-    simpleqtlogger::SimpleQtLogger::getInstance()->setLogLevels_qDebug(enableLogLevels_qDebug);
-
-    qDebug() << "[main.cpp] main qDebug Works"; 
-
+    qDebug() << "[main.cpp] main logger->debug Works"; 
     std::cerr << "This is from standard error" << std::endl; 
     std::cout << "This is from standard output" << std::endl; 
+    auto logger = Log4Qt::Logger::rootLogger();
+    logger->debug() << "This is debug";
 
     QApplication::setStyle(new DarkStyle);
     FramelessWindow framelesswindow;
@@ -93,14 +129,14 @@ int main(int argc, char *argv[])
 
     list->connect(list,&QAbstractItemView::doubleClicked,&handler,
         [&](const QModelIndex& ind){
-            L_INFO("Double Clicked");
-            qDebug() << sm->data(ind);
+            logger->debug("Double Clicked");
+            logger->debug() << sm->data(ind).toString();
     });
 
     handler.connect(&handler,&Handler::updateListViewModel,list,[&](QStringListModel* slm){
-        L_INFO("ListViewModel updated");
+        logger->debug("ListViewModel updated");
         list->setModel(slm);
-        qDebug() << "Slm" << slm->data(slm->index(0));
+        logger->debug() << "Slm" << slm->data(slm->index(0)).toString();
     });
     
     handler.connect(&handler,&Handler::updateVcbId,vcbId,[&](QString vcbIdString){
