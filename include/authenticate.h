@@ -2,7 +2,7 @@
     #define custom_authenticate_h
     #include <QObject>
     #include <QJsonObject>
-    #include "qhttpserver.hpp"
+    #include "qhttp/qhttpserver.hpp"
     class Authenticate : public QObject{
         Q_OBJECT
         public:

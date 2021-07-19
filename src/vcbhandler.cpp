@@ -1,5 +1,7 @@
 #include "vcbhandler.h"
 #include <QGuiApplication>
+// #include "log4qt/logger.h"
+// auto logger = Log4Qt::Logger::rootLogger(); 
 
 VCBHandler::VCBHandler(QObject* parent):QObject(parent){
     vcbList.insert("one",new VCB("one"));

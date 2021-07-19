@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/include/**",
-                "C:/Qt/6.0.2/mingw81_64/include/**"
+                "C:/Qt/6.0.2/mingw81_64/include/**",
+                "${workspaceFolder}/dependencies/**"
 
             ],
             "defines": [

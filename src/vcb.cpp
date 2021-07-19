@@ -1,4 +1,6 @@
 #include "vcb.h"
+#include "log4qt/logger.h"
+auto logger = Log4Qt::Logger::rootLogger(); 
 VCB::VCB(const QString& id,QObject* parent):id(id),QObject(parent)
 {
     slm = new QStringListModel();
@@ -11,7 +13,7 @@ VCB::VCB(const QString& id,QObject* parent):id(id),QObject(parent)
     clips = db->retrieveClips({});
     addClipsToSlm(clips);
     topClip = clips->size() > 0 ? clips->at(0) : Clip("","",0);
-    qDebug() << __FILE__ << __FUNCTION__ << " topclip: " << topClip.toString();
+    logger->debug() << __FILE__ << __FUNCTION__ << " topclip: " << topClip.toString();
     //lastSyncedClip
 }
 VCB::~VCB(){

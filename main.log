@@ -1,0 +1,34 @@
+2021-07-15 23:43:58.673 [0000000000002ad4] [-] Start file-log 'main'
+2021-07-15 23:48:00.718 [0000000000000e08] [-] Start file-log 'main'
+2021-07-15 23:49:11.107 [00000000000028e4] [-] Start file-log 'main'
+2021-07-15 23:51:31.956 [0000000000001e80] [-] Start file-log 'main'
+2021-07-15 23:58:31.178 [000000000000091c] [-] Start file-log 'main'
+2021-07-16 00:00:52.626 [0000000000002d94] [-] Start file-log 'main'
+2021-07-16 00:01:46.687 [00000000000031c8] [-] Start file-log 'main'
+2021-07-16 00:12:08.447 [0000000000003b88] [-] Start file-log 'main'
+2021-07-16 20:15:37.784 [0000000000001314] [-] Start file-log 'main'
+2021-07-16 20:15:37.842 [0000000000001314] [I] This is from L_INFO (qMain@main.cpp:49)
+2021-07-16 20:16:24.338 [0000000000002298] [-] Start file-log 'main'
+2021-07-16 20:16:24.338 [0000000000002298] [I] This is from L_INFO (qMain@main.cpp:49)
+2021-07-16 20:48:11.142 [00000000000023d0] [-] Start file-log 'main'
+2021-07-16 20:48:11.145 [00000000000023d0] [F] \ This is from L_FUNC (qMain@main.cpp:57)
+2021-07-16 20:48:11.145 [00000000000023d0] [I] This is from L_INFO (qMain@main.cpp:58)
+2021-07-16 20:49:09.643 [0000000000002c24] [-] Start file-log 'main'
+2021-07-16 20:49:09.645 [0000000000002c24] [F] \ This is from L_FUNC (qMain@main.cpp:57)
+2021-07-16 20:49:09.646 [0000000000002c24] [I] This is from L_INFO (qMain@main.cpp:58)
+2021-07-16 20:58:20.674 [0000000000001c08] [-] Start file-log 'main'
+2021-07-16 20:58:20.677 [0000000000001c08] [F] \ This is from L_FUNC (qMain@main.cpp:57)
+2021-07-16 20:58:20.677 [0000000000001c08] [I] This is from L_INFO (qMain@main.cpp:58)
+2021-07-16 20:58:20.677 [0000000000001c08] [D] THIS IS FROM DEBUG (qMain@main.cpp:59)
+2021-07-16 20:58:58.365 [0000000000001c08] [F] / This is from L_FUNC (qMain@main.cpp:57)
+2021-07-16 21:58:53.853 [0000000000002768] [-] Start file-log 'main'
+2021-07-16 21:58:53.856 [0000000000002768] [F] \ This is from L_FUNC (qMain@main.cpp:57)
+2021-07-16 21:58:53.856 [0000000000002768] [I] This is from L_INFO (qMain@main.cpp:58)
+2021-07-16 21:58:53.857 [0000000000002768] [I] QStringSTHISADd (qMain@main.cpp:59)
+2021-07-16 21:58:53.857 [0000000000002768] [D] THIS IS FROM DEBUG (qMain@main.cpp:60)
+2021-07-16 21:59:30.773 [0000000000002768] [F] / This is from L_FUNC (qMain@main.cpp:57)
+2021-07-16 22:33:07.980 [0000000000001470] [-] Start file-log 'main'
+2021-07-16 22:33:07.981 [0000000000001470] [F] \ This is from L_FUNC (qMain@main.cpp:52)
+2021-07-16 22:33:07.981 [0000000000001470] [I] This is from L_INFO (qMain@main.cpp:53)
+2021-07-16 22:33:07.982 [0000000000001470] [D] This is from L_Debug (qMain@main.cpp:54)
+2021-07-16 22:33:08.075 [0000000000001470] [I] ? (Authenticate@src\authenticate.cpp:18)

@@ -1,8 +1,8 @@
 #include "authenticate.h"
-#include "qhttpserver.hpp"
-#include "qhttpserverconnection.hpp"
-#include "qhttpserverrequest.hpp"
-#include "qhttpserverresponse.hpp"
+#include "qhttp/qhttpserver.hpp"
+#include "qhttp/qhttpserverconnection.hpp"
+#include "qhttp/qhttpserverrequest.hpp"
+#include "qhttp/qhttpserverresponse.hpp"
 #include <QDesktopServices>
 #include "utils.h"
 #include <QJsonDocument>
@@ -11,6 +11,8 @@
 #include <QNetworkReply>
 #include <QObject>
 QT_USE_NAMESPACE
+// #include "log4qt/logger.h"
+// auto logger = Log4Qt::Logger::rootLogger(); 
 
 Authenticate::Authenticate(QObject*parent):QObject(parent){
     qDebug() << __FILE__ << __FUNCTION__ << __LINE__;

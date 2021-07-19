@@ -15,21 +15,86 @@
 #include <QPalette>
 #include <QBrush>
 #include "framelesswindow\framelesswindow.h"
-
+#include "framelesswindow/DarkStyle.h"
+#include <QLoggingCategory>
 #include <iostream>
+
+#include "log4qt/logger.h"
+#include "log4qt/propertyconfigurator.h"
+#include "log4qt/loggerrepository.h"
+#include "log4qt/consoleappender.h"
+#include "log4qt/ttcclayout.h"
+#include "log4qt/logmanager.h"
+#include "log4qt/fileappender.h"
+
+Q_LOGGING_CATEGORY(category1, "test.category1")
+
+void setUpLogger(){
+    auto logger = Log4Qt::Logger::rootLogger();
+    auto *layout = new Log4Qt::TTCCLayout();
+    layout->setName(QStringLiteral("My Layout"));
+    layout->activateOptions();
+    // Create a console appender
+    Log4Qt::ConsoleAppender *consoleAppender = new Log4Qt::ConsoleAppender(layout, Log4Qt::ConsoleAppender::STDOUT_TARGET);
+    consoleAppender->setName(QStringLiteral("My Appender"));
+    consoleAppender->activateOptions();
+    // Add appender on root logger
+    logger->addAppender(consoleAppender);
+    // Create a file appender
+    Log4Qt::FileAppender *fileAppender = new Log4Qt::FileAppender(layout, QCoreApplication::applicationDirPath() + "/main.log", true);
+    fileAppender->setName(QStringLiteral("My file appender"));
+    fileAppender->activateOptions();
+    // Add appender on root logger
+    logger->addAppender(fileAppender);
+    // Set level to info
+    logger->setLevel(Log4Qt::Level::DEBUG_INT);
+}
+
+void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    QByteArray localMsg = msg.toLocal8Bit();
+    const char *file = context.file ? context.file : "";
+    const char *function = context.function ? context.function : "";
+    auto logger = Log4Qt::Logger::rootLogger();
+    switch (type) {
+    case QtDebugMsg:
+        logger->debug() << file << " " << function << ":" << context.line  << " " << localMsg.constData();
+        break;
+    case QtInfoMsg:
+        logger->info() << file << " " << function << ":" << context.line  << " " << localMsg.constData();
+        break;
+    case QtWarningMsg:
+        logger->warn() << file << " " << function << ":" << context.line  << " " << localMsg.constData();
+        break;
+    case QtCriticalMsg:
+        logger->error() << file << " " << function << ":" << context.line  << " " << localMsg.constData();
+        break;
+    case QtFatalMsg:
+        logger->fatal() << file << " " << function << ":" << context.line  << " " << localMsg.constData();
+        break;
+    }
+}
 
 int main(int argc, char *argv[])
 {
-    qInstallMessageHandler(Logger);
+    qInstallMessageHandler(myMessageOutput);
     QApplication a(argc, argv);
-    FramelessWindow framelesswindow;
     QWidget mainwindow;
+
+    setUpLogger();
+
+    qDebug() << "[main.cpp] main logger->debug Works"; 
+    std::cerr << "This is from standard error" << std::endl; 
+    std::cout << "This is from standard output" << std::endl; 
+    auto logger = Log4Qt::Logger::rootLogger();
+    logger->debug() << "This is debug";
+
+    QApplication::setStyle(new DarkStyle);
+    FramelessWindow framelesswindow;
     QVBoxLayout *layout = new QVBoxLayout(&mainwindow);
     QHBoxLayout *dirButtons = new QHBoxLayout();
     QHBoxLayout *loginLogoutButtons = new QHBoxLayout();
-    qDebug() << "[main.cpp] main qDebug Works"; 
-    std::cerr << "This is from standard error" << std::endl; 
-    std::cout << "This is from standard output" << std::endl; 
+
     QListView *list = new QListView();
     QLabel* vcbId = new QLabel();
     // QPushButton *button = new QPushButton("Sign In from Google");
@@ -64,14 +129,14 @@ int main(int argc, char *argv[])
 
     list->connect(list,&QAbstractItemView::doubleClicked,&handler,
         [&](const QModelIndex& ind){
-            qDebug()<<"Double Clicked";
-            qDebug() << sm->data(ind);
+            logger->debug("Double Clicked");
+            logger->debug() << sm->data(ind).toString();
     });
 
     handler.connect(&handler,&Handler::updateListViewModel,list,[&](QStringListModel* slm){
-        qDebug() << "ListViewModel updated";
+        logger->debug("ListViewModel updated");
         list->setModel(slm);
-        qDebug() << "Slm" << slm->data(slm->index(0));
+        logger->debug() << "Slm" << slm->data(slm->index(0)).toString();
     });
     
     handler.connect(&handler,&Handler::updateVcbId,vcbId,[&](QString vcbIdString){
@@ -106,6 +171,7 @@ int main(int argc, char *argv[])
     framelesswindow.setContent(&mainwindow);
     framelesswindow.setPalette(defaultPalette);
     framelesswindow.show();
-    
+    //  simpleqtlogger::SimpleQtLogger::getInstance()->setParent(&framelesswindow);
+ 
     return a.exec();
 }

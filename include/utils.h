@@ -16,5 +16,5 @@
     QString& quotedQString(QString&);
     QString getMd5Hash(const QString&);
     QSqlDatabase getDatabaseConnection(const QString&);
-    void Logger(QtMsgType, const QMessageLogContext&, const QString &);
+    // void Logger(QtMsgType, const QMessageLogContext&, const QString &);
 #endif

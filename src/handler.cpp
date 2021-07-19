@@ -6,6 +6,8 @@
 #include "clip.h"
 #include "vcbhandler.h"
 QT_USE_NAMESPACE
+// #include "log4qt/logger.h"
+// auto logger = Log4Qt::Logger::rootLogger(); 
 
 Handler::Handler(QObject* parent):QObject(parent)
 {
@@ -18,9 +20,9 @@ Handler::Handler(QObject* parent):QObject(parent)
     authenticate->connect(authenticate,&Authenticate::authenticated,this,[&](){
         qDebug() << "Authentication Success" ;
         QSettings s;
-        qDebug() << s.value("id_token");
-        qDebug() << s.value("refresh_token");
-        qDebug() << s.value("device_id");
+        qDebug() << s.value("id_token").toString();
+        qDebug() << s.value("refresh_token").toString();
+        qDebug() << s.value("device_id").toString();
         initWsw();
     });
 }
