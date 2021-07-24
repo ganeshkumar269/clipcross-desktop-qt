@@ -140,18 +140,6 @@ void WebSocketW::onWssError(QAbstractSocket::SocketError error){
 void WebSocketW::onWssMessageReceived(const QString& message)
 {
     qDebug() << "WebSocket Message Received: " << message;
-    // rapidjson::Document d;
-    // d.Parse(message.toStdString().c_str());
-    // if(d.HasParseError()){
-    //     qDebug() << "[websocketw.cpp] ParseError:" << d.GetParseError();
-    //     return;
-    // }
-    // if(!(d.HasMember("value") && d.HasMember("format"))){
-    //     qDebug() << "[websocketw.cpp] Missing members in received json";
-    //     return;
-    // }
-    // auto value  = d["value"].GetString();
-    // auto format = d["format"].GetString();
     QJsonDocument d = QJsonDocument::fromJson(message.toUtf8());
     QJsonObject o = d.object();
     if(o.contains("authenticate")){
@@ -168,7 +156,7 @@ void WebSocketW::onWssMessageReceived(const QString& message)
         o.remove("syncflow");
         emit syncFlowDataReceived(o);
     }
-    else if(o.contains("isClip") && o["isClip"].toBool() == true){
+    else if(o.contains("updateClip") && o["updateClip"].toBool() == true){
 
         // o.contains("value") && o.contains("format") && o.contains("timestamp") && o.contains("vcbIds")){
         
@@ -195,11 +183,6 @@ void WebSocketW::sendClip(const Clip& clip,const QList<QString>& ids)
 {
     qDebug() << "[websocketw.cpp] sendWssData "; //<< value_string << " " << format_string;
     if(!wss->isValid()) return;
-    // QString machine_id = QSysInfo::machineUniqueId();
-    // QJsonObject o;
-    // o.insert("value",value_string);
-    // o.insert("format",format_string);
-    // o.insert("id_token",settings->value("id_token").toString());
     QJsonDocument doc = QJsonDocument::fromJson(clip.toJson().toStdString().c_str());
     QJsonObject message;
     auto obj = doc.object();
@@ -214,6 +197,7 @@ void WebSocketW::sendClip(const Clip& clip,const QList<QString>& ids)
 void WebSocketW::initSyncFlow(){
     QJsonObject o;
     o.insert("syncflow",true);
+    o.insert("data","");
     wss->sendTextMessage(QJsonDocument(o).toJson(QJsonDocument::Compact));
 }
 

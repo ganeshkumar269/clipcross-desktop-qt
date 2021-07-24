@@ -24,6 +24,7 @@ Handler::Handler(QObject* parent):QObject(parent)
         qDebug() << s.value("refresh_token").toString();
         qDebug() << s.value("device_id").toString();
         initWsw();
+        authenticate->stopAuthServer();
     });
 }
 
@@ -49,6 +50,7 @@ void Handler::onWswClipReceived(const Clip& clip,const QStringList& ids){
 void Handler::initWsw(){
     if(wsw != nullptr) delete wsw;
     wsw = new WebSocketW();
+    // connect(wsw,&WebSocketW::getTopClips, this, &Handler::handleGetTopClips)
     connect(wsw,&WebSocketW::clipReceived,this,&Handler::onWswClipReceived);
     connect(wsw,&WebSocketW::wssTokenExpired,this,&Handler::onWssTokenExpired);
     connect(wsw,&WebSocketW::syncFlowDataReceived,this,&Handler::syncOperation);
@@ -64,7 +66,7 @@ void Handler::onWssTokenExpired(){
 }
 
 void Handler::syncOperation(const QJsonObject& payload){
-    qDebug() << __FILE__ << __FUNCTION__;
+    qDebug() << "handling syncflow response";
     if(!payload.empty())
     for(auto id : payload.keys()){
         qDebug() << "id: " << id;

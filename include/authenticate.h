@@ -13,11 +13,12 @@
             void refreshAccessToken();
             void logout();
             void login();
+            void stopAuthServer();
         Q_SIGNALS:
             void authenticated();
             void accessTokenRefreshed();
             void loggedout();
         private:
-            qhttp::server::QHttpServer *server;
+            qhttp::server::QHttpServer *server = nullptr;
     };  
 #endif

@@ -6,6 +6,7 @@
     #include <iostream>
     #include <QJsonDocument>
     #include <QCryptographicHash>
+    #include <QJsonObject>
     class Clip {
         private:
             QString m_value;
@@ -52,5 +53,13 @@
                 return "{" + this->toString() + "}";
             }
 
+            QJsonObject toJsonObject() const {
+                QJsonObject jsonObject;
+                jsonObject.insert("value",value);
+                jsonObject.insert("hash",hash);
+                jsonObject.insert("timestamp",timestamp);
+                jsonObject.insert("format",format);
+                return jsonObject;
+            }
     };
 #endif

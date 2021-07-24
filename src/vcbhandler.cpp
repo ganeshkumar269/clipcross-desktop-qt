@@ -4,30 +4,30 @@
 // auto logger = Log4Qt::Logger::rootLogger(); 
 
 VCBHandler::VCBHandler(QObject* parent):QObject(parent){
-    vcbList.insert("one",new VCB("one"));
-    vcbList.insert("two",new VCB("two"));
-    vcbList.insert("three",new VCB("three"));
-    visibleVCBId = "one";
-    // topClip = vcbList[visibleVCBId]->getTopClip();
-    // activeVCBIds = new QList<QString>();
+    vcbList.insert("desktop-one",new VCB("one"));
+    vcbList.insert("desktop-two",new VCB("two"));
+    vcbList.insert("desktop-three",new VCB("three"));
+    vcbList.insert("default-web",new VCB("default-web"));
+    visibleVCBId = "desktop-one";
     activeVCBIds.append(visibleVCBId);
-    
     cb = QGuiApplication::clipboard();
     connect(cb,&QClipboard::dataChanged,this,&VCBHandler::onCbDataChanged);
 }
 
 VCBHandler::~VCBHandler(){
-    // delete activeVCBIds;
     QHashIterator<QString, VCB*> i(vcbList);
     while (i.hasNext()) {
         i.next();
-        // cout << i.key() << ": " << i.value() << Qt::endl;
         delete i.value();
     }
 }
 
 void VCBHandler::add(const Clip& clip,const QString& id){
-    vcbList[id]->add(clip);
+    if(vcbList.contains(id)){
+        vcbList[id]->add(clip);
+    }else{
+        qDebug() << id << " is not a valid vcbId";
+    }
 }
 void VCBHandler::add(const Clip& clip){
     for(QString id : activeVCBIds)
@@ -45,17 +45,15 @@ QList<QString> VCBHandler::getActiveVCBIds(){return activeVCBIds;}
 QStringListModel* VCBHandler::getModel(){return vcbList[visibleVCBId]->getModel();}
 QStringListModel* VCBHandler::getModel(const QString& id){return vcbList[id]->getModel();}
 QString VCBHandler::getVisibleVCBId(){return visibleVCBId;}
+
 void VCBHandler::onCbDataChanged(){
     Clip currClip(cb->text(),"text",getTimestamp());
-    if( getTopClip().hash() != currClip.hash())//format assumed text
-    {
+    if( getTopClip().hash() != currClip.hash()){
         qDebug() << "Clip Hash doesnt match prevClipHash" << '\n';
         add(currClip,visibleVCBId);
-        // add(currClip);
         emit vcbDataChanged(currClip,{visibleVCBId});
     }
-    else
-    {
+    else{
         qDebug() << "Hash Matched" << '\n';
     }
 }
@@ -85,4 +83,12 @@ void VCBHandler::previous(){
         prevVal = i.key();
     }
     visibleVCBId = prevVal;
+}
+
+QJsonObject VCBHandler::vcbTopClips(){
+    QJsonObject data;
+    data.insert("desktop-one", getTopClip("desktop-one").toJsonObject());
+    data.insert("desktop-two", getTopClip("desktop-two").toJsonObject());
+    data.insert("desktop-three", getTopClip("desktop-three").toJsonObject());
+    return data;
 }

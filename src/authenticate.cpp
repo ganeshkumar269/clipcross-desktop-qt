@@ -15,11 +15,11 @@ QT_USE_NAMESPACE
 // auto logger = Log4Qt::Logger::rootLogger(); 
 
 Authenticate::Authenticate(QObject*parent):QObject(parent){
-    qDebug() << __FILE__ << __FUNCTION__ << __LINE__;
+    qDebug() << "Authenticate Constructor";
 }
 
 Authenticate::~Authenticate(){
-    qDebug() << "Authenticate.cpp Authenticate Destructor";
+    qDebug() << "Authenticate Destructor";
     if(server != nullptr)
         delete server;
 }
@@ -27,6 +27,11 @@ Authenticate::~Authenticate(){
 void Authenticate::start(){
     if(hasTokensLocally()) {
         qDebug() << "Has Tokens Locally";
+        QSettings s;
+        qDebug() << "The available tokens are: ";
+        qDebug() << "refresh_token : " << s.value("refresh_token");
+        qDebug() << "id_token : " << s.value("id_token");
+        qDebug() << "device_id : " << s.value("device_id");
         emit authenticated();
     }else{
         login();
@@ -35,31 +40,36 @@ void Authenticate::start(){
 
 void Authenticate::login(){
     using namespace qhttp::server;
+    if(server != nullptr) {
+        stopAuthServer();
+    }
     server = new qhttp::server::QHttpServer(this);
     server->listen(QHostAddress::Any, 12121,[&](QHttpRequest* req, QHttpResponse* res) {
-            qDebug() << __FILE__ << __FUNCTION__ << "request handler";
-
             QUrl url(req->url());
             QString rt = getQueryParamValue(url,"refresh_token");
             QString did = getQueryParamValue(url,"device_id");
             QString idt = getQueryParamValue(url,"id_token");
 
-            if(did != "" && rt != "" && idt != ""){
+            if(did != "" && rt != "" && idt != "" && did != "undefined" && rt != "undefined" && idt != "undefined" ){
                 QSettings s;
                 s.setValue("device_id",did);
                 s.setValue("refresh_token",rt);
                 s.setValue("id_token",idt);
-                qDebug() << __FILE__ << __FUNCTION__ << " Login SuccessFul";
+                qDebug() << "Login SuccessFul";
                 emit authenticated();
+                res->setStatusCode(qhttp::ESTATUS_OK);
+                res->write("<h2>Success, You Can close this tab!<h2>");
+                res->end("Success!\n");
+            }else{
+                res->setStatusCode(qhttp::ESTATUS_OK);
+                res->write("<h2>Unsuccessful, please try again!<h2>");
+                res->end("Failure!\n");
             }
-            res->setStatusCode(qhttp::ESTATUS_OK);
-            res->write("<h2>Success, You Can close this tab!<h2>");
-            res->end("Success!\n");
     });
 
     if(!server->isListening())  {
         qDebug() << "Server Not Listening";
-        qDebug() << __FILE__ << __FUNCTION__ << " Login Failed";
+        qDebug() << "Login Failed";
     }
     else{
         qDebug() << "Server Listening";
@@ -173,4 +183,8 @@ void Authenticate::logout(){
         r->deleteLater();
     });
     
+}
+
+void Authenticate::stopAuthServer(){
+    server->stopListening();
 }

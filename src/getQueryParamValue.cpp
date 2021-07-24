@@ -9,7 +9,7 @@ QString getQueryParamValue(const QUrl& url,const QString& param){
     if(q.hasQueryItem(param))
         return q.queryItemValue(param);
     else {
-        qDebug() << __FILE__ << __FUNCTION__ << __LINE__ << " Param doesnt exist";
+        qDebug() <<  " Param doesnt exist";
         return "";
     }
 }
