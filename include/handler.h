@@ -44,7 +44,9 @@
             void onVCBDataChanged(const Clip&,const QList<QString>&);       
             void onWswClipReceived(const Clip&,const QList<QString>&); 
             // void onModelUpdate(QStringListModel*);
-            void handleGetTopClips();
+            // void handleGetTopClips();
+            void onWssConnectionEstablished();
+            void onWssReadyToTransferData();
         private:
             // Database *db;
             WebSocketW *wsw;

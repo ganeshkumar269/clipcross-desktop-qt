@@ -4,7 +4,8 @@
     #include <QObject>
     #include "clip.h"
     #include "vcb.h"
-    #include <QJsonObject>
+    #include <QPair>
+
     class VCBHandler : public QObject{
         Q_OBJECT
         public:
@@ -23,12 +24,11 @@
             QList<QString> getActiveVCBIds();
             void next();
             void previous();
-            QJsonObject vcbTopClips();
+            QList<QPair<QString,Clip>> vcbTopClips();
             
         Q_SIGNALS:
             void vcbDataChanged(const Clip&,const QList<QString> /*vcbIds*/);
         public Q_SLOTS:   
-            // void onListViewDoubleClicked(const QModelIndex&);
             void onCbDataChanged();
         private:
             QHash<QString,VCB*> vcbList;

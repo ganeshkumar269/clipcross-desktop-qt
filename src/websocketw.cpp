@@ -41,6 +41,7 @@ void WebSocketW::createWss(){
             this,
             &WebSocketW::onWssStateChanged
             );
+    connect(wss,&QWebSocket::pong, this, &WebSocketW::onPong);
     #ifdef LOCAL_WSS_TEST
         QList<QSslCertificate> cert = QSslCertificate::fromPath(QLatin1String("./server.pem"));
         QSslError error1(QSslError::SelfSignedCertificate, cert.at(0));
@@ -78,7 +79,8 @@ void WebSocketW::onWssConnected()
     qDebug() << "WebSocket connected";
     connect(wss, &QWebSocket::textMessageReceived,
             this, &WebSocketW::onWssMessageReceived);
-    initSyncFlow();
+    emit wssConnectionEstablished();
+    pingUntilReadyToTransferData();
 }
 
 void WebSocketW::onWssDisconnected()
@@ -194,17 +196,34 @@ void WebSocketW::sendClip(const Clip& clip,const QList<QString>& ids)
     wss->sendTextMessage(QJsonDocument(message).toJson());
 }
 
-void WebSocketW::initSyncFlow(){
+void WebSocketW::initSyncFlow(QList<QPair<QString,Clip>> vcbClips){
     QJsonObject o;
     o.insert("syncflow",true);
-    o.insert("data","");
+    QJsonObject data;
+    for(auto vcbClip : vcbClips){
+        data.insert(vcbClip.first, vcbClip.second.toJsonObject());
+    }
+    o.insert("data",data);
     wss->sendTextMessage(QJsonDocument(o).toJson(QJsonDocument::Compact));
 }
 
 void WebSocketW::onPong(quint64 elapsedTime, const QByteArray &payload){
     qDebug() << "websokcetw.cpp onPong payload: " << payload.toStdString().c_str();
+    if(!canTransferData){
+        emit wssReadyToTransferData();
+        timer->stop();
+        canTransferData = true;
+    }    
 }
 
-// void WebSocketW::syncWithServer(){
-    
-// }
+void WebSocketW::pingUntilReadyToTransferData(){
+    timer = new QTimer(this);
+    int cntr = 0;
+    connect(timer, &QTimer::timeout, this, [&](){
+        if(!canTransferData){
+            qDebug() << "Pinging WebSocket Server, cnt : " << cntr++;
+            wss->ping();
+        }
+    });
+    timer->start(4000);
+}

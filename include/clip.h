@@ -55,10 +55,10 @@
 
             QJsonObject toJsonObject() const {
                 QJsonObject jsonObject;
-                jsonObject.insert("value",value);
-                jsonObject.insert("hash",hash);
-                jsonObject.insert("timestamp",timestamp);
-                jsonObject.insert("format",format);
+                jsonObject.insert("value",m_value);
+                jsonObject.insert("hash",m_hash);
+                jsonObject.insert("timestamp",m_timestamp);
+                jsonObject.insert("format",m_format);
                 return jsonObject;
             }
     };

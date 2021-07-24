@@ -7,7 +7,7 @@ VCBHandler::VCBHandler(QObject* parent):QObject(parent){
     vcbList.insert("desktop-one",new VCB("one"));
     vcbList.insert("desktop-two",new VCB("two"));
     vcbList.insert("desktop-three",new VCB("three"));
-    vcbList.insert("default-web",new VCB("default-web"));
+    vcbList.insert("default-web",new VCB("default_web"));
     visibleVCBId = "desktop-one";
     activeVCBIds.append(visibleVCBId);
     cb = QGuiApplication::clipboard();
@@ -85,10 +85,10 @@ void VCBHandler::previous(){
     visibleVCBId = prevVal;
 }
 
-QJsonObject VCBHandler::vcbTopClips(){
-    QJsonObject data;
-    data.insert("desktop-one", getTopClip("desktop-one").toJsonObject());
-    data.insert("desktop-two", getTopClip("desktop-two").toJsonObject());
-    data.insert("desktop-three", getTopClip("desktop-three").toJsonObject());
+QList<QPair<QString,Clip>> VCBHandler::vcbTopClips(){
+    QList<QPair<QString,Clip>> data;
+    data.append({"desktop-one", getTopClip("desktop-one")});
+    data.append({"desktop-two", getTopClip("desktop-two")});
+    data.append({"desktop-three", getTopClip("desktop-three")});
     return data;
 }

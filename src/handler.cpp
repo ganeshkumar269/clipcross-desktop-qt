@@ -54,6 +54,8 @@ void Handler::initWsw(){
     connect(wsw,&WebSocketW::clipReceived,this,&Handler::onWswClipReceived);
     connect(wsw,&WebSocketW::wssTokenExpired,this,&Handler::onWssTokenExpired);
     connect(wsw,&WebSocketW::syncFlowDataReceived,this,&Handler::syncOperation);
+    connect(wsw,&WebSocketW::wssConnectionEstablished,this,&Handler::onWssConnectionEstablished);
+    connect(wsw,&WebSocketW::wssReadyToTransferData,this,&Handler::onWssReadyToTransferData);
 }
 
 
@@ -101,14 +103,18 @@ void Handler::goPrevious(){
     emit updateListViewModel(vcbHandler->getModel());
     emit updateVcbId(vcbHandler->getVisibleVCBId());
 }
-
 void Handler::startAuthentication(){
     authenticate->start();
 }
-
 void Handler::startLogout(){
     authenticate->logout();
 }
 void Handler::startLogin(){
     authenticate->login();
+}
+void Handler::onWssConnectionEstablished(){
+    // wsw->initSyncFlow(vcbHandler->vcbTopClips());
+}
+void Handler::onWssReadyToTransferData(){
+    wsw->initSyncFlow(vcbHandler->vcbTopClips());
 }
