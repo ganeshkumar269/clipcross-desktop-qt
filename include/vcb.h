@@ -7,7 +7,7 @@
     class VCB : public QObject{
         Q_OBJECT
         public:
-            explicit VCB(const QString& id,QObject* =nullptr);
+            explicit VCB(const QString& id,const QString& deviceId, bool nonHost = false, QObject* =nullptr);
             ~VCB();
             void add(const Clip&);
             void add(const QModelIndex&);
@@ -22,10 +22,12 @@
         private:
             const QString id; //permanent
             QString name; //visible to user and customizable
-            QStringListModel* slm; //create a custom listmodel
-            QList<Clip>* clips;
+            QStringListModel* slm = nullptr; //create a custom listmodel
+            QList<Clip>* clips = nullptr;
             Clip topClip;
             Clip lastSyncedClip;
-            Database *db;
+            Database *db = nullptr;
+            const QString deviceId;
+            const bool nonHost;
     };  
 #endif

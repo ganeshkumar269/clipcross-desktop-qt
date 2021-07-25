@@ -12,7 +12,7 @@
             explicit VCBHandler(QObject* =nullptr);
             ~VCBHandler();
             void add(const Clip&);
-            void add(const Clip&,const QString&); //clip,id
+            void add(const Clip&,const QString&, const QString& deviceId = "desktop"); //clip,id
             void add(const Clip&,const QStringList&); //clip,ids
 
             Clip getTopClip();
@@ -25,6 +25,7 @@
             void next();
             void previous();
             QList<QPair<QString,Clip>> vcbTopClips();
+            bool hasVcbId(const QString& id);
             
         Q_SIGNALS:
             void vcbDataChanged(const Clip&,const QList<QString> /*vcbIds*/);
@@ -34,6 +35,8 @@
             QHash<QString,VCB*> vcbList;
             QList<QString> activeVCBIds;
             QString visibleVCBId;
+            int visibleVCBIdIndex;
+            QStringList* vcbListOrder;
             // Clip *topClip;
             // QList<Clip> getTopClips;
             QClipboard* cb;

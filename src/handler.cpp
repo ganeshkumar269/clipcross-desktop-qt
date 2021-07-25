@@ -15,7 +15,6 @@ Handler::Handler(QObject* parent):QObject(parent)
     wsw = nullptr;
     vcbHandler = new VCBHandler();
     connect(vcbHandler,&VCBHandler::vcbDataChanged,this,&Handler::onVCBDataChanged);
-    emit updateListViewModel(vcbHandler->getModel());
     authenticate = new Authenticate();
     authenticate->connect(authenticate,&Authenticate::authenticated,this,[&](){
         qDebug() << "Authentication Success" ;
@@ -70,25 +69,28 @@ void Handler::onWssTokenExpired(){
 void Handler::syncOperation(const QJsonObject& payload){
     qDebug() << "handling syncflow response";
     if(!payload.empty())
-    for(auto id : payload.keys()){
-        qDebug() << "id: " << id;
-        Clip clip(
-                    payload[id]["value"].toString(),
-                    payload[id]["format"].toString(),
-                    payload[id]["timestamp"].toInteger()
-                );
+    if(!payload.contains("clips")){
+        qDebug() << "Syncflow Response object doesnot have clips";
+        return;
+    }
+    const QJsonObject& clips = payload["clips"].toObject();
+    for(const auto deviceId : clips.keys()){
+        qDebug() << "deviceId: " << deviceId;
 
-        if(clip.timestamp() > vcbHandler->getTopClip(id).timestamp()){
-            //client lags the server
-            qDebug() << "Client lags Server";
-            vcbHandler->add(clip,id);
-        }
-        else if(clip.timestamp() < vcbHandler->getTopClip(id).timestamp()){
-            qDebug() << "Server lags Client";
-            wsw->sendClip(vcbHandler->getTopClip(id),{id});
-        }
-        else {
-            qDebug() << "Server and Client are in sync";
+        for(const auto vcbId : clips[deviceId].toObject().keys()){
+            qDebug() << "vcbId: " << vcbId;
+            if(vcbHandler->hasVcbId(vcbId)){
+                qDebug() << vcbId << " says: \"Server can't poke in my vcbs\"";
+                continue;
+            }
+
+            Clip clip(
+                        clips[deviceId][vcbId]["value"].toString(),
+                        clips[deviceId][vcbId]["format"].toString(),
+                        clips[deviceId][vcbId]["timestamp"].toInteger()
+                    );
+            qDebug() << "Recieved Clip for the vcbId: " << vcbId << " clip:" << clip.toString();
+            vcbHandler->add(clip,vcbId,deviceId);
         }
     }
 }

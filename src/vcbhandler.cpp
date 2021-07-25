@@ -4,12 +4,16 @@
 // auto logger = Log4Qt::Logger::rootLogger(); 
 
 VCBHandler::VCBHandler(QObject* parent):QObject(parent){
-    vcbList.insert("desktop-one",new VCB("one"));
-    vcbList.insert("desktop-two",new VCB("two"));
-    vcbList.insert("desktop-three",new VCB("three"));
-    vcbList.insert("default-web",new VCB("default_web"));
+    vcbList.insert("desktop-one",new VCB("one", "desktop"));
+    vcbList.insert("desktop-two",new VCB("two","desktop"));
+    vcbList.insert("desktop-three",new VCB("three","desktop"));
     visibleVCBId = "desktop-one";
+    visibleVCBIdIndex = 0;
     activeVCBIds.append(visibleVCBId);
+    vcbListOrder = new QStringList();
+    vcbListOrder->append("desktop-one");
+    vcbListOrder->append("desktop-two");
+    vcbListOrder->append("desktop-three");
     cb = QGuiApplication::clipboard();
     connect(cb,&QClipboard::dataChanged,this,&VCBHandler::onCbDataChanged);
 }
@@ -22,11 +26,14 @@ VCBHandler::~VCBHandler(){
     }
 }
 
-void VCBHandler::add(const Clip& clip,const QString& id){
+void VCBHandler::add(const Clip& clip,const QString& id, const QString& deviceId){
     if(vcbList.contains(id)){
         vcbList[id]->add(clip);
     }else{
-        qDebug() << id << " is not a valid vcbId";
+        qDebug() << id << " is not present, adding a session vcb";
+        vcbList.insert(id, new VCB(id,deviceId,true));
+        vcbList[id]->add(clip);
+        vcbListOrder->append(id);
     }
 }
 void VCBHandler::add(const Clip& clip){
@@ -44,7 +51,7 @@ Clip VCBHandler::getTopClip(const QString& id){return vcbList[id]->getTopClip();
 QList<QString> VCBHandler::getActiveVCBIds(){return activeVCBIds;}
 QStringListModel* VCBHandler::getModel(){return vcbList[visibleVCBId]->getModel();}
 QStringListModel* VCBHandler::getModel(const QString& id){return vcbList[id]->getModel();}
-QString VCBHandler::getVisibleVCBId(){return visibleVCBId;}
+QString VCBHandler::getVisibleVCBId(){return vcbListOrder->at(visibleVCBIdIndex);}
 
 void VCBHandler::onCbDataChanged(){
     Clip currClip(cb->text(),"text",getTimestamp());
@@ -60,29 +67,43 @@ void VCBHandler::onCbDataChanged(){
 
 void VCBHandler::next(){
     // auto it = vcbList.find(visibleVCBId);
-    QHashIterator<QString, VCB*> i(vcbList);
-    while (i.hasNext()) {
-        i.next();
-        // cout << i.key() << ": " << i.value() << Qt::endl;
-        if(i.key() == visibleVCBId) break;
-    }
+    // QHashIterator<QString, VCB*> i(vcbList);
+    // while (i.hasNext()) {
+    //     i.next();
+    //     // cout << i.key() << ": " << i.value() << Qt::endl;
+    //     if(i.key() == visibleVCBId) break;
+    // }
     
-    if(i.hasNext()){
-        i.next();
-        visibleVCBId = i.key(); 
+    // if(i.hasNext()){
+    //     i.next();
+    //     visibleVCBId = i.key(); 
+    // }
+
+    if(visibleVCBIdIndex < vcbList.size() - 1){
+        visibleVCBIdIndex++;
+        visibleVCBId = vcbListOrder->at(visibleVCBIdIndex);
+    }else{
+        qDebug() << "VcbList end reached";
     }
+
 }
 void VCBHandler::previous(){
     // auto it = vcbList.find(visibleVCBId);
-    QHashIterator<QString, VCB*> i(vcbList);
-    QString prevVal = visibleVCBId;
-    while (i.hasNext()) {
-        i.next();
-        // cout << i.key() << ": " << i.value() << Qt::endl;
-        if(i.key() == visibleVCBId) break;
-        prevVal = i.key();
+    // QHashIterator<QString, VCB*> i(vcbList);
+    // QString prevVal = visibleVCBId;
+    // while (i.hasNext()) {
+    //     i.next();
+    //     // cout << i.key() << ": " << i.value() << Qt::endl;
+    //     if(i.key() == visibleVCBId) break;
+    //     prevVal = i.key();
+    // }
+    // visibleVCBId = prevVal;
+    if(visibleVCBIdIndex > 0){
+        visibleVCBIdIndex--;
+        visibleVCBId = vcbListOrder->at(visibleVCBIdIndex);
+    }else{
+        qDebug() << "VcbList beginning reached";
     }
-    visibleVCBId = prevVal;
 }
 
 QList<QPair<QString,Clip>> VCBHandler::vcbTopClips(){
@@ -91,4 +112,8 @@ QList<QPair<QString,Clip>> VCBHandler::vcbTopClips(){
     data.append({"desktop-two", getTopClip("desktop-two")});
     data.append({"desktop-three", getTopClip("desktop-three")});
     return data;
+}
+
+bool VCBHandler::hasVcbId(const QString& id){
+    return vcbList.contains(id);
 }

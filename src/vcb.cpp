@@ -1,25 +1,26 @@
 #include "vcb.h"
-#include "log4qt/logger.h"
-auto logger = Log4Qt::Logger::rootLogger(); 
-VCB::VCB(const QString& id,QObject* parent):id(id),QObject(parent)
+VCB::VCB(const QString& id,const QString& deviceId, bool nonHost,QObject* parent)
+    :id(id),deviceId(deviceId),nonHost(nonHost),QObject(parent)
 {
     slm = new QStringListModel();
-    
+    //show the first item as the vcbId
     slm->insertRow(0,slm->index(0));
     slm->setData(slm->index(0),id);
-    
     clips = new QList<Clip>();
-    db = new Database(id);
-    clips = db->retrieveClips({});
+    if(!nonHost){
+        db = new Database(id);
+        clips = db->retrieveClips({});
+    }
     addClipsToSlm(clips);
-    topClip = clips->size() > 0 ? clips->at(0) : Clip("","",0);
-    logger->debug() << __FILE__ << __FUNCTION__ << " topclip: " << topClip.toString();
-    //lastSyncedClip
+    topClip = clips->size() > 0 ? clips->at(0) : Clip("Empty Database","text",0);
+    qDebug() << "VcbId: " << id << " topclip: " << topClip.toString();
 }
 VCB::~VCB(){
     delete slm;
     delete clips;
-    delete db;
+    if(db != nullptr){
+        delete db;
+    }
 }
 void VCB::addClipToSlm(const Clip& clip)
 {
@@ -39,7 +40,9 @@ void VCB::addClipsToSlm(const QList<Clip>* list){
 void VCB::add(const Clip& clip){
     clips->insert(0,clip); //check for optimisation ie insert vs append
     addClipToSlm(clip);
-    db->insertClip(clip);
+    if(!nonHost){
+        db->insertClip(clip);
+    }
     topClip = clip;
 }
 

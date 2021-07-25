@@ -79,7 +79,7 @@ int main(int argc, char *argv[])
 {
     qInstallMessageHandler(myMessageOutput);
     QApplication a(argc, argv);
-    QWidget mainwindow;
+    QWidget *mainwindow = new QWidget();
 
     setUpLogger();
 
@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 
     QApplication::setStyle(new DarkStyle);
     FramelessWindow framelesswindow;
-    QVBoxLayout *layout = new QVBoxLayout(&mainwindow);
+    QVBoxLayout *layout = new QVBoxLayout(mainwindow);
     QHBoxLayout *dirButtons = new QHBoxLayout();
     QHBoxLayout *loginLogoutButtons = new QHBoxLayout();
 
@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
     handler.connect(&handler,&Handler::updateListViewModel,list,[&](QStringListModel* slm){
         logger->debug("ListViewModel updated");
         list->setModel(slm);
-        logger->debug() << "Slm" << slm->data(slm->index(0)).toString();
+        // logger->debug() << "Slm" << slm->data(slm->index(0)).toString();
     });
     
     handler.connect(&handler,&Handler::updateVcbId,vcbId,[&](QString vcbIdString){
@@ -151,6 +151,9 @@ int main(int argc, char *argv[])
         handler.goNext();
     });
 
+    //show the first vcb (hacky way of doing it)
+    handler.goPrevious();
+
     login->connect(login, &QPushButton::clicked, &handler,&Handler::startLogin);
     logout->connect(logout, &QPushButton::clicked, &handler,&Handler::startLogout);
 
@@ -163,15 +166,14 @@ int main(int argc, char *argv[])
     layout->addWidget(list);
     layout->addWidget(vcbId);
 
-    mainwindow.setStyleSheet("background-color: #283742; color: #aaccff; font-family : roboto");
-    mainwindow.resize(360, 440);    
-    mainwindow.setPalette(defaultPalette);
+    mainwindow->setStyleSheet("background-color: #283742; color: #aaccff; font-family : roboto");
+    mainwindow->resize(360, 440);    
 
+    framelesswindow.setWindowIcon(a.style()->standardIcon(QStyle::SP_DesktopIcon));
     framelesswindow.setWindowTitle("clipcross");
-    framelesswindow.setContent(&mainwindow);
+    framelesswindow.setContent(mainwindow);
     framelesswindow.setPalette(defaultPalette);
     framelesswindow.show();
-    //  simpleqtlogger::SimpleQtLogger::getInstance()->setParent(&framelesswindow);
  
     return a.exec();
 }
