@@ -10,9 +10,9 @@
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QObject>
+#include <QJsonObject>
+
 QT_USE_NAMESPACE
-// #include "log4qt/logger.h"
-// auto logger = Log4Qt::Logger::rootLogger(); 
 
 Authenticate::Authenticate(QObject*parent):QObject(parent){
     qDebug() << "Authenticate Constructor";
@@ -148,7 +148,22 @@ void Authenticate::logout(){
     req.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     QJsonObject o;
     QSettings s;
+
+    QString id_token = s.value("id_token").toString();
+    QString email;
+    auto tokenArray = id_token.split('.');
+    if(tokenArray.length() == 3){
+        QJsonDocument res = QJsonDocument::fromJson( QByteArray::fromBase64( tokenArray[1].toUtf8() ) );
+        email = res.object()["email"].toString();
+    }else{
+        qDebug() << "Error Logging out, invalid id_token present";
+    }
+
+    qDebug() << "email : " << email; 
+
     o.insert("refresh_token",s.value("refresh_token").toString());
+    o.insert("email",email);
+
     QByteArray data = QJsonDocument(o).toJson();
 
     QList<QSslCertificate> cert = QSslCertificate::fromPath(QLatin1String("./server.pem"));

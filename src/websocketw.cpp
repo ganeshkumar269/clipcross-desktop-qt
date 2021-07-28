@@ -188,6 +188,7 @@ void WebSocketW::sendClip(const Clip& clip,const QList<QString>& ids)
     QJsonDocument doc = QJsonDocument::fromJson(clip.toJson().toStdString().c_str());
     QJsonObject message;
     auto obj = doc.object();
+    message.insert("updateClip",true);
     message.insert("clip",obj);
     QJsonArray json_id_array;
     for(QString id : ids)
