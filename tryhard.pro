@@ -11,7 +11,7 @@ LIBS += -L./debug/ -llog4qt
 LIBS += -L./dependencies/qhttp/ -lqhttp
 CONFIG += debug
 OUTPUT += Console
-DEFINES += LOCAL_WSS_TEST 
+# DEFINES += LOCAL_WSS_TEST 
 DEFINES += LOG4QT_LIBRARY
 DEFINES += QHTTP_EXPORT
 QMAKE_CXXFLAGS += -fpermissive
@@ -38,9 +38,11 @@ HEADERS += include\database.h \
            include\clip.h \
            include\vcb.h \
            include\vcbhandler.h \
+           include\constants.h \
            dependencies\framelesswindow\framelesswindow.h \
            dependencies\framelesswindow\windowdragger.h \
            dependencies\framelesswindow\DarkStyle.h \
+
 
 SOURCES += main.cpp \
            $$files(src/database/*.cpp) \

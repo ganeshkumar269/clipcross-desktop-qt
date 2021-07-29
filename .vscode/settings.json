@@ -58,6 +58,7 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp",
-        "qsqlfield": "cpp"
+        "qsqlfield": "cpp",
+        "qstring": "cpp"
     }
 }

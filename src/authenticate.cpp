@@ -11,6 +11,7 @@
 #include <QNetworkReply>
 #include <QObject>
 #include <QJsonObject>
+#include "constants.h"
 
 QT_USE_NAMESPACE
 
@@ -85,12 +86,7 @@ bool Authenticate::hasTokensLocally(){
 }
 
 void Authenticate::refreshAccessToken(){
-    QUrl url;
-    #ifdef LOCAL_WSS_TEST
-        url = QUrl("https://localhost:3000/refreshaccesstoken");
-    #else
-        url = QUrl("https://wss-node-server.ganeshkumar269.repl.co/refreshaccesstoken");
-    #endif
+    QUrl url(API_TOKEN_URL);
 
     QNetworkAccessManager * mgr = new QNetworkAccessManager(this);
     QNetworkRequest req(url);
@@ -135,14 +131,8 @@ void Authenticate::refreshAccessToken(){
 }
 
 void Authenticate::logout(){
-    QUrl url;
     qDebug() << __FILE__ << __FUNCTION__ << " logout initiated";
-    #ifdef LOCAL_WSS_TEST
-        url = QUrl("https://localhost:3000/logout");
-    #else
-        url = QUrl("https://wss-node-server.ganeshkumar269.repl.co/logout");
-    #endif
-
+    QUrl url(API_LOGOUT_URL);
     QNetworkAccessManager * mgr = new QNetworkAccessManager(this);
     QNetworkRequest req(url);
     req.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
