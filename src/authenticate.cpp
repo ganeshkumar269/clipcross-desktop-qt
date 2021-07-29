@@ -155,13 +155,13 @@ void Authenticate::logout(){
     o.insert("email",email);
 
     QByteArray data = QJsonDocument(o).toJson();
-
-    QList<QSslCertificate> cert = QSslCertificate::fromPath(QLatin1String("./server.pem"));
-    QSslError error1(QSslError::SelfSignedCertificate, cert.at(0));
-    QSslError error2(QSslError::CertificateExpired, cert.at(0));
-    QList<QSslError> expectedSslErrors;
     QNetworkReply *r = mgr->post(req,data);
+
     #ifdef LOCAL_WSS_TEST
+        QList<QSslCertificate> cert = QSslCertificate::fromPath(QLatin1String("./server.pem"));
+        QSslError error1(QSslError::SelfSignedCertificate, cert.at(0));
+        QSslError error2(QSslError::CertificateExpired, cert.at(0));
+        QList<QSslError> expectedSslErrors;
         expectedSslErrors.append(error1);
         expectedSslErrors.append(error2);
         r->ignoreSslErrors(expectedSslErrors);

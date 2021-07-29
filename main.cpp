@@ -102,6 +102,7 @@ int main(int argc, char *argv[])
     QPushButton *left = new QPushButton("<<");
     QPushButton *login = new QPushButton("Login");
     QPushButton *logout = new QPushButton("Logout");
+    QPushButton *removeTokens = new QPushButton("Force Logout");
     QStringListModel *sm = new QStringListModel();
 
     QGuiApplication::setOrganizationName("TestOrgName");
@@ -156,11 +157,12 @@ int main(int argc, char *argv[])
 
     login->connect(login, &QPushButton::clicked, &handler,&Handler::startLogin);
     logout->connect(logout, &QPushButton::clicked, &handler,&Handler::startLogout);
-
+    removeTokens->connect(removeTokens, &QPushButton::clicked, &handler, &Handler::resetAuthTokens);
     dirButtons->addWidget(left);
     dirButtons->addWidget(right);
     loginLogoutButtons->addWidget(login);
     loginLogoutButtons->addWidget(logout);
+    loginLogoutButtons->addWidget(removeTokens);
     layout->addLayout(dirButtons);
     layout->addLayout(loginLogoutButtons);
     layout->addWidget(list);

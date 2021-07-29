@@ -38,7 +38,7 @@
             void startAuthentication();
             void startLogout();
             void startLogin();
-
+            void resetAuthTokens();
         private Q_SLOTS:
             void onWssTokenExpired();
             void onVCBDataChanged(const Clip&,const QList<QString>&);       

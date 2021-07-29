@@ -120,3 +120,9 @@ void Handler::onWssConnectionEstablished(){
 void Handler::onWssReadyToTransferData(){
     wsw->initSyncFlow(vcbHandler->vcbTopClips());
 }
+void Handler::resetAuthTokens(){
+    QSettings s;
+    s.remove("refresh_token");
+    s.remove("id_token");
+    s.remove("device_id");
+}
