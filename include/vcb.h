@@ -14,6 +14,7 @@
             void addClipToSlm(const Clip&);
             void addClipsToSlm(const QList<Clip>*);
             Clip getTopClip();
+            Clip getClipAtIndex(int);
             QStringListModel* getModel();
         Q_SIGNALS:
 

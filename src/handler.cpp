@@ -5,9 +5,13 @@
 #include "utils.h"
 #include "clip.h"
 #include "vcbhandler.h"
+#include <QClipboard>
+#define WINVER 0x0500
+#include <windows.h>
+
+#define VK_1 0x31
+#define VK_2 0x32
 QT_USE_NAMESPACE
-// #include "log4qt/logger.h"
-// auto logger = Log4Qt::Logger::rootLogger(); 
 
 Handler::Handler(QObject* parent):QObject(parent)
 {
@@ -125,4 +129,48 @@ void Handler::resetAuthTokens(){
     s.remove("refresh_token");
     s.remove("id_token");
     s.remove("device_id");
+}
+
+void Handler::handleShortcutTrigger(MSG* msg){
+        WORD hotKey =  HIWORD(msg->lParam);
+        switch (hotKey) {
+            case VK_1:
+                qDebug() << "Ctrl + 1 pressed";
+                QGuiApplication::clipboard()->setText(vcbHandler->getClipAtIndex(0).value());
+                break;
+            case VK_2:
+                qDebug() << "Ctrl + 2 pressed";
+                QGuiApplication::clipboard()->setText(vcbHandler->getClipAtIndex(1).value());
+                break;
+            default:
+                break;
+        }
+
+
+        INPUT ip;
+        ip.type = INPUT_KEYBOARD;
+        ip.ki.wScan = 0;
+        ip.ki.time = 0;
+        ip.ki.dwExtraInfo = 0;
+        // Press the "Ctrl" key
+        ip.ki.wVk = VK_CONTROL;
+        ip.ki.dwFlags = 0; // 0 for key press
+        SendInput(1, &ip, sizeof(INPUT));
+
+        // Press the "V" key
+
+        ip.ki.wVk = 'V';
+        ip.ki.dwFlags = 0; // 0 for key press
+        SendInput(1, &ip, sizeof(INPUT));
+
+        // Release the "V" key
+        ip.ki.wVk = 'V';
+        ip.ki.dwFlags = KEYEVENTF_KEYUP;
+        SendInput(1, &ip, sizeof(INPUT));
+
+        // Release the "Ctrl" key
+        ip.ki.wVk = VK_CONTROL;
+        ip.ki.dwFlags = KEYEVENTF_KEYUP;
+        SendInput(1, &ip, sizeof(INPUT));
+
 }

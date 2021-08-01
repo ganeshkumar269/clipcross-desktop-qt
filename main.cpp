@@ -6,7 +6,6 @@
 #include <QPushButton>
 #include "database.h"
 #include "utils.h"
-#include "handler.h"
 #include "authenticate.h"
 #include <QSettings>
 #include <QObject>
@@ -18,7 +17,6 @@
 #include "framelesswindow/DarkStyle.h"
 #include <QLoggingCategory>
 #include <iostream>
-
 #include "log4qt/logger.h"
 #include "log4qt/propertyconfigurator.h"
 #include "log4qt/loggerrepository.h"
@@ -26,7 +24,10 @@
 #include "log4qt/ttcclayout.h"
 #include "log4qt/logmanager.h"
 #include "log4qt/fileappender.h"
-
+#define WINVER 0x0500
+#include <windows.h>
+#include "mainwindow.h"
+#include "handler.h"
 Q_LOGGING_CATEGORY(category1, "test.category1")
 
 void setUpLogger(){
@@ -79,10 +80,24 @@ int main(int argc, char *argv[])
 {
     qInstallMessageHandler(myMessageOutput);
     QApplication a(argc, argv);
-    QWidget *mainwindow = new QWidget();
-
+    MainWindow *mainwindow = new MainWindow();
     setUpLogger();
 
+    if (!RegisterHotKey(HWND(mainwindow->winId()), 0,MOD_CONTROL, 0x31))
+    {
+        // QMessageBox::warning(window, "Warning", "Can't register hotkey CTRL+M");
+        qDebug() << "Unable to register HotKey";
+    }else {
+        qDebug() << "Successfully registered Ctrl + 1";
+    }
+
+    if (!RegisterHotKey(HWND(mainwindow->winId()), 0,MOD_CONTROL, 0x32))
+    {
+        // QMessageBox::warning(window, "Warning", "Can't register hotkey CTRL+M");
+        qDebug() << "Unable to register HotKey";
+    }else {
+        qDebug() << "Successfully registered Ctrl + 2";
+    }
     qDebug() << "[main.cpp] main logger->debug Works"; 
     std::cerr << "This is from standard error" << std::endl; 
     std::cout << "This is from standard output" << std::endl; 
@@ -127,6 +142,8 @@ int main(int argc, char *argv[])
     vcbId->setText("Test VCB");
     
     Handler handler;  
+
+    mainwindow->connect(mainwindow, &MainWindow::configuredShortcutTriggered, &handler, &Handler::handleShortcutTrigger);
 
     list->connect(list,&QAbstractItemView::doubleClicked,&handler,
         [&](const QModelIndex& ind){

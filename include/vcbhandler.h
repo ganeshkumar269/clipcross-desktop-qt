@@ -19,6 +19,7 @@
             Clip getTopClip(const QString&);//id
             QStringListModel* getModel();
             QStringListModel* getModel(const QString&);
+            Clip getClipAtIndex(int);
             // void updateTopClip(const Clip&);
             QString getVisibleVCBId();
             QList<QString> getActiveVCBIds();

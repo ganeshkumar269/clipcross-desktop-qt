@@ -55,3 +55,10 @@ void VCB::add(const QModelIndex& index){
 }
 Clip VCB::getTopClip(){return topClip;}
 QStringListModel* VCB::getModel(){return slm;}
+Clip VCB::getClipAtIndex(int index){
+    if(index < 0 || index >= clips->size()){
+        qDebug() << "index " << index << " is out of range";
+    }else{
+        return clips->at(index);
+    }
+}

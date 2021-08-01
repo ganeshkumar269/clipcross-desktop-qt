@@ -10,7 +10,8 @@
     #include "authenticate.h"
     #include "clip.h"
     #include "vcbhandler.h"
-    //dbSchema : (textValue)
+    #define WINVER 0x0500
+    #include <windows.h>
 
     class Handler: public QObject {
         Q_OBJECT
@@ -39,6 +40,8 @@
             void startLogout();
             void startLogin();
             void resetAuthTokens();
+            void handleShortcutTrigger(MSG*);
+
         private Q_SLOTS:
             void onWssTokenExpired();
             void onVCBDataChanged(const Clip&,const QList<QString>&);       

@@ -66,19 +66,6 @@ void VCBHandler::onCbDataChanged(){
 }
 
 void VCBHandler::next(){
-    // auto it = vcbList.find(visibleVCBId);
-    // QHashIterator<QString, VCB*> i(vcbList);
-    // while (i.hasNext()) {
-    //     i.next();
-    //     // cout << i.key() << ": " << i.value() << Qt::endl;
-    //     if(i.key() == visibleVCBId) break;
-    // }
-    
-    // if(i.hasNext()){
-    //     i.next();
-    //     visibleVCBId = i.key(); 
-    // }
-
     if(visibleVCBIdIndex < vcbList.size() - 1){
         visibleVCBIdIndex++;
         visibleVCBId = vcbListOrder->at(visibleVCBIdIndex);
@@ -88,16 +75,6 @@ void VCBHandler::next(){
 
 }
 void VCBHandler::previous(){
-    // auto it = vcbList.find(visibleVCBId);
-    // QHashIterator<QString, VCB*> i(vcbList);
-    // QString prevVal = visibleVCBId;
-    // while (i.hasNext()) {
-    //     i.next();
-    //     // cout << i.key() << ": " << i.value() << Qt::endl;
-    //     if(i.key() == visibleVCBId) break;
-    //     prevVal = i.key();
-    // }
-    // visibleVCBId = prevVal;
     if(visibleVCBIdIndex > 0){
         visibleVCBIdIndex--;
         visibleVCBId = vcbListOrder->at(visibleVCBIdIndex);
@@ -116,4 +93,8 @@ QList<QPair<QString,Clip>> VCBHandler::vcbTopClips(){
 
 bool VCBHandler::hasVcbId(const QString& id){
     return vcbList.contains(id);
+}
+
+Clip VCBHandler::getClipAtIndex(int index){
+    return vcbList[visibleVCBId]->getClipAtIndex(index);
 }

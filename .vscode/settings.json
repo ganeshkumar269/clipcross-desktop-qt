@@ -59,6 +59,9 @@
         "typeinfo": "cpp",
         "variant": "cpp",
         "qsqlfield": "cpp",
-        "qstring": "cpp"
-    }
+        "qstring": "cpp",
+        "qwebsocket": "cpp",
+        "qsettings": "cpp"
+    },
+    "C_Cpp.dimInactiveRegions": false
 }

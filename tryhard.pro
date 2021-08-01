@@ -9,9 +9,9 @@ INCLUDEPATH += ./include/
 INCLUDEPATH += ./dependencies/
 LIBS += -L./debug/ -llog4qt
 LIBS += -L./dependencies/qhttp/ -lqhttp
-# CONFIG += debug
+CONFIG += debug
 OUTPUT += Console
-# DEFINES += LOCAL_WSS_TEST 
+DEFINES += LOCAL_WSS_TEST 
 DEFINES += LOG4QT_LIBRARY
 DEFINES += QHTTP_EXPORT
 QMAKE_CXXFLAGS += -fpermissive
@@ -39,6 +39,7 @@ HEADERS += include\database.h \
            include\vcb.h \
            include\vcbhandler.h \
            include\constants.h \
+           include\mainwindow.h \
            dependencies\framelesswindow\framelesswindow.h \
            dependencies\framelesswindow\windowdragger.h \
            dependencies\framelesswindow\DarkStyle.h \
@@ -57,4 +58,5 @@ SOURCES += main.cpp \
            dependencies\framelesswindow\framelesswindow.cpp \
            dependencies\framelesswindow\windowdragger.cpp \
            dependencies\framelesswindow\DarkStyle.cpp \
+           src/mainwindow.cpp \
            #debug/qrc_darkstyle.cpp \
