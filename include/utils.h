@@ -17,4 +17,5 @@
     QString getMd5Hash(const QString&);
     QSqlDatabase getDatabaseConnection(const QString&);
     // void Logger(QtMsgType, const QMessageLogContext&, const QString &);
+    void simulatePasteKeySequence();
 #endif

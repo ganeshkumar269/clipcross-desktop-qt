@@ -80,24 +80,9 @@ int main(int argc, char *argv[])
 {
     qInstallMessageHandler(myMessageOutput);
     QApplication a(argc, argv);
-    MainWindow *mainwindow = new MainWindow();
     setUpLogger();
+    MainWindow *mainwindow = new MainWindow();
 
-    if (!RegisterHotKey(HWND(mainwindow->winId()), 0,MOD_CONTROL, 0x31))
-    {
-        // QMessageBox::warning(window, "Warning", "Can't register hotkey CTRL+M");
-        qDebug() << "Unable to register HotKey";
-    }else {
-        qDebug() << "Successfully registered Ctrl + 1";
-    }
-
-    if (!RegisterHotKey(HWND(mainwindow->winId()), 0,MOD_CONTROL, 0x32))
-    {
-        // QMessageBox::warning(window, "Warning", "Can't register hotkey CTRL+M");
-        qDebug() << "Unable to register HotKey";
-    }else {
-        qDebug() << "Successfully registered Ctrl + 2";
-    }
     qDebug() << "[main.cpp] main logger->debug Works"; 
     std::cerr << "This is from standard error" << std::endl; 
     std::cout << "This is from standard output" << std::endl; 
@@ -143,7 +128,7 @@ int main(int argc, char *argv[])
     
     Handler handler;  
 
-    mainwindow->connect(mainwindow, &MainWindow::configuredShortcutTriggered, &handler, &Handler::handleShortcutTrigger);
+    mainwindow->connect(mainwindow, &MainWindow::registeredShortcutTriggered, &handler, &Handler::handleShortcutTrigger);
 
     list->connect(list,&QAbstractItemView::doubleClicked,&handler,
         [&](const QModelIndex& ind){

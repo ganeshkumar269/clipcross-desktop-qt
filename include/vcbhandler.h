@@ -27,7 +27,7 @@
             void previous();
             QList<QPair<QString,Clip>> vcbTopClips();
             bool hasVcbId(const QString& id);
-            
+            void setHandleClipboardUpdates(bool);
         Q_SIGNALS:
             void vcbDataChanged(const Clip&,const QList<QString> /*vcbIds*/);
         public Q_SLOTS:   
@@ -38,8 +38,7 @@
             QString visibleVCBId;
             int visibleVCBIdIndex;
             QStringList* vcbListOrder;
-            // Clip *topClip;
-            // QList<Clip> getTopClips;
+            bool handleClipboardUpdates; 
             QClipboard* cb;
     };  
 #endif

@@ -9,6 +9,7 @@ VCBHandler::VCBHandler(QObject* parent):QObject(parent){
     vcbList.insert("desktop-three",new VCB("three","desktop"));
     visibleVCBId = "desktop-one";
     visibleVCBIdIndex = 0;
+    handleClipboardUpdates = true;
     activeVCBIds.append(visibleVCBId);
     vcbListOrder = new QStringList();
     vcbListOrder->append("desktop-one");
@@ -54,6 +55,11 @@ QStringListModel* VCBHandler::getModel(const QString& id){return vcbList[id]->ge
 QString VCBHandler::getVisibleVCBId(){return vcbListOrder->at(visibleVCBIdIndex);}
 
 void VCBHandler::onCbDataChanged(){
+    qDebug() << "Clipboard Update Happened handleClipboardUpdate: " << handleClipboardUpdates;
+    if(!handleClipboardUpdates){
+        qDebug() << "Clipboard update happened, but handleClipboardUpdates is set to false";
+        return;
+    }
     Clip currClip(cb->text(),"text",getTimestamp());
     if( getTopClip().hash() != currClip.hash()){
         qDebug() << "Clip Hash doesnt match prevClipHash" << '\n';
@@ -97,4 +103,8 @@ bool VCBHandler::hasVcbId(const QString& id){
 
 Clip VCBHandler::getClipAtIndex(int index){
     return vcbList[visibleVCBId]->getClipAtIndex(index);
+}
+void VCBHandler::setHandleClipboardUpdates(bool flag){
+    qDebug() << "Setting hanldeClipbardUpdate: " << flag;
+    handleClipboardUpdates = flag;
 }

@@ -7,6 +7,6 @@
             explicit MainWindow(QWidget* parent = nullptr);
             bool nativeEvent(const QByteArray &eventType, void *message, qintptr *result);
         Q_SIGNALS:
-            void configuredShortcutTriggered(MSG*);
+            void registeredShortcutTriggered(MSG*);
     };
 #endif
