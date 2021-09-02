@@ -63,7 +63,7 @@ void DarkStyle::polish(QApplication *app) {
   app->setFont(defaultFont);
 
   // loadstylesheet
-  QFile qfDarkstyle(QStringLiteral(":/darkstyle/darkstyle.qss"));
+  QFile qfDarkstyle(QStringLiteral(":resources/darkstyle/darkstyle.qss"));
   if (qfDarkstyle.open(QIODevice::ReadOnly | QIODevice::Text)) {
     // set stylesheet
     QString qsStylesheet = QString::fromLatin1(qfDarkstyle.readAll());
