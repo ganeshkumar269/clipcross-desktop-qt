@@ -61,7 +61,9 @@
         "qsqlfield": "cpp",
         "qstring": "cpp",
         "qwebsocket": "cpp",
-        "qsettings": "cpp"
+        "qsettings": "cpp",
+        "qaction": "cpp",
+        "qgraphicsdropshadoweffect": "cpp"
     },
     "C_Cpp.dimInactiveRegions": false
 }

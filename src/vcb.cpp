@@ -58,6 +58,7 @@ QStringListModel* VCB::getModel(){return slm;}
 Clip VCB::getClipAtIndex(int index){
     if(index < 0 || index >= clips->size()){
         qDebug() << "index " << index << " is out of range";
+        return clips->at(0); // out of range just send the first clip
     }else{
         return clips->at(index);
     }

@@ -3,6 +3,15 @@
 #define WINVER 0x0500
 #include <windows.h>
 #include <QDebug>
+#include <QEvent>
+#include <QTimer>
+#include <QSystemTrayIcon>
+#include <QMenu>
+#include <QAction>
+#include <QMessageBox>
+#include <QCloseEvent>
+
+
 MainWindow::MainWindow(QWidget* parent):QWidget(parent){
     qDebug() << "MainWindow Contructor";
 
@@ -14,6 +23,7 @@ MainWindow::MainWindow(QWidget* parent):QWidget(parent){
             qDebug() << "Successfully registered Ctrl + " << i - 0x30;
         }
     }
+
 }
 
 bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, qintptr *result){
@@ -29,3 +39,25 @@ bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, qintptr
     }
     return false;
 }
+
+// void MainWindow::changeEvent(QEvent* e){
+//     switch (e->type())
+//     {
+//         case QEvent::WindowStateChange:
+//             {
+//                 if (this->windowState() & Qt::WindowMinimized)
+//                 {
+//                     qDebug() << "Window minimised";
+//                     // if (Preferences::instance().minimizeToTray())
+//                     {
+//                         QTimer::singleShot(250, this, SLOT(hide()));
+//                     }
+//                 }
+
+//                 break;
+//             }
+//         default:
+//             break;
+//     }
+// }
+

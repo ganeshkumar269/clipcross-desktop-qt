@@ -54,7 +54,7 @@ class FramelessWindow : public QWidget {
   virtual void mousePressEvent(QMouseEvent *event);
   virtual void mouseReleaseEvent(QMouseEvent *event);
   virtual bool eventFilter(QObject *obj, QEvent *event);
-
+  void closeEvent(QCloseEvent *event) override;
  private:
   Ui::FramelessWindow *ui;
   QRect m_StartGeometry;
@@ -64,6 +64,7 @@ class FramelessWindow : public QWidget {
   bool m_bDragLeft;
   bool m_bDragRight;
   bool m_bDragBottom;
+  bool closing;
 };
 
 #endif  // FRAMELESSWINDOW_H

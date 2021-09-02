@@ -9,6 +9,7 @@ INCLUDEPATH += ./include/
 INCLUDEPATH += ./dependencies/
 LIBS += -L./debug/ -llog4qt
 LIBS += -L./dependencies/qhttp/ -lqhttp
+LIBS += -luser32
 CONFIG += debug
 OUTPUT += Console
 DEFINES += LOCAL_WSS_TEST 

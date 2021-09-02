@@ -6,7 +6,13 @@
         public : 
             explicit MainWindow(QWidget* parent = nullptr);
             bool nativeEvent(const QByteArray &eventType, void *message, qintptr *result);
+            // void changeEvent(QEvent*);
+        // protected:
+        //     void closeEvent(QCloseEvent *event) override;
+
         Q_SIGNALS:
             void registeredShortcutTriggered(MSG*);
+        // private:
+        //     bool closing;
     };
 #endif

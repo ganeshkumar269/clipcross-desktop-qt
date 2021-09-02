@@ -17,6 +17,10 @@
 #include "framelesswindow/DarkStyle.h"
 #include <QLoggingCategory>
 #include <iostream>
+#include <QSystemTrayIcon>
+#include <QStyle>
+#include <QAction>
+#include <QMenu>
 #include "log4qt/logger.h"
 #include "log4qt/propertyconfigurator.h"
 #include "log4qt/loggerrepository.h"
@@ -108,6 +112,7 @@ int main(int argc, char *argv[])
     QGuiApplication::setOrganizationName("TestOrgName");
     QGuiApplication::setOrganizationDomain("TestOrgDomainName.com");
     QGuiApplication::setApplicationName("Clipboard Manager");
+    QSettings settings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
 
     QPalette defaultPalette;
     QBrush base; base.setColor(QColor("#283742"));
@@ -173,6 +178,29 @@ int main(int argc, char *argv[])
     mainwindow->setStyleSheet("background-color: #283742; color: #aaccff; font-family : roboto");
     mainwindow->resize(360, 440);    
 
+    //for systemTrayIcon
+    // QIcon icon;
+    // icon.addFile("resources/clipboard-icon.png");
+    // framelesswindow.setWindowIcon(icon);
+    // auto exitAction = new QAction("&Exit", &framelesswindow);
+    // exitAction->connect(exitAction, &QAction::triggered, exitAction,[&](){
+    //     qDebug() << "Exit Action Triggered";
+    // });
+    // auto trayIconMenu = new QMenu(&framelesswindow);
+    // trayIconMenu->addAction(exitAction);
+    // QSystemTrayIcon st(&framelesswindow);
+    // qDebug() << "Is sytemtray available: " << QSystemTrayIcon::isSystemTrayAvailable();
+    // st.setContextMenu(trayIconMenu);
+    // st.setIcon(icon);
+    // st.show();
+    // st.connect(&st, &QSystemTrayIcon::activated, &st,[&](auto reason)
+    // {
+    //     qDebug() << "QSystemTracIcon is activated reason: " << reason;
+    //     if(reason == QSystemTrayIcon::Trigger)
+    //     {
+    //         qDebug() << "QSystemTracIcon is Triggered";
+    //     }
+    // });
     framelesswindow.setWindowIcon(a.style()->standardIcon(QStyle::SP_DesktopIcon));
     framelesswindow.setWindowTitle("clipcross");
     framelesswindow.setContent(mainwindow);

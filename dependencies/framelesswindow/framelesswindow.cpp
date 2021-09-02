@@ -10,7 +10,11 @@
 #                                                                             #
 ###############################################################################
 */
-
+#include <QSystemTrayIcon>
+#include <QMenu>
+#include <QAction>
+#include <QMessageBox>
+#include <QCloseEvent>
 #include "framelesswindow.h"
 #include <QApplication>
 // #include <QDesktopWidget>
@@ -59,7 +63,56 @@ FramelessWindow::FramelessWindow(QWidget *parent)
 
   // important to watch mouse move from all child widgets
   QApplication::instance()->installEventFilter(this);
+closing = false;
+
+auto exitAction = new QAction(tr("&Exit"), this);
+connect(exitAction, &QAction::triggered, [this]()
+{
+    closing = true;
+    close();
+});
+
+auto trayIconMenu = new QMenu(this);
+trayIconMenu->addAction(exitAction);
+
+    QIcon icon;
+    icon.addFile("resources/clipboard-icon.png");
+auto sysTrayIcon = new QSystemTrayIcon(this);
+sysTrayIcon->setContextMenu(trayIconMenu);
+sysTrayIcon->setIcon(icon);
+sysTrayIcon->show();
+
+connect(sysTrayIcon, &QSystemTrayIcon::activated, [this](auto reason)
+{
+    if(reason == QSystemTrayIcon::Trigger)
+    {
+        if(isVisible())
+        {
+            hide();
+        }
+        else
+        {
+            show();
+            activateWindow();
+        }
+    }
+});
+
+
 }
+void FramelessWindow::closeEvent(QCloseEvent *event)
+{
+    if(closing)
+    {
+        event->accept();
+    }
+    else
+    {
+        this->hide();
+        event->ignore();
+    }
+}
+
 
 FramelessWindow::~FramelessWindow() { delete ui; }
 
