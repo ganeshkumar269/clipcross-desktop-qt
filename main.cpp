@@ -120,7 +120,10 @@ int main(int argc, char *argv[])
     defaultPalette.setBrush(QPalette::Base,base);
     defaultPalette.setBrush(QPalette::AlternateBase,alternateBase);
 
-    QFontDatabase::addApplicationFont("./resources/Roboto-Medium.ttf");
+    const auto fontId = QFontDatabase::addApplicationFont("./resources/Roboto-Medium.ttf");
+    QString family = QFontDatabase::applicationFontFamilies(fontId).at(0);
+    QFont _font(family, 8);
+    a.setFont(_font);
 
     sm->insertRow(0,sm->index(0));
     sm->setData(sm->index(0),QString("Test Text"));
@@ -175,7 +178,7 @@ int main(int argc, char *argv[])
     layout->addWidget(list);
     layout->addWidget(vcbId);
 
-    mainwindow->setStyleSheet("background-color: #283742; color: #aaccff; font-family : roboto");
+    mainwindow->setStyleSheet("background-color: #283742; color: #aaccff;");
     mainwindow->resize(360, 440);    
 
     framelesswindow.setWindowIcon(a.style()->standardIcon(QStyle::SP_DesktopIcon));
