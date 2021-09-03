@@ -146,3 +146,7 @@ void Handler::handleShortcutTrigger(MSG* msg){
         vcbHandler->setHandleClipboardUpdates(true);
     });
 }
+
+void Handler::doubleClickEvent(const QModelIndex& index){
+    vcbHandler->handleDoubleClickEvent(index);
+}

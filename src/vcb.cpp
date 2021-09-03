@@ -50,8 +50,8 @@ void VCB::add(const QModelIndex& index){
     // Clip clip(slm->data(index),clips->at(index.row()),);
     clips->insert(0,clips->at(index.row()));
     // clips->insert(0,slm->data(index));
-    addClipToSlm(clips->at(index.row()));
-    topClip = clips->at(index.row());
+    addClipToSlm(clips->at(0));
+    topClip = clips->at(0);
 }
 Clip VCB::getTopClip(){return topClip;}
 QStringListModel* VCB::getModel(){return slm;}

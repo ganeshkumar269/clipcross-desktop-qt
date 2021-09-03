@@ -5,7 +5,7 @@
     #include "clip.h"
     #include "vcb.h"
     #include <QPair>
-
+    #include <QModelIndex>
     class VCBHandler : public QObject{
         Q_OBJECT
         public:
@@ -28,6 +28,7 @@
             QList<QPair<QString,Clip>> vcbTopClips();
             bool hasVcbId(const QString& id);
             void setHandleClipboardUpdates(bool);
+            void handleDoubleClickEvent(const QModelIndex&);
         Q_SIGNALS:
             void vcbDataChanged(const Clip&,const QList<QString> /*vcbIds*/);
         public Q_SLOTS:   

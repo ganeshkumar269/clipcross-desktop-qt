@@ -12,7 +12,7 @@
     #include "vcbhandler.h"
     #define WINVER 0x0500
     #include <windows.h>
-
+    #include <QModelIndex>
     class Handler: public QObject {
         Q_OBJECT
 
@@ -28,6 +28,7 @@
             void syncOperation(const QJsonObject&);
             void goNext();
             void goPrevious();
+            void doubleClickEvent(const QModelIndex&);
 
         Q_SIGNALS:
             void makeCBSignal();

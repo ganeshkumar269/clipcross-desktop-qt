@@ -21,6 +21,7 @@
 #include <QStyle>
 #include <QAction>
 #include <QMenu>
+#include <QAbstractItemView>
 #include "log4qt/logger.h"
 #include "log4qt/propertyconfigurator.h"
 #include "log4qt/loggerrepository.h"
@@ -131,7 +132,7 @@ int main(int argc, char *argv[])
     list->setModel(sm);
     list->setPalette(defaultPalette);
     list->setAlternatingRowColors(true);
-
+    list->setEditTriggers(QAbstractItemView::NoEditTriggers);
     vcbId->setText("Test VCB");
     
     Handler handler;  
@@ -141,7 +142,9 @@ int main(int argc, char *argv[])
     list->connect(list,&QAbstractItemView::doubleClicked,&handler,
         [&](const QModelIndex& ind){
             logger->debug("Double Clicked");
-            logger->debug() << sm->data(ind).toString();
+            logger->debug() << list->model()->data(ind).toString();
+            // send update to vcbHandler view handler
+            handler.doubleClickEvent(ind); 
     });
 
     handler.connect(&handler,&Handler::updateListViewModel,list,[&](QStringListModel* slm){

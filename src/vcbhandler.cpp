@@ -108,3 +108,8 @@ void VCBHandler::setHandleClipboardUpdates(bool flag){
     qDebug() << "Setting hanldeClipbardUpdate: " << flag;
     handleClipboardUpdates = flag;
 }
+
+void VCBHandler::handleDoubleClickEvent(const QModelIndex& index){
+    vcbList[visibleVCBId]->add(index);
+    cb->setText(vcbList[visibleVCBId]->getTopClip().value());
+}
