@@ -29,11 +29,11 @@ VCBHandler::~VCBHandler(){
 
 void VCBHandler::add(const Clip& clip,const QString& id, const QString& deviceId){
     if(vcbList.contains(id)){
-        vcbList[id]->add(clip);
+        vcbList[id]->checkForDuplicateAndAdd(clip);
     }else{
         qDebug() << id << " is not present, adding a session vcb";
         vcbList.insert(id, new VCB(id,deviceId,true));
-        vcbList[id]->add(clip);
+        vcbList[id]->checkForDuplicateAndAdd(clip);
         vcbListOrder->append(id);
     }
 }

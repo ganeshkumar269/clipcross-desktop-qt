@@ -13,7 +13,7 @@
     QString getQueryParamValue(const QUrl&,const QString&);
     qint64 getTimestamp();
     qint32 getRowCount(QString);
-    QString& quotedQString(QString&);
+    QString quotedQString(QString&);
     QString getMd5Hash(const QString&);
     QSqlDatabase getDatabaseConnection(const QString&);
     // void Logger(QtMsgType, const QMessageLogContext&, const QString &);

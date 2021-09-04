@@ -135,3 +135,39 @@ Clip Database::getTopItem(){
 }
 
 void Database::onOpened(){}
+
+bool Database::checkIfHashIsPresent(const QString& hash){
+    QSqlQuery query(db);
+    QString hash_temp = hash;
+    QString query_string ="SELECT * from " + id + " where hash=" + quotedQString(hash_temp); 
+    query.prepare(query_string);
+    
+    if(!query.exec()){
+        qDebug() << "database.cpp Database::checkIfHashIsPresent query: "<< query_string;
+        qDebug() << "ERROR: " << query.lastError().text();
+        return false;
+    }
+    else{
+        qDebug() << "database.cpp Database::checkIfHashIsPresent query: "<< query_string;
+        qDebug() << "database.cpp Database::checkIfHashIsPresent success";
+        return true;
+    }
+}
+
+bool Database::deleteClip(const QString& hash){
+    QSqlQuery query(db);
+    QString hash_temp = hash;
+    QString query_string ="DELETE from  " + id + " where hash=" + quotedQString(hash_temp); 
+    query.prepare(query_string);
+    
+    if(!query.exec()){
+        qDebug() << "database.cpp Database::deleteClip query: "<< query_string;
+        qDebug() << "ERROR: " << query.lastError().text();
+        return false;
+    }
+    else{
+        qDebug() << "database.cpp Database::deleteClip query: "<< query_string;
+        qDebug() << "database.cpp Database::deleteClip success";
+        return true;
+    }
+}

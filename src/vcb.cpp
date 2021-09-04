@@ -47,12 +47,30 @@ void VCB::add(const Clip& clip){
 }
 
 void VCB::add(const QModelIndex& index){
-    // Clip clip(slm->data(index),clips->at(index.row()),);
-    clips->insert(0,clips->at(index.row()));
-    // clips->insert(0,slm->data(index));
-    addClipToSlm(clips->at(0));
-    topClip = clips->at(0);
+    const Clip clip = clips->at(index.row());
+    if(db->checkIfHashIsPresent(clip.hash())){        
+        remove(clip,index.row());
+    }
+    add(clip);
 }
+
+void VCB::checkForDuplicateAndAdd(const Clip& clip){
+    for(int i = 0; i < clips->size(); i++)
+        if(clips->at(i).hash() == clip.hash()){
+            remove(clip,i);
+            break;
+        }
+    add(clip);
+}
+
+void VCB::remove(const Clip& clip, int index){
+    if(!nonHost){
+        db->deleteClip(clip.hash());
+    }
+    clips->removeAt(index);
+    slm->removeRow(index);
+}
+
 Clip VCB::getTopClip(){return topClip;}
 QStringListModel* VCB::getModel(){return slm;}
 Clip VCB::getClipAtIndex(int index){

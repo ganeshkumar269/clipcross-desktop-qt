@@ -10,7 +10,9 @@
             explicit VCB(const QString& id,const QString& deviceId, bool nonHost = false, QObject* =nullptr);
             ~VCB();
             void add(const Clip&);
+            void remove(const Clip& clip, int);
             void add(const QModelIndex&);
+            void checkForDuplicateAndAdd(const Clip& clip);
             void addClipToSlm(const Clip&);
             void addClipsToSlm(const QList<Clip>*);
             Clip getTopClip();

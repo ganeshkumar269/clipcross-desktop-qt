@@ -22,7 +22,8 @@
             bool insertClip(const Clip&);//(val,format)
             bool insert(const QString,const QList<QString>&,const QList<QString>&);
             Clip getTopItem();
-
+            bool checkIfHashIsPresent(const QString&);
+            bool deleteClip(const QString& hash);
         private Q_SLOTS:
             void onOpened();
 

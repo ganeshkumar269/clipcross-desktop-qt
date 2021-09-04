@@ -63,7 +63,8 @@
         "qwebsocket": "cpp",
         "qsettings": "cpp",
         "qaction": "cpp",
-        "qgraphicsdropshadoweffect": "cpp"
+        "qgraphicsdropshadoweffect": "cpp",
+        "qbytearray": "cpp"
     },
     "C_Cpp.dimInactiveRegions": false
 }
