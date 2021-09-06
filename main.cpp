@@ -34,6 +34,9 @@
 #include <windows.h>
 #include "mainwindow.h"
 #include "handler.h"
+#include "rightarroweventlistener.h"
+#include "leftarroweventlistener.h"
+
 Q_LOGGING_CATEGORY(category1, "test.category1")
 
 void setUpLogger(){
@@ -82,27 +85,6 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     }
 }
 
-class KeyPressEater : public QObject
-{
-    // Q_OBJECT
-    protected:
-        bool eventFilter(QObject *obj, QEvent *event) override;
-};
-
-bool KeyPressEater::eventFilter(QObject *obj, QEvent *event)
-{
-    if (event->type() == QEvent::MouseButtonPress) {
-        // QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-        // qDebug("Ate key press %d", keyEvent->key());
-        // return true;
-        qDebug() << "There is a mouse press";
-        return true;
-    } else {
-        // standard event processing
-        return QObject::eventFilter(obj, event);
-    }
-    return true;
-}
 
 
 
@@ -238,18 +220,21 @@ int main(int argc, char *argv[])
     });
     
     handler.connect(&handler,&Handler::updateVcbId,vcbId,[&](QString vcbIdString){
-        vcbId->setText(vcbIdString);
+        vcbLabel.setText(vcbIdString);
     });
 
-    // QObject::connect(&leftArrowActive,&QLabel::clicked,&handler,[&](){
-    //     handler.goPrevious();
-    // });
-    KeyPressEater *keyPressEater = new KeyPressEater();
-    leftArrowActive.installEventFilter(keyPressEater);
+    LeftArrowEventListener *leftArrowEventListener = new LeftArrowEventListener();
+    RightArrowEventListener *rightArrowEventListener = new RightArrowEventListener();
 
+    leftArrowActive.installEventFilter(leftArrowEventListener);
+    rightArrowActive.installEventFilter(rightArrowEventListener);
 
-    right->connect(right,&QPushButton::clicked,&handler,[&](){
+    rightArrowEventListener->connect(rightArrowEventListener,&RightArrowEventListener::clicked,&handler,[&](){
         handler.goNext();
+    });
+
+    leftArrowEventListener->connect(leftArrowEventListener,&LeftArrowEventListener::clicked,&handler,[&](){
+        handler.goPrevious();
     });
 
     //show the first vcb (hacky way of doing it)
@@ -264,18 +249,13 @@ int main(int argc, char *argv[])
     loginLogoutButtons->addWidget(logout);
     loginLogoutButtons->addWidget(removeTokens);
     
-    // infoBar->addWidget(&vcbLabelContainer);
-    // infoBar->addWidget(&vcbLabelBackground);
     infoBar->addWidget(&leftArrowActive, Qt::AlignCenter);
     infoBar->addWidget(&vcbLabel, Qt::AlignCenter);
     infoBar->addWidget(&rightArrowActive, Qt::AlignCenter);
     infoBar->addWidget(&menuIcon, Qt::AlignLeft);
-    // layout->addLayout(dirButtons);
-    // layout->addLayout(loginLogoutButtons);
+
     layout->addLayout(infoBar);
-    // layout->addWidget(&vcbLabel);
     layout->addWidget(list);
-    layout->addWidget(vcbId);
     
     mainwindow->setStyleSheet("background-color: #283742; color: #aaccff;");
     mainwindow->resize(windowSize.x(), windowSize.y());    

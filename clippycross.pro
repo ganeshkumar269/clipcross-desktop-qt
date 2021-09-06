@@ -3,7 +3,7 @@
 ######################################################################
 QT       += core gui sql network websockets widgets concurrent
 TEMPLATE = app
-TARGET = tryhard
+TARGET = clippycross
 INCLUDEPATH += .
 INCLUDEPATH += ./include/
 INCLUDEPATH += ./dependencies/
@@ -41,6 +41,8 @@ HEADERS += include\database.h \
            include\vcbhandler.h \
            include\constants.h \
            include\mainwindow.h \
+           include\rightarroweventlistener.h \
+           include\leftarroweventlistener.h \
            dependencies\framelesswindow\framelesswindow.h \
            dependencies\framelesswindow\windowdragger.h \
            dependencies\framelesswindow\DarkStyle.h \
@@ -59,5 +61,7 @@ SOURCES += main.cpp \
            dependencies\framelesswindow\framelesswindow.cpp \
            dependencies\framelesswindow\windowdragger.cpp \
            dependencies\framelesswindow\DarkStyle.cpp \
+           src/eventlisteners/rightarroweventlistener.cpp \
+           src/eventlisteners/leftarroweventlistener.cpp \
            src/mainwindow.cpp \
            #debug/qrc_darkstyle.cpp \
