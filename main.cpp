@@ -10,6 +10,7 @@
 #include <QSettings>
 #include <QObject>
 #include <QLabel>
+#include <QIcon>
 #include <QFontDatabase>
 #include <QPalette>
 #include <QBrush>
@@ -81,11 +82,36 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     }
 }
 
+class KeyPressEater : public QObject
+{
+    // Q_OBJECT
+    protected:
+        bool eventFilter(QObject *obj, QEvent *event) override;
+};
+
+bool KeyPressEater::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::MouseButtonPress) {
+        // QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        // qDebug("Ate key press %d", keyEvent->key());
+        // return true;
+        qDebug() << "There is a mouse press";
+        return true;
+    } else {
+        // standard event processing
+        return QObject::eventFilter(obj, event);
+    }
+    return true;
+}
+
+
+
 int main(int argc, char *argv[])
 {
     qInstallMessageHandler(myMessageOutput);
     QApplication a(argc, argv);
     setUpLogger();
+    const QPoint windowSize(360,440);
     MainWindow *mainwindow = new MainWindow();
 
     qDebug() << "[main.cpp] main logger->debug Works"; 
@@ -96,9 +122,11 @@ int main(int argc, char *argv[])
 
     QApplication::setStyle(new DarkStyle);
     FramelessWindow framelesswindow;
+
     QVBoxLayout *layout = new QVBoxLayout(mainwindow);
     QHBoxLayout *dirButtons = new QHBoxLayout();
     QHBoxLayout *loginLogoutButtons = new QHBoxLayout();
+    QHBoxLayout *infoBar = new QHBoxLayout();
 
     QListView *list = new QListView();
     QLabel* vcbId = new QLabel();
@@ -114,6 +142,62 @@ int main(int argc, char *argv[])
     QGuiApplication::setOrganizationDomain("TestOrgDomainName.com");
     QGuiApplication::setApplicationName("Clipboard Manager");
     QSettings settings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+
+    //InfoBar
+    QPixmap left_arrow_active_image("./left_arrow_active.png");
+    QPixmap left_arrow_inactive_image("./left_arrow_inactive.png");
+    QPixmap right_arrow_active_image("./right_arrow_active.png");
+    QPixmap right_arrow_inactive_image("./right_arrow_inactive_image.png");
+    QPixmap menu_icon("./menu_icon.png");
+
+    QLabel leftArrowInactive;
+    leftArrowInactive.setPixmap(left_arrow_inactive_image);
+    leftArrowInactive.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
+    // leftArrowWidget.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
+    // leftArrowWidget.setAttribute(Qt::WA_NoSystemBackground, true);
+    leftArrowInactive.setFixedSize(30,30);
+    leftArrowInactive.setAlignment(Qt::AlignCenter);
+
+    QLabel leftArrowActive;
+    leftArrowActive.setPixmap(left_arrow_active_image);
+    leftArrowActive.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
+    leftArrowActive.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
+    leftArrowActive.setAttribute(Qt::WA_NoSystemBackground, true);
+    leftArrowActive.setFixedSize(30,30);
+    leftArrowActive.setAlignment(Qt::AlignCenter);
+
+    QLabel rightArrowActive;
+    rightArrowActive.setPixmap(right_arrow_active_image);
+    rightArrowActive.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
+    rightArrowActive.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
+    rightArrowActive.setAttribute(Qt::WA_NoSystemBackground, true);
+    rightArrowActive.setFixedSize(30,30);
+    rightArrowActive.setAlignment(Qt::AlignCenter);
+
+    QLabel rightArrowInactive;
+    rightArrowInactive.setPixmap(right_arrow_inactive_image);
+    rightArrowInactive.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
+    // leftArrowWidget.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
+    // leftArrowWidget.setAttribute(Qt::WA_NoSystemBackground, true);
+    rightArrowInactive.setFixedSize(30,30);
+    rightArrowInactive.setAlignment(Qt::AlignCenter);
+
+    QLabel menuIcon;
+    menuIcon.setPixmap(menu_icon);
+    // menuIcon.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
+    menuIcon.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
+    menuIcon.setAttribute(Qt::WA_NoSystemBackground, true);
+    // menuIcon.setFixedSize(30,30);
+    menuIcon.setAlignment(Qt::AlignRight);
+
+    QLabel vcbLabel;
+    vcbLabel.setText("vcb placeholder");
+    vcbLabel.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
+    vcbLabel.setFixedWidth(150);
+    // vcbLabel.setFixedHeight(30);
+    // vcbLabel.setFixedSize(100,30);
+    vcbLabel.setAlignment(Qt::AlignCenter);
+    // vcbLabel.setAttribute(Qt::WA_TranslucentBackground, true);
 
     QPalette defaultPalette;
     QBrush base; base.setColor(QColor("#283742"));
@@ -157,9 +241,12 @@ int main(int argc, char *argv[])
         vcbId->setText(vcbIdString);
     });
 
-    left->connect(left,&QPushButton::clicked,&handler,[&](){
-        handler.goPrevious();
-    });
+    // QObject::connect(&leftArrowActive,&QLabel::clicked,&handler,[&](){
+    //     handler.goPrevious();
+    // });
+    KeyPressEater *keyPressEater = new KeyPressEater();
+    leftArrowActive.installEventFilter(keyPressEater);
+
 
     right->connect(right,&QPushButton::clicked,&handler,[&](){
         handler.goNext();
@@ -176,16 +263,25 @@ int main(int argc, char *argv[])
     loginLogoutButtons->addWidget(login);
     loginLogoutButtons->addWidget(logout);
     loginLogoutButtons->addWidget(removeTokens);
-    layout->addLayout(dirButtons);
-    layout->addLayout(loginLogoutButtons);
+    
+    // infoBar->addWidget(&vcbLabelContainer);
+    // infoBar->addWidget(&vcbLabelBackground);
+    infoBar->addWidget(&leftArrowActive, Qt::AlignCenter);
+    infoBar->addWidget(&vcbLabel, Qt::AlignCenter);
+    infoBar->addWidget(&rightArrowActive, Qt::AlignCenter);
+    infoBar->addWidget(&menuIcon, Qt::AlignLeft);
+    // layout->addLayout(dirButtons);
+    // layout->addLayout(loginLogoutButtons);
+    layout->addLayout(infoBar);
+    // layout->addWidget(&vcbLabel);
     layout->addWidget(list);
     layout->addWidget(vcbId);
-
+    
     mainwindow->setStyleSheet("background-color: #283742; color: #aaccff;");
-    mainwindow->resize(360, 440);    
+    mainwindow->resize(windowSize.x(), windowSize.y());    
 
     framelesswindow.setWindowIcon(a.style()->standardIcon(QStyle::SP_DesktopIcon));
-    framelesswindow.setWindowTitle("clipcross");
+    framelesswindow.setWindowTitle("Clippycross");
     framelesswindow.setContent(mainwindow);
     framelesswindow.setPalette(defaultPalette);
     framelesswindow.show();

@@ -17,4 +17,5 @@ Makefile
 *.log
 src/deprecated
 
+**/*.d
 .vscode
