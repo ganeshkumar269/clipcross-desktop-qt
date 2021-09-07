@@ -43,6 +43,7 @@ HEADERS += include\database.h \
            include\mainwindow.h \
            include\rightarroweventlistener.h \
            include\leftarroweventlistener.h \
+           include\menuiconeventlistener.h \
            dependencies\framelesswindow\framelesswindow.h \
            dependencies\framelesswindow\windowdragger.h \
            dependencies\framelesswindow\DarkStyle.h \
@@ -63,5 +64,6 @@ SOURCES += main.cpp \
            dependencies\framelesswindow\DarkStyle.cpp \
            src/eventlisteners/rightarroweventlistener.cpp \
            src/eventlisteners/leftarroweventlistener.cpp \
+           src/eventlisteners/menuiconeventlistener.cpp \
            src/mainwindow.cpp \
            #debug/qrc_darkstyle.cpp \

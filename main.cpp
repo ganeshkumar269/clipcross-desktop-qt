@@ -36,6 +36,7 @@
 #include "handler.h"
 #include "rightarroweventlistener.h"
 #include "leftarroweventlistener.h"
+#include "menuiconeventlistener.h"
 
 Q_LOGGING_CATEGORY(category1, "test.category1")
 
@@ -96,6 +97,11 @@ int main(int argc, char *argv[])
     const QPoint windowSize(360,440);
     MainWindow *mainwindow = new MainWindow();
 
+    QGuiApplication::setOrganizationName("ClippyCross");
+    QGuiApplication::setOrganizationDomain("clippycross.com");
+    QGuiApplication::setApplicationName("Clippycross");
+    QSettings settings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+
     qDebug() << "[main.cpp] main logger->debug Works"; 
     std::cerr << "This is from standard error" << std::endl; 
     std::cout << "This is from standard output" << std::endl; 
@@ -110,8 +116,9 @@ int main(int argc, char *argv[])
     QHBoxLayout *loginLogoutButtons = new QHBoxLayout();
     QHBoxLayout *infoBar = new QHBoxLayout();
 
+    Handler handler;  
+
     QListView *list = new QListView();
-    QLabel* vcbId = new QLabel();
     // QPushButton *button = new QPushButton("Sign In from Google");
     QPushButton *right = new QPushButton(">>");
     QPushButton *left = new QPushButton("<<");
@@ -120,10 +127,7 @@ int main(int argc, char *argv[])
     QPushButton *removeTokens = new QPushButton("Force Logout");
     QStringListModel *sm = new QStringListModel();
 
-    QGuiApplication::setOrganizationName("TestOrgName");
-    QGuiApplication::setOrganizationDomain("TestOrgDomainName.com");
-    QGuiApplication::setApplicationName("Clipboard Manager");
-    QSettings settings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+
 
     //InfoBar
     QPixmap left_arrow_active_image("./left_arrow_active.png");
@@ -172,6 +176,18 @@ int main(int argc, char *argv[])
     // menuIcon.setFixedSize(30,30);
     menuIcon.setAlignment(Qt::AlignRight);
 
+    //MenuBar
+    MenuIconEventListener *menuIconEventListener = new MenuIconEventListener();
+    QMenu menu(&menuIcon);
+    QAction loginAction("Login");
+    QAction logoutAction("Logout");
+    menu.addAction(&loginAction);
+    menu.addAction(&logoutAction);
+    menuIcon.installEventFilter(menuIconEventListener);
+    loginAction.connect(&loginAction,&QAction::triggered, &menu, [&](){
+        qDebug() << "Login Action is triggered";
+    });
+
     QLabel vcbLabel;
     vcbLabel.setText("vcb placeholder");
     vcbLabel.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
@@ -199,9 +215,7 @@ int main(int argc, char *argv[])
     list->setPalette(defaultPalette);
     list->setAlternatingRowColors(true);
     list->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    vcbId->setText("Test VCB");
     
-    Handler handler;  
 
     mainwindow->connect(mainwindow, &MainWindow::registeredShortcutTriggered, &handler, &Handler::handleShortcutTrigger);
 
@@ -219,7 +233,7 @@ int main(int argc, char *argv[])
         // logger->debug() << "Slm" << slm->data(slm->index(0)).toString();
     });
     
-    handler.connect(&handler,&Handler::updateVcbId,vcbId,[&](QString vcbIdString){
+    handler.connect(&handler,&Handler::updateVcbId,&vcbLabel,[&](QString vcbIdString){
         vcbLabel.setText(vcbIdString);
     });
 
@@ -237,17 +251,15 @@ int main(int argc, char *argv[])
         handler.goPrevious();
     });
 
+    menuIconEventListener->connect(menuIconEventListener,&MenuIconEventListener::clicked,&handler,[&](){
+       menu.exec(menuIcon.mapToGlobal(QPoint(menuIcon.width(),menuIcon.height()))); 
+    });
+
     //show the first vcb (hacky way of doing it)
     handler.goPrevious();
 
-    login->connect(login, &QPushButton::clicked, &handler,&Handler::startLogin);
-    logout->connect(logout, &QPushButton::clicked, &handler,&Handler::startLogout);
-    removeTokens->connect(removeTokens, &QPushButton::clicked, &handler, &Handler::resetAuthTokens);
-    dirButtons->addWidget(left);
-    dirButtons->addWidget(right);
-    loginLogoutButtons->addWidget(login);
-    loginLogoutButtons->addWidget(logout);
-    loginLogoutButtons->addWidget(removeTokens);
+    loginAction.connect(&loginAction, &QAction::triggered, &handler,&Handler::startLogin);
+    logoutAction.connect(&logoutAction, &QAction::triggered, &handler,&Handler::startLogout);
     
     infoBar->addWidget(&leftArrowActive, Qt::AlignCenter);
     infoBar->addWidget(&vcbLabel, Qt::AlignCenter);
