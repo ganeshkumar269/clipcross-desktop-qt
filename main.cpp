@@ -112,19 +112,12 @@ int main(int argc, char *argv[])
     FramelessWindow framelesswindow;
 
     QVBoxLayout *layout = new QVBoxLayout(mainwindow);
-    QHBoxLayout *dirButtons = new QHBoxLayout();
-    QHBoxLayout *loginLogoutButtons = new QHBoxLayout();
     QHBoxLayout *infoBar = new QHBoxLayout();
 
     Handler handler;  
-
+    
+    //list
     QListView *list = new QListView();
-    // QPushButton *button = new QPushButton("Sign In from Google");
-    QPushButton *right = new QPushButton(">>");
-    QPushButton *left = new QPushButton("<<");
-    QPushButton *login = new QPushButton("Login");
-    QPushButton *logout = new QPushButton("Logout");
-    QPushButton *removeTokens = new QPushButton("Force Logout");
     QStringListModel *sm = new QStringListModel();
 
 
