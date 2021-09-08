@@ -174,7 +174,13 @@ int main(int argc, char *argv[])
     QMenu menu(&menuIcon);
     QAction loginAction("Login");
     QAction logoutAction("Logout");
-    QAction runAtStartupAction("❌ Run at Startup");
+    QString runAppAtStartupActionInitText;
+    if(getStartupPref()){
+        runAppAtStartupActionInitText ="✔️"; 
+    }else{
+        runAppAtStartupActionInitText ="❌"; 
+    }
+    QAction runAtStartupAction(runAppAtStartupActionInitText.append( "Run at Startup"));
     menu.addAction(&loginAction);
     menu.addAction(&logoutAction);
     menu.addAction(&runAtStartupAction);
