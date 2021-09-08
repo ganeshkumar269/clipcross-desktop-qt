@@ -37,6 +37,7 @@
 #include "rightarroweventlistener.h"
 #include "leftarroweventlistener.h"
 #include "menuiconeventlistener.h"
+#include <QStandardPaths>
 
 Q_LOGGING_CATEGORY(category1, "test.category1")
 
@@ -87,7 +88,20 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 }
 
 
-
+void setUpStartUpScript(){
+    QSettings settings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
+    QString value = QCoreApplication::applicationFilePath();
+    QString apostroph = "\"";
+    qDebug() << QStandardPaths::displayName( QStandardPaths::AppDataLocation);
+    qDebug() << QStandardPaths::writableLocation( QStandardPaths::AppDataLocation);
+    qDebug() << QStandardPaths::standardLocations( QStandardPaths::AppDataLocation);
+    qDebug() << "Path of Execution " << QCoreApplication::applicationDirPath();
+    qDebug() << "The application Path is " << value;
+    value.replace("/","\\");
+    value = apostroph + value + apostroph + " --argument";
+    qDebug() << "Value adding to registry " << value;
+    settings.setValue("clippycross-startup-setup", value);
+}
 
 int main(int argc, char *argv[])
 {
@@ -100,8 +114,9 @@ int main(int argc, char *argv[])
     QGuiApplication::setOrganizationName("ClippyCross");
     QGuiApplication::setOrganizationDomain("clippycross.com");
     QGuiApplication::setApplicationName("Clippycross");
-    QSettings settings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
 
+    setUpStartUpScript();
+    
     qDebug() << "[main.cpp] main logger->debug Works"; 
     std::cerr << "This is from standard error" << std::endl; 
     std::cout << "This is from standard output" << std::endl; 
@@ -265,7 +280,7 @@ int main(int argc, char *argv[])
     mainwindow->setStyleSheet("background-color: #283742; color: #aaccff;");
     mainwindow->resize(windowSize.x(), windowSize.y());    
 
-    framelesswindow.setWindowIcon(a.style()->standardIcon(QStyle::SP_DesktopIcon));
+    framelesswindow.setWindowIcon(QIcon("resources/clippycross_logo.png"));
     framelesswindow.setWindowTitle("Clippycross");
     framelesswindow.setContent(mainwindow);
     framelesswindow.setPalette(defaultPalette);

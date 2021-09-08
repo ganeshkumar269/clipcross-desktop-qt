@@ -11,6 +11,8 @@
 #include <QSqlField>
 #include "utils.h"
 #include "log4qt/logger.h"
+#include <QStandardPaths>
+#include <QDir>
 QT_USE_NAMESPACE
 
 // auto logger = Log4Qt::Logger::rootLogger(); 
@@ -22,7 +24,19 @@ Database::Database(const QString& _id,QObject* parent):id(_id),QObject(parent){
     else 
         qDebug() << "Driver Not Available";
     db = QSqlDatabase::addDatabase(driver,id);
-    db.setDatabaseName("testdatabase");
+
+    QString databasePath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    if(!QDir(databasePath).exists()){
+        qDebug() << "DatabasePath doesnt exist, creating";
+
+        //this is windows specific, change later for cross-plat support
+        if(QDir::root().mkpath(databasePath))
+            qDebug() << "DatabasePath creation successfull";
+        else
+            qDebug() << "Failed to create DatabasePath";
+    }
+    qDebug() << "DatabasePath : " << databasePath;
+    db.setDatabaseName(databasePath + "/clippycross_data");
     if(!db.open())
         qDebug() << "ERROR: " << db.lastError().text();
     else{

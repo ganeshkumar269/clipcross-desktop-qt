@@ -63,40 +63,40 @@ FramelessWindow::FramelessWindow(QWidget *parent)
 
   // important to watch mouse move from all child widgets
   QApplication::instance()->installEventFilter(this);
-closing = false;
+  closing = false;
 
-auto exitAction = new QAction(tr("&Exit"), this);
-connect(exitAction, &QAction::triggered, [this]()
-{
-    closing = true;
-    close();
-});
+  auto exitAction = new QAction(tr("&Exit"), this);
+  connect(exitAction, &QAction::triggered, [this]()
+  {
+      closing = true;
+      close();
+  });
 
-auto trayIconMenu = new QMenu(this);
-trayIconMenu->addAction(exitAction);
+  auto trayIconMenu = new QMenu(this);
+  trayIconMenu->addAction(exitAction);
 
-    QIcon icon;
-    icon.addFile("resources/clipboard-icon.png");
-auto sysTrayIcon = new QSystemTrayIcon(this);
-sysTrayIcon->setContextMenu(trayIconMenu);
-sysTrayIcon->setIcon(icon);
-sysTrayIcon->show();
+      QIcon icon;
+      icon.addFile("resources/clippycross_logo.png");
+  auto sysTrayIcon = new QSystemTrayIcon(this);
+  sysTrayIcon->setContextMenu(trayIconMenu);
+  sysTrayIcon->setIcon(icon);
+  sysTrayIcon->show();
 
-connect(sysTrayIcon, &QSystemTrayIcon::activated, [this](auto reason)
-{
-    if(reason == QSystemTrayIcon::Trigger)
-    {
-        if(isVisible())
-        {
-            hide();
-        }
-        else
-        {
-            show();
-            activateWindow();
-        }
-    }
-});
+  connect(sysTrayIcon, &QSystemTrayIcon::activated, [this](auto reason)
+  {
+      if(reason == QSystemTrayIcon::Trigger)
+      {
+          if(isVisible())
+          {
+              hide();
+          }
+          else
+          {
+              show();
+              activateWindow();
+          }
+      }
+  });
 
 
 }
