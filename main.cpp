@@ -249,11 +249,9 @@ int main(int argc, char *argv[])
     menuIconEventListener->connect(menuIconEventListener,&MenuIconEventListener::clicked,&handler,[&](){
        menu.exec(menuIcon.mapToGlobal(QPoint(menuIcon.width(),menuIcon.height()))); 
     });
-    qDebug() << "Before handler.goPrev";
     //show the first vcb (hacky way of doing it)
     handler.goPrevious();
 
-    qDebug() << "After handler.goPrev";
     loginAction.connect(&loginAction, &QAction::triggered, &handler,&Handler::startLogin);
     logoutAction.connect(&logoutAction, &QAction::triggered, &handler,&Handler::startLogout);
     runAtStartupAction.connect(&runAtStartupAction, &QAction::triggered, &runAtStartupAction, [&](){
