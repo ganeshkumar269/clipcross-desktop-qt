@@ -74,9 +74,7 @@ FramelessWindow::FramelessWindow(QWidget *parent)
 
   auto trayIconMenu = new QMenu(this);
   trayIconMenu->addAction(exitAction);
-
-      QIcon icon;
-      icon.addFile("resources/clippycross_logo.png");
+  QIcon icon(":resources/clippycross_logo.png");
   auto sysTrayIcon = new QSystemTrayIcon(this);
   sysTrayIcon->setContextMenu(trayIconMenu);
   sysTrayIcon->setIcon(icon);

@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/">
+    <qresource>
         <file>resources/darkstyle/darkstyle.qss</file>
         <file>resources/darkstyle/icon_close.png</file>
         <file>resources/darkstyle/icon_restore.png</file>

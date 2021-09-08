@@ -38,7 +38,7 @@
 #include "leftarroweventlistener.h"
 #include "menuiconeventlistener.h"
 #include <QStandardPaths>
-
+#include "prefs.h"
 Q_LOGGING_CATEGORY(category1, "test.category1")
 
 void setUpLogger(){
@@ -88,20 +88,6 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
 }
 
 
-void setUpStartUpScript(){
-    QSettings settings("HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", QSettings::NativeFormat);
-    QString value = QCoreApplication::applicationFilePath();
-    QString apostroph = "\"";
-    qDebug() << QStandardPaths::displayName( QStandardPaths::AppDataLocation);
-    qDebug() << QStandardPaths::writableLocation( QStandardPaths::AppDataLocation);
-    qDebug() << QStandardPaths::standardLocations( QStandardPaths::AppDataLocation);
-    qDebug() << "Path of Execution " << QCoreApplication::applicationDirPath();
-    qDebug() << "The application Path is " << value;
-    value.replace("/","\\");
-    value = apostroph + value + apostroph + " --argument";
-    qDebug() << "Value adding to registry " << value;
-    settings.setValue("clippycross-startup-setup", value);
-}
 
 int main(int argc, char *argv[])
 {
@@ -115,8 +101,7 @@ int main(int argc, char *argv[])
     QGuiApplication::setOrganizationDomain("clippycross.com");
     QGuiApplication::setApplicationName("Clippycross");
 
-    setUpStartUpScript();
-    
+
     qDebug() << "[main.cpp] main logger->debug Works"; 
     std::cerr << "This is from standard error" << std::endl; 
     std::cout << "This is from standard output" << std::endl; 
@@ -138,11 +123,11 @@ int main(int argc, char *argv[])
 
 
     //InfoBar
-    QPixmap left_arrow_active_image("./left_arrow_active.png");
-    QPixmap left_arrow_inactive_image("./left_arrow_inactive.png");
-    QPixmap right_arrow_active_image("./right_arrow_active.png");
-    QPixmap right_arrow_inactive_image("./right_arrow_inactive_image.png");
-    QPixmap menu_icon("./menu_icon.png");
+    QPixmap left_arrow_active_image(":resources/left_arrow_active.png");
+    QPixmap left_arrow_inactive_image(":resources/left_arrow_inactive.png");
+    QPixmap right_arrow_active_image(":resources/right_arrow_active.png");
+    QPixmap right_arrow_inactive_image(":resources/right_arrow_inactive_image.png");
+    QPixmap menu_icon(":resources/menu_icon.png");
 
     QLabel leftArrowInactive;
     leftArrowInactive.setPixmap(left_arrow_inactive_image);
@@ -189,8 +174,10 @@ int main(int argc, char *argv[])
     QMenu menu(&menuIcon);
     QAction loginAction("Login");
     QAction logoutAction("Logout");
+    QAction runAtStartupAction("❌ Run at Startup");
     menu.addAction(&loginAction);
     menu.addAction(&logoutAction);
+    menu.addAction(&runAtStartupAction);
     menuIcon.installEventFilter(menuIconEventListener);
     loginAction.connect(&loginAction,&QAction::triggered, &menu, [&](){
         qDebug() << "Login Action is triggered";
@@ -211,7 +198,7 @@ int main(int argc, char *argv[])
     defaultPalette.setBrush(QPalette::Base,base);
     defaultPalette.setBrush(QPalette::AlternateBase,alternateBase);
 
-    const auto fontId = QFontDatabase::addApplicationFont("./resources/Roboto-Medium.ttf");
+    const auto fontId = QFontDatabase::addApplicationFont(":resources/Roboto-Medium.ttf");
     QString family = QFontDatabase::applicationFontFamilies(fontId).at(0);
     QFont _font(family, 8);
     a.setFont(_font);
@@ -262,13 +249,24 @@ int main(int argc, char *argv[])
     menuIconEventListener->connect(menuIconEventListener,&MenuIconEventListener::clicked,&handler,[&](){
        menu.exec(menuIcon.mapToGlobal(QPoint(menuIcon.width(),menuIcon.height()))); 
     });
-
+    qDebug() << "Before handler.goPrev";
     //show the first vcb (hacky way of doing it)
     handler.goPrevious();
 
+    qDebug() << "After handler.goPrev";
     loginAction.connect(&loginAction, &QAction::triggered, &handler,&Handler::startLogin);
     logoutAction.connect(&logoutAction, &QAction::triggered, &handler,&Handler::startLogout);
-    
+    runAtStartupAction.connect(&runAtStartupAction, &QAction::triggered, &runAtStartupAction, [&](){
+        if(getStartupPref()){
+            runAtStartupAction.setText("❌ Run at Startup");
+            setStartupPref(false);
+            undoRunAppAtStartup();
+        }else{
+            runAtStartupAction.setText("✔️ Run at Startup");
+            setStartupPref(true);
+            runAppAtStartup();
+        }
+    });
     infoBar->addWidget(&leftArrowActive, Qt::AlignCenter);
     infoBar->addWidget(&vcbLabel, Qt::AlignCenter);
     infoBar->addWidget(&rightArrowActive, Qt::AlignCenter);
@@ -280,7 +278,7 @@ int main(int argc, char *argv[])
     mainwindow->setStyleSheet("background-color: #283742; color: #aaccff;");
     mainwindow->resize(windowSize.x(), windowSize.y());    
 
-    framelesswindow.setWindowIcon(QIcon("resources/clippycross_logo.png"));
+    framelesswindow.setWindowIcon(QIcon(":resources/clippycross_logo.png"));
     framelesswindow.setWindowTitle("Clippycross");
     framelesswindow.setContent(mainwindow);
     framelesswindow.setPalette(defaultPalette);

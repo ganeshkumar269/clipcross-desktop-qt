@@ -1,0 +1,11 @@
+<RCC>
+    <qresource>
+        <file>resources/clippycross_logo.png</file>
+        <file>resources/left_arrow_active.png</file>
+        <file>resources/left_arrow_inactive.png</file>
+        <file>resources/right_arrow_active.png</file>
+        <file>resources/right_arrow_inactive.png</file>
+        <file>resources/menu_icon.png</file>
+        <file>resources/Roboto-Medium.ttf</file>
+    </qresource>
+</RCC>

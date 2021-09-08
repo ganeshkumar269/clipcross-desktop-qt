@@ -26,7 +26,7 @@ QMAKE_CXXFLAGS += -fpermissive
 
 # Input
 
-RESOURCES = framelesswindow.qrc darkstyle.qrc 
+RESOURCES += framelesswindow.qrc darkstyle.qrc clippycross.qrc
 
 FORMS += dependencies\framelesswindow\framelesswindow.ui \
 
@@ -44,6 +44,7 @@ HEADERS += include\database.h \
            include\rightarroweventlistener.h \
            include\leftarroweventlistener.h \
            include\menuiconeventlistener.h \
+           include\prefs.h \
            dependencies\framelesswindow\framelesswindow.h \
            dependencies\framelesswindow\windowdragger.h \
            dependencies\framelesswindow\DarkStyle.h \
@@ -66,4 +67,5 @@ SOURCES += main.cpp \
            src/eventlisteners/leftarroweventlistener.cpp \
            src/eventlisteners/menuiconeventlistener.cpp \
            src/mainwindow.cpp \
+           src/prefs.cpp \
            #debug/qrc_darkstyle.cpp \

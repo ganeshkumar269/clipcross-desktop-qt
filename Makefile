@@ -271,7 +271,8 @@ Makefile: clippycross.pro C:/Qt/6.1.3/mingw81_64/mkspecs/win32-g++/qmake.conf C:
 		C:/Qt/6.1.3/mingw81_64/lib/Qt6EntryPoint.prl \
 		C:/Qt/6.1.3/mingw81_64/mkspecs/features/build_pass.prf \
 		framelesswindow.qrc \
-		darkstyle.qrc
+		darkstyle.qrc \
+		clippycross.qrc
 	$(QMAKE) -o Makefile clippycross.pro
 C:/Qt/6.1.3/mingw81_64/mkspecs/features/spec_pre.prf:
 C:/Qt/6.1.3/mingw81_64/mkspecs/features/device_config.prf:
@@ -475,6 +476,7 @@ C:/Qt/6.1.3/mingw81_64/lib/Qt6EntryPoint.prl:
 C:/Qt/6.1.3/mingw81_64/mkspecs/features/build_pass.prf:
 framelesswindow.qrc:
 darkstyle.qrc:
+clippycross.qrc:
 qmake: FORCE
 	@$(QMAKE) -o Makefile clippycross.pro
 
