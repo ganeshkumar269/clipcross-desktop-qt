@@ -19,3 +19,5 @@ src/deprecated
 
 **/*.d
 .vscode
+vendor
+qpm.json

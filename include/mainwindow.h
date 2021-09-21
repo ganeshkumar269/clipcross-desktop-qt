@@ -1,6 +1,7 @@
 #ifndef MAIN_WINDOW_H
 #define MAIN_WINDOW_H
     #include <QWidget>
+    #include <QKeySequence>
     class MainWindow : public QWidget {
         Q_OBJECT
         public : 
@@ -12,6 +13,7 @@
 
         Q_SIGNALS:
             void registeredShortcutTriggered(MSG*);
+            void registeredHotkeyActivated(const QKeySequence&);
         // private:
         //     bool closing;
     };

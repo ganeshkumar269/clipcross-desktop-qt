@@ -64,7 +64,8 @@
         "qsettings": "cpp",
         "qaction": "cpp",
         "qgraphicsdropshadoweffect": "cpp",
-        "qbytearray": "cpp"
+        "qbytearray": "cpp",
+        "qcoreapplication": "cpp"
     },
     "C_Cpp.dimInactiveRegions": false
 }

@@ -8,7 +8,7 @@
 #include <QClipboard>
 #define WINVER 0x0500
 #include <windows.h>
-
+#include <QKeySequence>
 QT_USE_NAMESPACE
 
 Handler::Handler(QObject* parent):QObject(parent)
@@ -149,4 +149,56 @@ void Handler::handleShortcutTrigger(MSG* msg){
 
 void Handler::doubleClickEvent(const QModelIndex& index){
     vcbHandler->handleDoubleClickEvent(index);
+}
+
+void Handler::handleHotkeyActivation(const QKeySequence& keyseq){
+    if(keyseq == QKeySequence(Qt::ControlModifier | Qt::Key_1)){
+        qDebug() << " Ctrl + 1 captured";
+        changeClipboardTemporarily(vcbHandler->getClipAtIndex(0));
+    }
+    else if(keyseq == QKeySequence(Qt::ControlModifier | Qt::Key_2)){
+        qDebug() << " Ctrl + 2 captured";
+        changeClipboardTemporarily(vcbHandler->getClipAtIndex(1));
+    }
+    else if(keyseq == QKeySequence(Qt::ControlModifier | Qt::Key_3)){
+        qDebug() << " Ctrl + 3 captured";
+        changeClipboardTemporarily(vcbHandler->getClipAtIndex(2));
+    }
+    else if(keyseq == QKeySequence(Qt::ControlModifier | Qt::Key_4)){
+        qDebug() << " Ctrl + 4 captured";
+        changeClipboardTemporarily(vcbHandler->getClipAtIndex(3));
+    }
+    else if(keyseq == QKeySequence(Qt::ControlModifier | Qt::Key_5)){
+        qDebug() << " Ctrl + 5 captured";
+        changeClipboardTemporarily(vcbHandler->getClipAtIndex(4));
+    }
+    else if(keyseq == QKeySequence(Qt::ControlModifier | Qt::Key_6)){
+        qDebug() << " Ctrl + 6 captured";
+        changeClipboardTemporarily(vcbHandler->getClipAtIndex(5));
+    }
+    else if(keyseq == QKeySequence(Qt::ControlModifier | Qt::Key_7)){
+        qDebug() << " Ctrl + 7 captured";
+        changeClipboardTemporarily(vcbHandler->getClipAtIndex(6));
+    }
+    else if(keyseq == QKeySequence(Qt::ControlModifier | Qt::Key_8)){
+        qDebug() << " Ctrl + 8 captured";
+        changeClipboardTemporarily(vcbHandler->getClipAtIndex(7));
+    }
+    else if(keyseq == QKeySequence(Qt::ControlModifier | Qt::Key_9)){
+        qDebug() << " Ctrl + 9 captured";
+        changeClipboardTemporarily(vcbHandler->getClipAtIndex(8));
+    }else {
+        qDebug() << "Hotkey "  << keyseq << " not handled";
+    }
+}
+
+void Handler::changeClipboardTemporarily(const Clip& clip){
+    vcbHandler->setHandleClipboardUpdates(false);
+    QString topClipValue = vcbHandler->getTopClip().value();
+    QGuiApplication::clipboard()->setText(clip.value());
+    simulatePasteKeySequence();
+    QTimer::singleShot(1000,[=](){
+        QGuiApplication::clipboard()->setText(topClipValue);
+        vcbHandler->setHandleClipboardUpdates(true);
+    });
 }

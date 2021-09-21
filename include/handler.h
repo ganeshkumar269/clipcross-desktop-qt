@@ -29,7 +29,7 @@
             void goNext();
             void goPrevious();
             void doubleClickEvent(const QModelIndex&);
-
+            void changeClipboardTemporarily(const Clip&);
         Q_SIGNALS:
             void makeCBSignal();
             void tokenExpired();
@@ -42,6 +42,7 @@
             void startLogin();
             void resetAuthTokens();
             void handleShortcutTrigger(MSG*);
+            void handleHotkeyActivation(const QKeySequence&);
 
         private Q_SLOTS:
             void onWssTokenExpired();
