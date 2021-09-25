@@ -1,5 +1,6 @@
 #include "vcbhandler.h"
 #include <QGuiApplication>
+#include <QMimeData>
 // #include "log4qt/logger.h"
 // auto logger = Log4Qt::Logger::rootLogger(); 
 
@@ -56,11 +57,13 @@ QString VCBHandler::getVisibleVCBId(){return vcbListOrder->at(visibleVCBIdIndex)
 
 void VCBHandler::onCbDataChanged(){
     qDebug() << "Clipboard Update Happened handleClipboardUpdate: " << handleClipboardUpdates;
+    const QString format = cb->mimeData()->formats().contains("text/plain") ? "text" : "file";
+    qDebug() << "Format of data in clipboard " << format;
     if(!handleClipboardUpdates){
         qDebug() << "Clipboard update happened, but handleClipboardUpdates is set to false";
         return;
     }
-    Clip currClip(cb->text(),"text",getTimestamp());
+    Clip currClip(cb->text(),format,getTimestamp());
     if( getTopClip().hash() != currClip.hash()){
         qDebug() << "Clip Hash doesnt match prevClipHash" << '\n';
         add(currClip,visibleVCBId);
