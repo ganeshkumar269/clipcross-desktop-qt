@@ -65,7 +65,17 @@
         "qaction": "cpp",
         "qgraphicsdropshadoweffect": "cpp",
         "qbytearray": "cpp",
-        "qcoreapplication": "cpp"
+        "qcoreapplication": "cpp",
+        "__locale": "cpp",
+        "locale": "cpp",
+        "qsqldatabase": "cpp",
+        "qsqlerror": "cpp",
+        "qjsonobject": "cpp",
+        "qurl": "cpp",
+        "qurlquery": "cpp",
+        "qwidget": "cpp",
+        "qkeysequence": "cpp",
+        "qapplication": "cpp"
     },
     "C_Cpp.dimInactiveRegions": false
 }

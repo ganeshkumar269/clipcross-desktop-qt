@@ -6,7 +6,6 @@
 #include <QPushButton>
 #include "database.h"
 #include "utils.h"
-#include "authenticate.h"
 #include <QSettings>
 #include <QObject>
 #include <QLabel>
@@ -14,7 +13,7 @@
 #include <QFontDatabase>
 #include <QPalette>
 #include <QBrush>
-#include "framelesswindow\framelesswindow.h"
+#include "framelesswindow/framelesswindow.h"
 #include "framelesswindow/DarkStyle.h"
 #include <QLoggingCategory>
 #include <iostream>
@@ -31,7 +30,7 @@
 #include "log4qt/logmanager.h"
 #include "log4qt/fileappender.h"
 #define WINVER 0x0500
-#include <windows.h>
+// #include <windows.h>
 #include "mainwindow.h"
 #include "handler.h"
 #include "rightarroweventlistener.h"
@@ -123,71 +122,71 @@ int main(int argc, char *argv[])
 
 
     //InfoBar
-    QPixmap left_arrow_active_image(":resources/left_arrow_active.png");
-    QPixmap left_arrow_inactive_image(":resources/left_arrow_inactive.png");
-    QPixmap right_arrow_active_image(":resources/right_arrow_active.png");
-    QPixmap right_arrow_inactive_image(":resources/right_arrow_inactive_image.png");
-    QPixmap menu_icon(":resources/menu_icon.png");
+    // QPixmap left_arrow_active_image(":resources/left_arrow_active.png");
+    // QPixmap left_arrow_inactive_image(":resources/left_arrow_inactive.png");
+    // QPixmap right_arrow_active_image(":resources/right_arrow_active.png");
+    // QPixmap right_arrow_inactive_image(":resources/right_arrow_inactive_image.png");
+    // QPixmap menu_icon(":resources/menu_icon.jpg");
 
-    QLabel leftArrowInactive;
-    leftArrowInactive.setPixmap(left_arrow_inactive_image);
-    leftArrowInactive.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
-    // leftArrowWidget.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
-    // leftArrowWidget.setAttribute(Qt::WA_NoSystemBackground, true);
-    leftArrowInactive.setFixedSize(30,30);
-    leftArrowInactive.setAlignment(Qt::AlignCenter);
+    // QLabel leftArrowInactive;
+    // leftArrowInactive.setPixmap(left_arrow_inactive_image);
+    // leftArrowInactive.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
+    // // leftArrowWidget.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
+    // // leftArrowWidget.setAttribute(Qt::WA_NoSystemBackground, true);
+    // leftArrowInactive.setFixedSize(30,30);
+    // leftArrowInactive.setAlignment(Qt::AlignCenter);
 
-    QLabel leftArrowActive;
-    leftArrowActive.setPixmap(left_arrow_active_image);
-    leftArrowActive.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
-    leftArrowActive.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
-    leftArrowActive.setAttribute(Qt::WA_NoSystemBackground, true);
-    leftArrowActive.setFixedSize(30,30);
-    leftArrowActive.setAlignment(Qt::AlignCenter);
+    // QLabel leftArrowActive;
+    // leftArrowActive.setPixmap(left_arrow_active_image);
+    // leftArrowActive.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
+    // leftArrowActive.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
+    // leftArrowActive.setAttribute(Qt::WA_NoSystemBackground, true);
+    // leftArrowActive.setFixedSize(30,30);
+    // leftArrowActive.setAlignment(Qt::AlignCenter);
 
-    QLabel rightArrowActive;
-    rightArrowActive.setPixmap(right_arrow_active_image);
-    rightArrowActive.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
-    rightArrowActive.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
-    rightArrowActive.setAttribute(Qt::WA_NoSystemBackground, true);
-    rightArrowActive.setFixedSize(30,30);
-    rightArrowActive.setAlignment(Qt::AlignCenter);
+    // QLabel rightArrowActive;
+    // rightArrowActive.setPixmap(right_arrow_active_image);
+    // rightArrowActive.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
+    // rightArrowActive.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
+    // rightArrowActive.setAttribute(Qt::WA_NoSystemBackground, true);
+    // rightArrowActive.setFixedSize(30,30);
+    // rightArrowActive.setAlignment(Qt::AlignCenter);
 
-    QLabel rightArrowInactive;
-    rightArrowInactive.setPixmap(right_arrow_inactive_image);
-    rightArrowInactive.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
-    // leftArrowWidget.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
-    // leftArrowWidget.setAttribute(Qt::WA_NoSystemBackground, true);
-    rightArrowInactive.setFixedSize(30,30);
-    rightArrowInactive.setAlignment(Qt::AlignCenter);
+    // QLabel rightArrowInactive;
+    // rightArrowInactive.setPixmap(right_arrow_inactive_image);
+    // rightArrowInactive.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
+    // // leftArrowWidget.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
+    // // leftArrowWidget.setAttribute(Qt::WA_NoSystemBackground, true);
+    // rightArrowInactive.setFixedSize(30,30);
+    // rightArrowInactive.setAlignment(Qt::AlignCenter);
 
-    QLabel menuIcon;
-    menuIcon.setPixmap(menu_icon);
+    // QLabel menuIcon;
+    // menuIcon.setPixmap(menu_icon);
     // menuIcon.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
-    menuIcon.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
-    menuIcon.setAttribute(Qt::WA_NoSystemBackground, true);
+    // menuIcon.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
+    // menuIcon.setAttribute(Qt::WA_NoSystemBackground, true);
     // menuIcon.setFixedSize(30,30);
-    menuIcon.setAlignment(Qt::AlignRight);
+    // menuIcon.setAlignment(Qt::AlignRight);
 
     //MenuBar
-    MenuIconEventListener *menuIconEventListener = new MenuIconEventListener();
-    QMenu menu(&menuIcon);
-    QAction loginAction("Login");
-    QAction logoutAction("Logout");
-    QString runAppAtStartupActionInitText;
-    if(getStartupPref()){
-        runAppAtStartupActionInitText ="✔️"; 
-    }else{
-        runAppAtStartupActionInitText ="❌"; 
-    }
-    QAction runAtStartupAction(runAppAtStartupActionInitText.append( "Run at Startup"));
-    menu.addAction(&loginAction);
-    menu.addAction(&logoutAction);
-    menu.addAction(&runAtStartupAction);
-    menuIcon.installEventFilter(menuIconEventListener);
-    loginAction.connect(&loginAction,&QAction::triggered, &menu, [&](){
-        qDebug() << "Login Action is triggered";
-    });
+    // MenuIconEventListener *menuIconEventListener = new MenuIconEventListener();
+    // QMenu menu(&menuIcon);
+    // QAction loginAction("Login");
+    // QAction logoutAction("Logout");
+    // QString runAppAtStartupActionInitText;
+    // if(getStartupPref()){
+    //     runAppAtStartupActionInitText ="✔️"; 
+    // }else{
+    //     runAppAtStartupActionInitText ="❌"; 
+    // }
+    // QAction runAtStartupAction(runAppAtStartupActionInitText.append( "Run at Startup"));
+    // menu.addAction(&loginAction);
+    // menu.addAction(&logoutAction);
+    // menu.addAction(&runAtStartupAction);
+    // menuIcon.installEventFilter(menuIconEventListener);
+    // loginAction.connect(&loginAction,&QAction::triggered, &menu, [&](){
+    //     qDebug() << "Login Action is triggered";
+    // });
 
     QLabel vcbLabel;
     vcbLabel.setText("vcb placeholder");
@@ -218,7 +217,7 @@ int main(int argc, char *argv[])
     list->setEditTriggers(QAbstractItemView::NoEditTriggers);
     
 
-    mainwindow->connect(mainwindow, &MainWindow::registeredShortcutTriggered, &handler, &Handler::handleShortcutTrigger);
+    // mainwindow->connect(mainwindow, &MainWindow::registeredShortcutTriggered, &handler, &Handler::handleShortcutTrigger);
     mainwindow->connect(mainwindow, &MainWindow::registeredHotkeyActivated, &handler, &Handler::handleHotkeyActivation);
 
     list->connect(list,&QAbstractItemView::doubleClicked,&handler,
@@ -239,43 +238,43 @@ int main(int argc, char *argv[])
         vcbLabel.setText(vcbIdString);
     });
 
-    LeftArrowEventListener *leftArrowEventListener = new LeftArrowEventListener();
-    RightArrowEventListener *rightArrowEventListener = new RightArrowEventListener();
+    // LeftArrowEventListener *leftArrowEventListener = new LeftArrowEventListener();
+    // RightArrowEventListener *rightArrowEventListener = new RightArrowEventListener();
 
-    leftArrowActive.installEventFilter(leftArrowEventListener);
-    rightArrowActive.installEventFilter(rightArrowEventListener);
+    // leftArrowActive.installEventFilter(leftArrowEventListener);
+    // rightArrowActive.installEventFilter(rightArrowEventListener);
 
-    rightArrowEventListener->connect(rightArrowEventListener,&RightArrowEventListener::clicked,&handler,[&](){
-        handler.goNext();
-    });
+    // rightArrowEventListener->connect(rightArrowEventListener,&RightArrowEventListener::clicked,&handler,[&](){
+    //     handler.goNext();
+    // });
 
-    leftArrowEventListener->connect(leftArrowEventListener,&LeftArrowEventListener::clicked,&handler,[&](){
-        handler.goPrevious();
-    });
+    // leftArrowEventListener->connect(leftArrowEventListener,&LeftArrowEventListener::clicked,&handler,[&](){
+    //     handler.goPrevious();
+    // });
 
-    menuIconEventListener->connect(menuIconEventListener,&MenuIconEventListener::clicked,&handler,[&](){
-       menu.exec(menuIcon.mapToGlobal(QPoint(menuIcon.width(),menuIcon.height()))); 
-    });
+    // menuIconEventListener->connect(menuIconEventListener,&MenuIconEventListener::clicked,&handler,[&](){
+    //    menu.exec(menuIcon.mapToGlobal(QPoint(menuIcon.width(),menuIcon.height()))); 
+    // });
     //show the first vcb (hacky way of doing it)
     handler.goPrevious();
 
-    loginAction.connect(&loginAction, &QAction::triggered, &handler,&Handler::startLogin);
-    logoutAction.connect(&logoutAction, &QAction::triggered, &handler,&Handler::startLogout);
-    runAtStartupAction.connect(&runAtStartupAction, &QAction::triggered, &runAtStartupAction, [&](){
-        if(getStartupPref()){
-            runAtStartupAction.setText("❌ Run at Startup");
-            setStartupPref(false);
-            undoRunAppAtStartup();
-        }else{
-            runAtStartupAction.setText("✔️ Run at Startup");
-            setStartupPref(true);
-            runAppAtStartup();
-        }
-    });
-    infoBar->addWidget(&leftArrowActive, Qt::AlignCenter);
+    // loginAction.connect(&loginAction, &QAction::triggered, &handler,&Handler::startLogin);
+    // logoutAction.connect(&logoutAction, &QAction::triggered, &handler,&Handler::startLogout);
+    // runAtStartupAction.connect(&runAtStartupAction, &QAction::triggered, &runAtStartupAction, [&](){
+    //     if(getStartupPref()){
+    //         runAtStartupAction.setText("❌ Run at Startup");
+    //         setStartupPref(false);
+    //         undoRunAppAtStartup();
+    //     }else{
+    //         runAtStartupAction.setText("✔️ Run at Startup");
+    //         setStartupPref(true);
+    //         runAppAtStartup();
+    //     }
+    // });
+    // infoBar->addWidget(&leftArrowActive, Qt::AlignCenter);
     infoBar->addWidget(&vcbLabel, Qt::AlignCenter);
-    infoBar->addWidget(&rightArrowActive, Qt::AlignCenter);
-    infoBar->addWidget(&menuIcon, Qt::AlignLeft);
+    // infoBar->addWidget(&rightArrowActive, Qt::AlignCenter);
+    // infoBar->addWidget(&menuIcon, Qt::AlignLeft);
 
     layout->addLayout(infoBar);
     layout->addWidget(list);
@@ -283,7 +282,7 @@ int main(int argc, char *argv[])
     mainwindow->setStyleSheet("background-color: #283742; color: #aaccff;");
     mainwindow->resize(windowSize.x(), windowSize.y());    
 
-    framelesswindow.setWindowIcon(QIcon(":resources/clippycross_logo.png"));
+    framelesswindow.setWindowIcon(QIcon(":clippycross_logo.jpg"));
     framelesswindow.setWindowTitle("Clippycross");
     framelesswindow.setContent(mainwindow);
     framelesswindow.setPalette(defaultPalette);

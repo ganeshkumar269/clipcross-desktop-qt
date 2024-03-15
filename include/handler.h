@@ -6,12 +6,10 @@
     #include <QString>
     #include <QClipboard>
     #include <QStringListModel>
-    #include "websocketw.h"
-    #include "authenticate.h"
     #include "clip.h"
     #include "vcbhandler.h"
     #define WINVER 0x0500
-    #include <windows.h>
+    // #include <windows.h>
     #include <QModelIndex>
     class Handler: public QObject {
         Q_OBJECT
@@ -41,7 +39,7 @@
             void startLogout();
             void startLogin();
             void resetAuthTokens();
-            void handleShortcutTrigger(MSG*);
+            // void handleShortcutTrigger(MSG*);
             void handleHotkeyActivation(const QKeySequence&);
 
         private Q_SLOTS:
@@ -54,7 +52,6 @@
             void onWssReadyToTransferData();
         private:
             // Database *db;
-            WebSocketW *wsw;
             // QClipboard* cb;
             VCBHandler *vcbHandler;
             QStringListModel* sm;
@@ -62,7 +59,6 @@
             QList<QString> device_head;
             Clip *prevClip;
             uint wsw_retries;
-            Authenticate *authenticate;
     };
 
 #endif

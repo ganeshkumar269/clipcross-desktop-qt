@@ -12,7 +12,7 @@
         //     void closeEvent(QCloseEvent *event) override;
 
         Q_SIGNALS:
-            void registeredShortcutTriggered(MSG*);
+            // void registeredShortcutTriggered(MSG*);
             void registeredHotkeyActivated(const QKeySequence&);
         // private:
         //     bool closing;

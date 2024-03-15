@@ -1,7 +1,7 @@
 #include <QWidget>
 #include "mainwindow.h"
 #define WINVER 0x0500
-#include <windows.h>
+// #include <windows.h>
 #include <QDebug>
 #include <QEvent>
 #include <QTimer>
@@ -99,14 +99,14 @@ MainWindow::MainWindow(QWidget* parent):QWidget(parent){
 bool MainWindow::nativeEvent(const QByteArray &eventType, void *message, qintptr *result){
     Q_UNUSED(eventType);
     Q_UNUSED(result);
-    MSG* msg = static_cast<MSG*>(message);
+    // MSG* msg = static_cast<MSG*>(message);
 
-    if (msg->message == WM_HOTKEY)
-    {
-        qDebug() << "Registered Hotkey triggered";
-        emit registeredShortcutTriggered(msg);
-        return true;
-    }
+    // if (msg->message == WM_HOTKEY)
+    // {
+    //     qDebug() << "Registered Hotkey triggered";
+    //     emit registeredShortcutTriggered(msg);
+    //     return true;
+    // }
     return false;
 }
 

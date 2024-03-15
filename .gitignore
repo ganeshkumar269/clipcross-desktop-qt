@@ -21,3 +21,6 @@ src/deprecated
 .vscode
 vendor
 qpm.json
+**/*.o
+**/moc_*.cpp
+**/qrc_*.cpp
