@@ -13,7 +13,6 @@ object_script*
 
 *.stash
 Makefile
-*.txt
 *.log
 src/deprecated
 
