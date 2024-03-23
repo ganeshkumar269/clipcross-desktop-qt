@@ -1,24 +1,27 @@
 #include "vcbhandler.h"
 #include <QGuiApplication>
 #include <QMimeData>
-
+#include  <QTimer>
 // #include "log4qt/logger.h"
 // auto logger = Log4Qt::Logger::rootLogger(); 
 
 VCBHandler::VCBHandler(QObject* parent):QObject(parent){
     vcbList.insert("desktop-one",new VCB("one", "desktop"));
-    vcbList.insert("desktop-two",new VCB("two","desktop"));
-    vcbList.insert("desktop-three",new VCB("three","desktop"));
+    // vcbList.insert("desktop-two",new VCB("two","desktop"));
+    // vcbList.insert("desktop-three",new VCB("three","desktop"));
     visibleVCBId = "desktop-one";
     visibleVCBIdIndex = 0;
     handleClipboardUpdates = true;
     activeVCBIds.append(visibleVCBId);
     vcbListOrder = new QStringList();
     vcbListOrder->append("desktop-one");
-    vcbListOrder->append("desktop-two");
-    vcbListOrder->append("desktop-three");
+    // vcbListOrder->append("desktop-two");
+    // vcbListOrder->append("desktop-three");
     cb = QGuiApplication::clipboard();
-    connect(cb,&QClipboard::dataChanged,this,&VCBHandler::onCbDataChanged);
+    // connect(cb,&QClipboard::dataChanged,this,&VCBHandler::onCbDataChanged);
+    clipboardTimer = new QTimer(this);
+    connect(clipboardTimer, &QTimer::timeout, this, &VCBHandler::checkClipboardChanged);
+    clipboardTimer->start(500); // Adjust interval as needed (in milliseconds)
 }
 
 VCBHandler::~VCBHandler(){
@@ -27,6 +30,9 @@ VCBHandler::~VCBHandler(){
         i.next();
         delete i.value();
     }
+}
+void VCBHandler::checkClipboardChanged() {
+    onCbDataChanged();
 }
 
 void VCBHandler::add(const Clip& clip,const QString& id, const QString& deviceId){

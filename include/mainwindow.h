@@ -2,7 +2,9 @@
 #define MAIN_WINDOW_H
     #include <QWidget>
     #include <QKeySequence>
-    class MainWindow : public QWidget {
+#include <QSystemTrayIcon>
+
+class MainWindow : public QWidget {
         Q_OBJECT
         public : 
             explicit MainWindow(QWidget* parent = nullptr);
@@ -14,7 +16,8 @@
         Q_SIGNALS:
             // void registeredShortcutTriggered(MSG*);
             void registeredHotkeyActivated(const QKeySequence&);
-        // private:
+        private:
+            QSystemTrayIcon *trayIcon;
         //     bool closing;
     };
 #endif

@@ -24,3 +24,8 @@ qpm.json
 **/*.o
 **/moc_*.cpp
 **/qrc_*.cpp
+
+clippycross.app/
+/CMakeFiles/
+/clippycross_autogen/
+/.qt/

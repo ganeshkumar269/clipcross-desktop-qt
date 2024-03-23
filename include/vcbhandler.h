@@ -4,8 +4,8 @@
     #include <QObject>
     #include "clip.h"
     #include "vcb.h"
-    #include <QPair>
     #include <QModelIndex>
+#include <QTimer>
     class VCBHandler : public QObject{
         Q_OBJECT
         public:
@@ -29,8 +29,9 @@
             bool hasVcbId(const QString& id);
             void setHandleClipboardUpdates(bool);
             void handleDoubleClickEvent(const QModelIndex&);
+            void checkClipboardChanged();
         Q_SIGNALS:
-            void vcbDataChanged(const Clip&,const QList<QString> /*vcbIds*/);
+            void vcbDataChanged(const Clip&, QList<QString> /*vcbIds*/);
         public Q_SLOTS:   
             void onCbDataChanged();
         private:
@@ -41,5 +42,6 @@
             QStringList* vcbListOrder;
             bool handleClipboardUpdates; 
             QClipboard* cb;
-    };  
+            QTimer *clipboardTimer;
+    };
 #endif

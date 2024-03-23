@@ -5,17 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "g++.exe - Build and debug active file",
+            "name": "(lldb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}\\debug\\clippycross.exe",
-            "args": ["1>","standardout.txt","2>","standarerror.txt"],
-            "stopAtEntry": true,
-            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/clippycross.app/Contents/MacOS/clippycross",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
             "environment": [],
             "externalConsole": false,
-            "MIMode": "gdb",
-            "miDebuggerPath": "C:\\Program Files\\mingw-w64\\x86_64-8.1.0-posix-seh-rt_v6-rev0\\mingw64\\bin\\gdb.exe",
+            "MIMode": "lldb",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
@@ -24,8 +23,29 @@
                     
                 }
             ],
-            "preLaunchTask": "mingw32make",
+        },
+        // {
+        //     "name": "g++.exe - Build and debug active file",
+        //     "type": "cppdbg",
+        //     "request": "launch",
+        //     "program": "${workspaceFolder}\\debug\\clippycross.exe",
+        //     "args": ["1>","standardout.txt","2>","standarerror.txt"],
+        //     "stopAtEntry": true,
+        //     "cwd": "${workspaceFolder}",
+        //     "environment": [],
+        //     "externalConsole": false,
+        //     "MIMode": "gdb",
+        //     "miDebuggerPath": "C:\\Program Files\\mingw-w64\\x86_64-8.1.0-posix-seh-rt_v6-rev0\\mingw64\\bin\\gdb.exe",
+        //     "setupCommands": [
+        //         {
+        //             "description": "Enable pretty-printing for gdb",
+        //             "text": "-enable-pretty-printing",
+        //             "ignoreFailures": true,
+                    
+        //         }
+        //     ],
+        //     "preLaunchTask": "mingw32make",
 
-        }
+        // }
     ]
 }

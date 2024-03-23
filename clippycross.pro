@@ -7,23 +7,28 @@ TARGET = clippycross
 INCLUDEPATH += .
 INCLUDEPATH += ./include/
 INCLUDEPATH += ./dependencies/
+INCLUDEPATH += ./dependencies/Log4Qt/src/
+INCLUDEPATH += ./dependencies/Log4Qt/src/log4qt
 INCLUDEPATH += /Users/ganesh.maddula/Documents/projects/QHotkey/QHotKey/
-LIBS += -L./debug/ -llog4qt -L/Users/ganesh.maddula/Documents/projects/QHotkey/QHotKey/ -lQHotkey
-LIBS += -luser32
+LIBS += -L./dependencies/Log4Qt/bin/ -llog4qt -L/Users/ganesh.maddula/Documents/projects/QHotkey/QHotKey -lQHotkey
+# LIBS += -luser32
+LIBS += -framework Carbon
 
 CONFIG += debug
 OUTPUT += Console
 
-DEFINES += LOCAL_WSS_TEST 
+# DEFINES += LOCAL_WSS_TEST 
 DEFINES += LOG4QT_LIBRARY
+DEFINES += LOG4QT_STATIC
 QMAKE_CXXFLAGS += -fpermissive
 
 # include(vendor/vendor.pri)
+# include(dependencies/Log4Qt/src/log4qt/log4qt.pri)
+# include(dependencies/Log4Qt/build.pri)
 
 RESOURCES += framelesswindow.qrc darkstyle.qrc resources/clippycross.qrc
 
 FORMS += dependencies/framelesswindow/framelesswindow.ui \
-
 
 HEADERS += include/database.h \
            include/handler.h \
@@ -40,7 +45,6 @@ HEADERS += include/database.h \
            dependencies/framelesswindow/framelesswindow.h \
            dependencies/framelesswindow/windowdragger.h \
            dependencies/framelesswindow/DarkStyle.h \
-
 
 SOURCES += main.cpp \
            $$files(src/database/*.cpp) \

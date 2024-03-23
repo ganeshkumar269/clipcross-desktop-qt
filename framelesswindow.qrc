@@ -1,8 +1,0 @@
-<RCC>
-    <qresource>
-        <file>resources/images/icon_window_minimize.png</file>
-        <file>resources/images/icon_window_restore.png</file>
-        <file>resources/images/icon_window_maximize.png</file>
-        <file>resources/images/icon_window_close.png</file>
-    </qresource>
-</RCC>

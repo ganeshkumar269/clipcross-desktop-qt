@@ -33,9 +33,9 @@
 // #include <windows.h>
 #include "mainwindow.h"
 #include "handler.h"
-#include "rightarroweventlistener.h"
-#include "leftarroweventlistener.h"
-#include "menuiconeventlistener.h"
+// #include "rightarroweventlistener.h" 
+// #include "leftarroweventlistener.h"
+// #include "menuiconeventlistener.h"
 #include <QStandardPaths>
 #include "prefs.h"
 Q_LOGGING_CATEGORY(category1, "test.category1")
@@ -100,13 +100,15 @@ int main(int argc, char *argv[])
     QGuiApplication::setOrganizationDomain("clippycross.com");
     QGuiApplication::setApplicationName("Clippycross");
 
-
     qDebug() << "[main.cpp] main logger->debug Works"; 
-    std::cerr << "This is from standard error" << std::endl; 
+    qDebug() << "[main.cpp] main logger->debug Works with change 2";
+    std::cerr << "This is from standard error" << std::endl;
     std::cout << "This is from standard output" << std::endl; 
     auto logger = Log4Qt::Logger::rootLogger();
     logger->debug() << "This is debug";
-
+    QSystemTrayIcon tray_icon = new QSystemTrayIcon();
+    tray_icon.setIcon(QIcon(":clippycross_logo.jpg"));
+    tray_icon.show();
     QApplication::setStyle(new DarkStyle);
     FramelessWindow framelesswindow;
 
@@ -118,83 +120,13 @@ int main(int argc, char *argv[])
     //list
     QListView *list = new QListView();
     QStringListModel *sm = new QStringListModel();
-
-
-
-    //InfoBar
-    // QPixmap left_arrow_active_image(":resources/left_arrow_active.png");
-    // QPixmap left_arrow_inactive_image(":resources/left_arrow_inactive.png");
-    // QPixmap right_arrow_active_image(":resources/right_arrow_active.png");
-    // QPixmap right_arrow_inactive_image(":resources/right_arrow_inactive_image.png");
-    // QPixmap menu_icon(":resources/menu_icon.jpg");
-
-    // QLabel leftArrowInactive;
-    // leftArrowInactive.setPixmap(left_arrow_inactive_image);
-    // leftArrowInactive.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
-    // // leftArrowWidget.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
-    // // leftArrowWidget.setAttribute(Qt::WA_NoSystemBackground, true);
-    // leftArrowInactive.setFixedSize(30,30);
-    // leftArrowInactive.setAlignment(Qt::AlignCenter);
-
-    // QLabel leftArrowActive;
-    // leftArrowActive.setPixmap(left_arrow_active_image);
-    // leftArrowActive.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
-    // leftArrowActive.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
-    // leftArrowActive.setAttribute(Qt::WA_NoSystemBackground, true);
-    // leftArrowActive.setFixedSize(30,30);
-    // leftArrowActive.setAlignment(Qt::AlignCenter);
-
-    // QLabel rightArrowActive;
-    // rightArrowActive.setPixmap(right_arrow_active_image);
-    // rightArrowActive.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
-    // rightArrowActive.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
-    // rightArrowActive.setAttribute(Qt::WA_NoSystemBackground, true);
-    // rightArrowActive.setFixedSize(30,30);
-    // rightArrowActive.setAlignment(Qt::AlignCenter);
-
-    // QLabel rightArrowInactive;
-    // rightArrowInactive.setPixmap(right_arrow_inactive_image);
-    // rightArrowInactive.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
-    // // leftArrowWidget.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
-    // // leftArrowWidget.setAttribute(Qt::WA_NoSystemBackground, true);
-    // rightArrowInactive.setFixedSize(30,30);
-    // rightArrowInactive.setAlignment(Qt::AlignCenter);
-
-    // QLabel menuIcon;
-    // menuIcon.setPixmap(menu_icon);
-    // menuIcon.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
-    // menuIcon.setWindowFlags(Qt::Widget | Qt::FramelessWindowHint | Qt::ToolTip | Qt::WindowStaysOnTopHint);
-    // menuIcon.setAttribute(Qt::WA_NoSystemBackground, true);
-    // menuIcon.setFixedSize(30,30);
-    // menuIcon.setAlignment(Qt::AlignRight);
-
-    //MenuBar
-    // MenuIconEventListener *menuIconEventListener = new MenuIconEventListener();
-    // QMenu menu(&menuIcon);
-    // QAction loginAction("Login");
-    // QAction logoutAction("Logout");
-    // QString runAppAtStartupActionInitText;
-    // if(getStartupPref()){
-    //     runAppAtStartupActionInitText ="✔️"; 
-    // }else{
-    //     runAppAtStartupActionInitText ="❌"; 
-    // }
-    // QAction runAtStartupAction(runAppAtStartupActionInitText.append( "Run at Startup"));
-    // menu.addAction(&loginAction);
-    // menu.addAction(&logoutAction);
-    // menu.addAction(&runAtStartupAction);
-    // menuIcon.installEventFilter(menuIconEventListener);
-    // loginAction.connect(&loginAction,&QAction::triggered, &menu, [&](){
-    //     qDebug() << "Login Action is triggered";
-    // });
-
-    QLabel vcbLabel;
-    vcbLabel.setText("vcb placeholder");
-    vcbLabel.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
-    vcbLabel.setFixedWidth(150);
-    // vcbLabel.setFixedHeight(30);
-    // vcbLabel.setFixedSize(100,30);
-    vcbLabel.setAlignment(Qt::AlignCenter);
+    // QLabel vcbLabel;
+    // vcbLabel.setText("vcb placeholder");
+    // vcbLabel.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
+    // vcbLabel.setFixedWidth(150);
+    // // vcbLabel.setFixedHeight(30);
+    // // vcbLabel.setFixedSize(100,30);
+    // vcbLabel.setAlignment(Qt::AlignCenter);
     // vcbLabel.setAttribute(Qt::WA_TranslucentBackground, true);
 
     QPalette defaultPalette;
@@ -202,10 +134,9 @@ int main(int argc, char *argv[])
     QBrush alternateBase; alternateBase.setColor(QColor("#6784a3"));
     defaultPalette.setBrush(QPalette::Base,base);
     defaultPalette.setBrush(QPalette::AlternateBase,alternateBase);
-
-    const auto fontId = QFontDatabase::addApplicationFont(":resources/Roboto-Medium.ttf");
-    QString family = QFontDatabase::applicationFontFamilies(fontId).at(0);
-    QFont _font(family, 8);
+    const auto fontId = QFontDatabase::addApplicationFont(":Roboto-Medium.ttf");
+    const QString family = QFontDatabase::applicationFontFamilies(fontId).at(0);
+    const QFont _font(family, 16);
     a.setFont(_font);
 
     sm->insertRow(0,sm->index(0));
@@ -218,7 +149,7 @@ int main(int argc, char *argv[])
     
 
     // mainwindow->connect(mainwindow, &MainWindow::registeredShortcutTriggered, &handler, &Handler::handleShortcutTrigger);
-    mainwindow->connect(mainwindow, &MainWindow::registeredHotkeyActivated, &handler, &Handler::handleHotkeyActivation);
+    // mainwindow->connect(mainwindow, &MainWindow::registeredHotkeyActivated, &handler, &Handler::handleHotkeyActivation);
 
     list->connect(list,&QAbstractItemView::doubleClicked,&handler,
         [&](const QModelIndex& ind){
@@ -228,51 +159,21 @@ int main(int argc, char *argv[])
             handler.doubleClickEvent(ind); 
     });
 
-    handler.connect(&handler,&Handler::updateListViewModel,list,[&](QStringListModel* slm){
-        logger->debug("ListViewModel updated");
-        list->setModel(slm);
-        // logger->debug() << "Slm" << slm->data(slm->index(0)).toString();
-    });
+    // handler.connect(&handler,&Handler::updateListViewModel,list,[&](QStringListModel* slm){
+    //     logger->debug("ListViewModel updated");
+    //     list->setModel(slm);
+    //     // logger->debug() << "Slm" << slm->data(slm->index(0)).toString();
+    // });
     
-    handler.connect(&handler,&Handler::updateVcbId,&vcbLabel,[&](QString vcbIdString){
-        vcbLabel.setText(vcbIdString);
-    });
-
-    // LeftArrowEventListener *leftArrowEventListener = new LeftArrowEventListener();
-    // RightArrowEventListener *rightArrowEventListener = new RightArrowEventListener();
-
-    // leftArrowActive.installEventFilter(leftArrowEventListener);
-    // rightArrowActive.installEventFilter(rightArrowEventListener);
-
-    // rightArrowEventListener->connect(rightArrowEventListener,&RightArrowEventListener::clicked,&handler,[&](){
-    //     handler.goNext();
+    // handler.connect(&handler,&Handler::updateVcbId,&vcbLabel,[&](QString vcbIdString){
+    //     vcbLabel.setText(vcbIdString);
     // });
 
-    // leftArrowEventListener->connect(leftArrowEventListener,&LeftArrowEventListener::clicked,&handler,[&](){
-    //     handler.goPrevious();
-    // });
-
-    // menuIconEventListener->connect(menuIconEventListener,&MenuIconEventListener::clicked,&handler,[&](){
-    //    menu.exec(menuIcon.mapToGlobal(QPoint(menuIcon.width(),menuIcon.height()))); 
-    // });
     //show the first vcb (hacky way of doing it)
     handler.goPrevious();
 
-    // loginAction.connect(&loginAction, &QAction::triggered, &handler,&Handler::startLogin);
-    // logoutAction.connect(&logoutAction, &QAction::triggered, &handler,&Handler::startLogout);
-    // runAtStartupAction.connect(&runAtStartupAction, &QAction::triggered, &runAtStartupAction, [&](){
-    //     if(getStartupPref()){
-    //         runAtStartupAction.setText("❌ Run at Startup");
-    //         setStartupPref(false);
-    //         undoRunAppAtStartup();
-    //     }else{
-    //         runAtStartupAction.setText("✔️ Run at Startup");
-    //         setStartupPref(true);
-    //         runAppAtStartup();
-    //     }
-    // });
     // infoBar->addWidget(&leftArrowActive, Qt::AlignCenter);
-    infoBar->addWidget(&vcbLabel, Qt::AlignCenter);
+    // infoBar->addWidget(&vcbLabel, Qt::AlignCenter);
     // infoBar->addWidget(&rightArrowActive, Qt::AlignCenter);
     // infoBar->addWidget(&menuIcon, Qt::AlignLeft);
 

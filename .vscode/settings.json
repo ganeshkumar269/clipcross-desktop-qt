@@ -75,7 +75,15 @@
         "qurlquery": "cpp",
         "qwidget": "cpp",
         "qkeysequence": "cpp",
-        "qapplication": "cpp"
+        "qapplication": "cpp",
+        "qtglobal": "cpp",
+        "qstringlistmodel": "cpp",
+        "qclipboard": "cpp",
+        "qlistview": "cpp",
+        "qloggingcategory": "cpp",
+        "qpalette": "cpp",
+        "qbrush": "cpp"
     },
-    "C_Cpp.dimInactiveRegions": false
+    "C_Cpp.dimInactiveRegions": false,
+    "C_Cpp.errorSquiggles": "disabled"
 }

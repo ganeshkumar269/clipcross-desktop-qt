@@ -1,40 +1,25 @@
 {
     "configurations": [
-        // {
-        //     "name": "Win32",
-        //     "includePath": [
-        //         "${workspaceFolder}/**",
-        //         "${workspaceFolder}/include/**",
-        //         "C:/Qt/6.1.3/mingw81_64/include/**",
-        //         "${workspaceFolder}/dependencies/**"
-
-        //     ],
-        //     "defines": [
-        //         "_DEBUG",
-        //         "UNICODE",
-        //         "_UNICODE"
-        //     ],
-        //     "windowsSdkVersion": "10.0.18362.0",
-        //     "compilerPath": "C:\\Program Files\\mingw-w64\\x86_64-8.1.0-posix-seh-rt_v6-rev0\\mingw64\\bin\\g++.exe",
-        //     "cStandard": "c17",
-        //     "cppStandard": "c++17",
-        //     "intelliSenseMode": "windows-gcc-x64"
-        // },
         {
             "name": "MacIntel",
             "includePath": [
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/include/**",
                 "/Users/ganesh.maddula/Qt2/6.5.3/macos/lib/**",
+"/Users/ganesh.maddula/Qt2/6.5.3/macos/lib/QtWidgets.framework/Headers",
+"/Users/ganesh.maddula/Qt2/6.5.3/macos/lib/QtGui.framework/Headers",
+"/Users/ganesh.maddula/Qt2/6.5.3/macos/lib/QtSql.framework/Headers",
+"/Users/ganesh.maddula/Qt2/6.5.3/macos/lib/QtWebSockets.framework/Headers",
+"/Users/ganesh.maddula/Qt2/6.5.3/macos/lib/QtNetwork.framework/Headers",
+"/Users/ganesh.maddula/Qt2/6.5.3/macos/lib/QtConcurrent.framework/Headers",
+"/Users/ganesh.maddula/Qt2/6.5.3/macos/lib/QtCore.framework/Headers",
                 "${workspaceFolder}/dependencies/**"
-
             ],
             "defines": [
                 "_DEBUG",
                 "UNICODE",
                 "_UNICODE"
             ],
-            // "windowsSdkVersion": "10.0.18362.0",
             "compilerPath": "/usr/local/opt/llvm/bin/clang++",
             "cStandard": "c17",
             "cppStandard": "c++17",
