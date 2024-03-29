@@ -28,6 +28,8 @@
             void goPrevious();
             void doubleClickEvent(const QModelIndex&);
             void changeClipboardTemporarily(const Clip&);
+            QStringListModel* getActiveStringListModel();
+            void onSearchQuery(const QString&);
         Q_SIGNALS:
             void makeCBSignal();
             // void tokenExpired();

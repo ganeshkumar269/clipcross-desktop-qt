@@ -17,6 +17,8 @@ class Clip {
     public:
         // friend QString getMd5Hash(const QString&);
         Clip():m_value(""),m_format(""),m_hash(""),m_timestamp(0){}
+        Clip(const QString& value,const QString& format, const QString& hash, qint64 timestamp)
+            :m_value(value) , m_format(format), m_hash(hash), m_timestamp(timestamp){}
         Clip(const QString& value,const QString& format,qint64 timestamp)
             :m_value(value) , m_format(format), m_timestamp(timestamp)
         {

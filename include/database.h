@@ -20,10 +20,12 @@
             // QList<QList<QVariant>>* retrieveClips(uy[[[[[[[[[[[[[[[[[[int=0,uint=100);
             QList<Clip>* retrieveClips(const QList<QString>&,uint=UINT32_MAX,uint=0);
             bool insertClip(const Clip&);//(val,format)
+            bool insertFTS(const Clip&);//(val,format)
             bool insert(const QString,const QList<QString>&,const QList<QString>&);
             Clip getTopItem();
             bool checkIfHashIsPresent(const QString&);
             bool deleteClip(const QString& hash);
+            QStringListModel* onSearchQuery(const QString& searchQuery);
         private Q_SLOTS:
             void onOpened();
 

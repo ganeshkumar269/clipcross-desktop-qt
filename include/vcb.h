@@ -18,6 +18,7 @@
             Clip getTopClip();
             Clip getClipAtIndex(int);
             QStringListModel* getModel();
+            QStringListModel* onSearchQuery(const QString&);
         Q_SIGNALS:
 
         public Q_SLOTS:   
@@ -26,6 +27,7 @@
             const QString id; //permanent
             QString name; //visible to user and customizable
             QStringListModel* slm = nullptr; //create a custom listmodel
+            QStringListModel* searchResult = nullptr;
             QList<Clip>* clips = nullptr;
             Clip topClip;
             Clip lastSyncedClip;

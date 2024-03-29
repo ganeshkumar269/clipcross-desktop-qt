@@ -30,6 +30,7 @@
             void setHandleClipboardUpdates(bool);
             void handleDoubleClickEvent(const QModelIndex&);
             void checkClipboardChanged();
+            QStringListModel* onSearchQuery(const QString&);
         Q_SIGNALS:
             void vcbDataChanged(const Clip&, QList<QString> /*vcbIds*/);
         public Q_SLOTS:   

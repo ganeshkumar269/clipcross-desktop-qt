@@ -81,6 +81,9 @@ set(HEADER_FILES
 #
 ## Create executable
 qt_add_executable(clippycross ${SOURCE_FILES} ${HEADER_FILES} ${RESOURCES_clippycross})
+set_target_properties(clippycross PROPERTIES
+        MACOSX_BUNDLE ON
+)
 target_link_libraries(clippycross PRIVATE Qt6::Core Qt6::Gui Qt6::Sql Qt6::Network Qt6::WebSockets Qt6::Widgets Qt6::Concurrent log4qt QHotkey)
 
 if(APPLE)

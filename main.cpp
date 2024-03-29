@@ -37,6 +37,8 @@
 // #include "leftarroweventlistener.h"
 // #include "menuiconeventlistener.h"
 #include <QStandardPaths>
+#include <QLineEdit>
+#include "DarkStyle.h"
 #include "prefs.h"
 Q_LOGGING_CATEGORY(category1, "test.category1")
 
@@ -94,7 +96,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     setUpLogger();
     const QPoint windowSize(360,440);
-    MainWindow *mainwindow = new MainWindow();
+    auto *mainwindow = new MainWindow();
 
     QGuiApplication::setOrganizationName("ClippyCross");
     QGuiApplication::setOrganizationDomain("clippycross.com");
@@ -117,17 +119,18 @@ int main(int argc, char *argv[])
 
     Handler handler;  
     
-    //list
     QListView *list = new QListView();
-    QStringListModel *sm = new QStringListModel();
+    auto lineEdit = new QLineEdit(mainwindow);
+    // QStringListModel *sm = new QStringListModel();
     // QLabel vcbLabel;
     // vcbLabel.setText("vcb placeholder");
     // vcbLabel.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
-    // vcbLabel.setFixedWidth(150);
-    // // vcbLabel.setFixedHeight(30);
-    // // vcbLabel.setFixedSize(100,30);
-    // vcbLabel.setAlignment(Qt::AlignCenter);
-    // vcbLabel.setAttribute(Qt::WA_TranslucentBackground, true);
+    lineEdit->setFixedWidth(150);
+    lineEdit->setFixedHeight(30);
+    lineEdit->setFixedSize(100,30);
+    // lineEdit->setAlignment(Qt::AlignCenter);
+    layout->addWidget(lineEdit);
+    // lineEdit->setAttribute(Qt::WA_TranslucentBackground, true);
 
     QPalette defaultPalette;
     QBrush base; base.setColor(QColor("#283742"));
@@ -139,10 +142,10 @@ int main(int argc, char *argv[])
     const QFont _font(family, 16);
     a.setFont(_font);
 
-    sm->insertRow(0,sm->index(0));
-    sm->setData(sm->index(0),QString("Test Text"));
+    // sm->insertRow(0,sm->index(0));
+    // sm->setData(sm->index(0),QString("Test Text"));
 
-    list->setModel(sm);
+    // list->setModel(sm);
     list->setPalette(defaultPalette);
     list->setAlternatingRowColors(true);
     list->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -151,7 +154,7 @@ int main(int argc, char *argv[])
     // mainwindow->connect(mainwindow, &MainWindow::registeredShortcutTriggered, &handler, &Handler::handleShortcutTrigger);
     // mainwindow->connect(mainwindow, &MainWindow::registeredHotkeyActivated, &handler, &Handler::handleHotkeyActivation);
 
-    list->connect(list,&QAbstractItemView::doubleClicked,&handler,
+    QListView::connect(list,&QAbstractItemView::doubleClicked,&handler,
         [&](const QModelIndex& ind){
             logger->debug("Double Clicked");
             logger->debug() << list->model()->data(ind).toString();
@@ -159,18 +162,31 @@ int main(int argc, char *argv[])
             handler.doubleClickEvent(ind); 
     });
 
-    // handler.connect(&handler,&Handler::updateListViewModel,list,[&](QStringListModel* slm){
-    //     logger->debug("ListViewModel updated");
-    //     list->setModel(slm);
-    //     // logger->debug() << "Slm" << slm->data(slm->index(0)).toString();
-    // });
-    
+    handler.connect(&handler,&Handler::updateListViewModel,list,[&](QStringListModel* slm){
+        logger->debug("ListViewModel updated");
+        list->setModel(slm);
+        logger->debug() << "Slm" << slm->data(slm->index(0)).toString();
+    });
+    list->setModel(handler.getActiveStringListModel());
+
+    QObject::connect(lineEdit, &QLineEdit::returnPressed, &handler,
+        [&] {
+            logger->debug("Enter clicked on Search Box");
+            auto search_query = lineEdit->text();
+            if(search_query.isEmpty()) {
+                list->setModel(handler.getActiveStringListModel());
+            }else {
+                handler.onSearchQuery(search_query);
+            }
+        });
+
+
     // handler.connect(&handler,&Handler::updateVcbId,&vcbLabel,[&](QString vcbIdString){
     //     vcbLabel.setText(vcbIdString);
     // });
 
     //show the first vcb (hacky way of doing it)
-    handler.goPrevious();
+    // handler.goPrevious();
 
     // infoBar->addWidget(&leftArrowActive, Qt::AlignCenter);
     // infoBar->addWidget(&vcbLabel, Qt::AlignCenter);

@@ -12,7 +12,7 @@ VCB::VCB(const QString& id,const QString& deviceId, bool nonHost,QObject* parent
         clips = db->retrieveClips({});
     }
     addClipsToSlm(clips);
-    topClip = clips->size() > 0 ? clips->at(0) : Clip("Empty Database","text",0);
+    topClip = !clips->empty() ? clips->at(0) : Clip("Empty Database","text",0);
     qDebug() << "VcbId: " << id << " topclip: " << topClip.toString();
 }
 VCB::~VCB(){
@@ -80,4 +80,7 @@ Clip VCB::getClipAtIndex(int index){
     }else{
         return clips->at(index);
     }
+}
+QStringListModel* VCB::onSearchQuery(const QString& searchQuery) {
+    return db->onSearchQuery(searchQuery);
 }

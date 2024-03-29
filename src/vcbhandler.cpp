@@ -124,3 +124,7 @@ void VCBHandler::handleDoubleClickEvent(const QModelIndex& index){
     vcbList[visibleVCBId]->add(index);
     cb->setText(vcbList[visibleVCBId]->getTopClip().value());
 }
+
+QStringListModel* VCBHandler::onSearchQuery(const QString& search_query) {
+    return vcbList[visibleVCBId]->onSearchQuery(search_query);
+}

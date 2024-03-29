@@ -202,3 +202,13 @@ void Handler::changeClipboardTemporarily(const Clip& clip){
         vcbHandler->setHandleClipboardUpdates(true);
     });
 }
+
+QStringListModel* Handler::getActiveStringListModel() {
+    return vcbHandler->getModel();
+}
+
+void Handler::onSearchQuery(const QString& search_query) {
+    auto res =  vcbHandler->onSearchQuery(search_query);
+    emit updateListViewModel(res);
+    // return res;
+}
