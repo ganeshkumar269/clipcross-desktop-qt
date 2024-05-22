@@ -2,6 +2,7 @@
 #include <QGuiApplication>
 #include <QMimeData>
 #include  <QTimer>
+#include "utils.h"
 // #include "log4qt/logger.h"
 // auto logger = Log4Qt::Logger::rootLogger(); 
 
@@ -15,8 +16,6 @@ VCBHandler::VCBHandler(QObject* parent):QObject(parent){
     activeVCBIds.append(visibleVCBId);
     vcbListOrder = new QStringList();
     vcbListOrder->append("desktop-one");
-    // vcbListOrder->append("desktop-two");
-    // vcbListOrder->append("desktop-three");
     cb = QGuiApplication::clipboard();
     // connect(cb,&QClipboard::dataChanged,this,&VCBHandler::onCbDataChanged);
     clipboardTimer = new QTimer(this);
@@ -38,11 +37,6 @@ void VCBHandler::checkClipboardChanged() {
 void VCBHandler::add(const Clip& clip,const QString& id, const QString& deviceId){
     if(vcbList.contains(id)){
         vcbList[id]->checkForDuplicateAndAdd(clip);
-    }else{
-        qDebug() << id << " is not present, adding a session vcb";
-        vcbList.insert(id, new VCB(id,deviceId,true));
-        vcbList[id]->checkForDuplicateAndAdd(clip);
-        vcbListOrder->append(id);
     }
 }
 void VCBHandler::add(const Clip& clip){
@@ -71,7 +65,7 @@ void VCBHandler::onCbDataChanged(){
         qDebug() << "Clipboard update happened, but handleClipboardUpdates is set to false";
         return;
     }
-    Clip currClip(cb->text(), format ,getTimestamp());
+    Clip currClip(cb->text(), format, getTimestamp());
     if( getTopClip().hash() != currClip.hash()){
         qDebug() << "Clip Hash doesnt match prevClipHash" << '\n';
         add(currClip,visibleVCBId);

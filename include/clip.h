@@ -22,9 +22,10 @@ class Clip {
         Clip(const QString& value,const QString& format,qint64 timestamp)
             :m_value(value) , m_format(format), m_timestamp(timestamp)
         {
-            QString temp = value + format + QString::number(timestamp);
+            // QString temp = value + format + QString::number(timestamp);
+            QString temp = value + format;
             QCryptographicHash qh(QCryptographicHash::Md5);
-            qh.addData(temp.toStdString().c_str(),16);
+            qh.addData(temp.toUtf8());
             m_hash = qh.result().toHex();
         }
 

@@ -39,16 +39,8 @@ set(SOURCE_FILES
     main.cpp
     ${PROJECT_SOURCE_DIR}/src/database/database.cpp
     ${PROJECT_SOURCE_DIR}/src/database/getDatabaseConnection.cpp
-    ${PROJECT_SOURCE_DIR}/src/database/getRowCount.cpp
-    ${PROJECT_SOURCE_DIR}/src/utils/formatQString.cpp
-    ${PROJECT_SOURCE_DIR}/src/utils/getMd5Hash.cpp
-    ${PROJECT_SOURCE_DIR}/src/utils/getOAuthUrl.cpp
-    ${PROJECT_SOURCE_DIR}/src/utils/getTimestamp.cpp
-    ${PROJECT_SOURCE_DIR}/src/utils/quotedQString.cpp
-    ${PROJECT_SOURCE_DIR}/src/utils/simulatePasteKeySequence.cpp
     ${PROJECT_SOURCE_DIR}/src/handler.cpp
     ${PROJECT_SOURCE_DIR}/src/vcb.cpp
-    ${PROJECT_SOURCE_DIR}/src/getQueryParamValue.cpp
     ${PROJECT_SOURCE_DIR}/src/vcbhandler.cpp
     ${PROJECT_SOURCE_DIR}/dependencies/framelesswindow/framelesswindow.cpp
     ${PROJECT_SOURCE_DIR}/dependencies/framelesswindow/windowdragger.cpp
@@ -58,13 +50,13 @@ set(SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/src/eventlisteners/menuiconeventlistener.cpp
     ${PROJECT_SOURCE_DIR}/src/mainwindow.cpp
     ${PROJECT_SOURCE_DIR}/src/prefs.cpp
+    src/utils.cpp
 )
 #
 ## Add header files
 set(HEADER_FILES
     ${PROJECT_SOURCE_DIR}/include/database.h
     ${PROJECT_SOURCE_DIR}/include/handler.h
-    ${PROJECT_SOURCE_DIR}/include/utils.h
     ${PROJECT_SOURCE_DIR}/include/clip.h
     ${PROJECT_SOURCE_DIR}/include/vcb.h
     ${PROJECT_SOURCE_DIR}/include/vcbhandler.h
@@ -77,6 +69,7 @@ set(HEADER_FILES
     ${PROJECT_SOURCE_DIR}/dependencies/framelesswindow/framelesswindow.h
     ${PROJECT_SOURCE_DIR}/dependencies/framelesswindow/windowdragger.h
     ${PROJECT_SOURCE_DIR}/dependencies/framelesswindow/DarkStyle.h
+    include/utils.h
 )
 #
 ## Create executable

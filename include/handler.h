@@ -42,7 +42,7 @@
             // void startLogin();
             // void resetAuthTokens();
             // void handleShortcutTrigger(MSG*);
-            // void handleHotkeyActivation(const QKeySequence&);
+            void handleHotkeyActivation(const QKeySequence&);
 
         private Q_SLOTS:
             // void onWssTokenExpired();

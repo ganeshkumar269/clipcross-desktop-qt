@@ -36,6 +36,7 @@
 // #include "rightarroweventlistener.h" 
 // #include "leftarroweventlistener.h"
 // #include "menuiconeventlistener.h"
+#include <QHotkey>
 #include <QStandardPaths>
 #include <QLineEdit>
 #include "DarkStyle.h"
@@ -97,20 +98,16 @@ int main(int argc, char *argv[])
     setUpLogger();
     const QPoint windowSize(360,440);
     auto *mainwindow = new MainWindow();
-
+    const auto logoIcon = QIcon(":clippycross_logo.jpg");
+    a.setWindowIcon(logoIcon);
     QGuiApplication::setOrganizationName("ClippyCross");
     QGuiApplication::setOrganizationDomain("clippycross.com");
     QGuiApplication::setApplicationName("Clippycross");
-
-    qDebug() << "[main.cpp] main logger->debug Works"; 
-    qDebug() << "[main.cpp] main logger->debug Works with change 2";
+    qDebug() << "[main.cpp] main logger->debug Works";
     std::cerr << "This is from standard error" << std::endl;
     std::cout << "This is from standard output" << std::endl; 
     auto logger = Log4Qt::Logger::rootLogger();
     logger->debug() << "This is debug";
-    QSystemTrayIcon tray_icon = new QSystemTrayIcon();
-    tray_icon.setIcon(QIcon(":clippycross_logo.jpg"));
-    tray_icon.show();
     QApplication::setStyle(new DarkStyle);
     FramelessWindow framelesswindow;
 
@@ -125,12 +122,11 @@ int main(int argc, char *argv[])
     // QLabel vcbLabel;
     // vcbLabel.setText("vcb placeholder");
     // vcbLabel.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
-    lineEdit->setFixedWidth(150);
-    lineEdit->setFixedHeight(30);
-    lineEdit->setFixedSize(100,30);
+    // lineEdit->setFixedWidth(150);
+    // lineEdit->setFixedHeight(30);
+    // lineEdit->setFixedSize(100,30);
     // lineEdit->setAlignment(Qt::AlignCenter);
-    layout->addWidget(lineEdit);
-    // lineEdit->setAttribute(Qt::WA_TranslucentBackground, true);
+    layout->addWidget(lineEdit, 0,Qt::AlignCenter);
 
     QPalette defaultPalette;
     QBrush base; base.setColor(QColor("#283742"));
@@ -140,19 +136,15 @@ int main(int argc, char *argv[])
     const auto fontId = QFontDatabase::addApplicationFont(":Roboto-Medium.ttf");
     const QString family = QFontDatabase::applicationFontFamilies(fontId).at(0);
     const QFont _font(family, 16);
-    a.setFont(_font);
+    QApplication::setFont(_font);
 
-    // sm->insertRow(0,sm->index(0));
-    // sm->setData(sm->index(0),QString("Test Text"));
-
-    // list->setModel(sm);
     list->setPalette(defaultPalette);
     list->setAlternatingRowColors(true);
     list->setEditTriggers(QAbstractItemView::NoEditTriggers);
     
 
     // mainwindow->connect(mainwindow, &MainWindow::registeredShortcutTriggered, &handler, &Handler::handleShortcutTrigger);
-    // mainwindow->connect(mainwindow, &MainWindow::registeredHotkeyActivated, &handler, &Handler::handleHotkeyActivation);
+    MainWindow::connect(mainwindow, &MainWindow::registeredHotkeyActivated, &handler, &Handler::handleHotkeyActivation);
 
     QListView::connect(list,&QAbstractItemView::doubleClicked,&handler,
         [&](const QModelIndex& ind){
@@ -162,7 +154,7 @@ int main(int argc, char *argv[])
             handler.doubleClickEvent(ind); 
     });
 
-    handler.connect(&handler,&Handler::updateListViewModel,list,[&](QStringListModel* slm){
+    Handler::connect(&handler,&Handler::updateListViewModel,list,[&](QStringListModel* slm){
         logger->debug("ListViewModel updated");
         list->setModel(slm);
         logger->debug() << "Slm" << slm->data(slm->index(0)).toString();
@@ -195,11 +187,21 @@ int main(int argc, char *argv[])
 
     layout->addLayout(infoBar);
     layout->addWidget(list);
-    
+
+    mainwindow->setWindowTitle("Clippycross");
     mainwindow->setStyleSheet("background-color: #283742; color: #aaccff;");
     mainwindow->resize(windowSize.x(), windowSize.y());    
+    auto hotkey = new QHotkey(QKeySequence(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_C), true, &framelesswindow);//The hotkey will be automatically registered
+    qDebug() << "Is HotKey Registered Ctrl + Shift + C  " << hotkey->isRegistered() << " KeyCode : " << hotkey->keyCode();
+    QObject::connect(hotkey, &QHotkey::activated, &framelesswindow, [&](){
+        qDebug() << "Hotkey Activated - Ctrl + Shift + C";
+        framelesswindow.activateWindow();
+        framelesswindow.setVisible(true);
+        framelesswindow.showNormal();
+        // emit registeredHotkeyActivated(QKeySequence(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_C));
+    });
 
-    framelesswindow.setWindowIcon(QIcon(":clippycross_logo.jpg"));
+    framelesswindow.setWindowIcon(logoIcon);
     framelesswindow.setWindowTitle("Clippycross");
     framelesswindow.setContent(mainwindow);
     framelesswindow.setPalette(defaultPalette);

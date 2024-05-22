@@ -33,11 +33,20 @@ MainWindow::MainWindow(QWidget* parent):QWidget(parent){
     // }
 
     // auto hotkey = new QHotkey(QKeySequence(QString("ctrl+") + QString::number(1)), true, this);//The hotkey will be automatically registered
-    // qDebug() << "Is HotKey Registered Ctrl + " << 1 << " : " << hotkey->isRegistered() << " KeyCode : " << hotkey->keyCode();
-    // QObject::connect(hotkey, &QHotkey::activated, this, [&](){
-    //     qDebug() << "Hotkey Activated - Ctrl + 1";
-    //     emit registeredHotkeyActivated(QKeySequence(Qt::ControlModifier | Qt::Key_1));
-    // });
+    auto hotkey = new QHotkey(QKeySequence(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_C), true, this);//The hotkey will be automatically registered
+    qDebug() << "Is HotKey Registered Ctrl + Shift + C  " << hotkey->isRegistered() << " KeyCode : " << hotkey->keyCode();
+    connect(hotkey, &QHotkey::activated, this, [&](){
+        qDebug() << "Hotkey Activated - Ctrl + Shift + C";
+        if (isHidden()) {
+          show();  // Make the window visible
+        } else if (!isActiveWindow()) {
+          activateWindow();  // Activate the window if not already active
+        }
+        // activateWindow();
+        // setVisible(true);
+        // showNormal();
+        // emit registeredHotkeyActivated(QKeySequence(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_C));
+    });
     //
     // hotkey = new QHotkey(QKeySequence(QString("ctrl+") + QString::number(2)), true, this);//The hotkey will be automatically registered
     // qDebug() << "Is HotKey Registered Ctrl + " << 2 << " : " << hotkey->isRegistered() << " KeyCode : " << hotkey->keyCode();

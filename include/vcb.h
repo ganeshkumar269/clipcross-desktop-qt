@@ -7,10 +7,10 @@
     class VCB : public QObject{
         Q_OBJECT
         public:
-            explicit VCB(const QString& id,const QString& deviceId, bool nonHost = false, QObject* =nullptr);
+            explicit VCB(const QString& id,const QString& deviceId, QObject* =nullptr);
             ~VCB();
             void add(const Clip&);
-            void remove(const Clip& clip, int);
+            void removeFromSlm(int);
             void add(const QModelIndex&);
             void checkForDuplicateAndAdd(const Clip& clip);
             void addClipToSlm(const Clip&);
@@ -33,6 +33,5 @@
             Clip lastSyncedClip;
             Database *db = nullptr;
             const QString deviceId;
-            const bool nonHost;
-    };  
+    };
 #endif

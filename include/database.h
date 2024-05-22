@@ -25,6 +25,7 @@
             Clip getTopItem();
             bool checkIfHashIsPresent(const QString&);
             bool deleteClip(const QString& hash);
+            bool updateTimestampOfClip(const QString& clip_hash, const qint64 new_timestamp);
             QStringListModel* onSearchQuery(const QString& searchQuery);
         private Q_SLOTS:
             void onOpened();

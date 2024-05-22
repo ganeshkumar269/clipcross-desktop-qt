@@ -40,9 +40,6 @@ Database::Database(const QString& _id,QObject* parent):id(_id),QObject(parent){
         qDebug() << "ERROR: " << db.lastError().text();
     else{
         qDebug() << "DB opened successfully"; //onopened slot
-        // QString query_string ="CREATE TABLE IF NOT EXISTS " + id +
-        //                     " (timestamp TEXT PRIMARY KEY DEFAULT(strftime(\'%s\','now') || substr(strftime(\'%f\','now'),4)),"
-        //                     "value TEXT, format TEXT, hash TEXT)" ;
         // strftime(\'%s\','now') || substr(strftime(\'%f\','now'),4) -> get the current time with millisecond precision
         // strftime(\'%s\','now')  -> gets current time in seconds
         // substr(strftime(\'%f\','now'),4)) -> gets the millisecond part
@@ -60,7 +57,7 @@ Database::Database(const QString& _id,QObject* parent):id(_id),QObject(parent){
             qDebug() << "dbv2 Table Creation query success";
 
         // create FTS5 index on text
-        const auto fts5_table_create_query_string = "CREATE VIRTUAL TABLE trigram_fts USING fts5(value, hash unindexed, tokenize = 'trigram');";
+        const auto fts5_table_create_query_string = "CREATE VIRTUAL TABLE IF NOT EXISTS trigram_fts USING fts5(value, hash unindexed, tokenize = 'trigram');";
         const auto fts5_table_create_query = db.exec(fts5_table_create_query_string);
         if(!fts5_table_create_query.isActive())
             qDebug() << "query_string: "<< fts5_table_create_query_string <<  "\nERROR: " << fts5_table_create_query.lastError().text();
@@ -111,18 +108,26 @@ QList<Clip>* Database::retrieveClips(const QList<QString>& cols,uint limit,uint 
 
 
 bool Database::insertClip(const Clip& clip){
-    auto query = db.exec("insert into " + id + " values(" + 
-                        QString::number(clip.timestamp()) + 
-                        ",\"" + clip.value() + 
-                        "\",\"" + clip.format() +
-                        "\",\"" + clip.hash() +"\")"
-                        );    
+    qDebug() << "clip: " << clip.toString();
+    const auto query_string = "insert into " + id + " values(:timestamp, :value, :format, :hash)"
+        " ON CONFLICT(hash) DO UPDATE SET timestamp=:timestamp";
+    // const auto query_string = "insert into " + id + " values(?, ?, ?, ?)";
+    QSqlQuery query = QSqlQuery(db);
+    query.prepare(query_string);
 
+    query.bindValue(":timestamp", QString::number(clip.timestamp()) );
+    query.bindValue(":value", clip.value());
+    query.bindValue(":format", clip.format());
+    query.bindValue(":hash", clip.hash());
+    // query.addBindValue( QString::number(clip.timestamp()) );
+    // query.addBindValue( clip.value());
+    // query.addBindValue(clip.format());
+    // query.addBindValue(clip.hash());
+    query.exec();
     // db.exec();
     if(!query.isActive()){
         qDebug() << "database.cpp Database::insertClip query: "<< query.lastQuery();
         qDebug() << "ERROR: " << query.lastError().text();
-        // qDebug() << "Error lastquery:" << query.lastQuery();
         return false;
     }
     else{
@@ -133,21 +138,21 @@ bool Database::insertClip(const Clip& clip){
 }
 
 bool Database::insertFTS(const Clip& clip){
-    auto query = db.exec("insert into trigram_fts(value, hash) values("
-                        "\"" + clip.value() +
-                        "\",\"" + clip.hash() +"\")"
-                        );
+    const auto query_string = "insert into trigram_fts(value, hash) values(:value, :hash)";
 
-    // db.exec();
+    QSqlQuery query = QSqlQuery(db);
+    query.prepare(query_string);
+    query.bindValue(":value", clip.value());
+    query.bindValue(":hash", clip.hash());
+
+    query.exec();
     if(!query.isActive()){
-        qDebug() << "database.cpp Database::insertClip query: "<< query.lastQuery();
+        qDebug() << "query: "<< query.lastQuery();
         qDebug() << "ERROR: " << query.lastError().text();
-        // qDebug() << "Error lastquery:" << query.lastQuery();
         return false;
-    }
-    else{
-        qDebug() << "database.cpp Database::insertClip query: "<< query.lastQuery();
-        qDebug() << "database.cpp Database::insertClip insert success";
+    }else{
+        qDebug() << "query: "<< query.lastQuery();
+        qDebug() << "insert success";
         return true;
     }
 }
@@ -221,31 +226,47 @@ bool Database::deleteClip(const QString& hash){
 }
 
 QStringListModel* Database::onSearchQuery(const QString& searchQuery) {
-    const auto query = "SELECT source.value, source.format, source.hash, source.timestamp, temp.rank FROM one as source JOIN "
-        "(SELECT value, hash, rank FROM trigram_fts WHERE value MATCH \"" + searchQuery + "\" ORDER BY rank) temp "
+    const auto query_string = "SELECT source.value, source.format, source.hash, source.timestamp, temp.rank FROM one as source JOIN "
+        "(SELECT value, hash, rank FROM trigram_fts WHERE value MATCH :search_query ORDER BY rank) temp "
         "ON source.hash = temp.hash ORDER by rank";
-    auto res = db.exec(query);
-    if(!res.isActive()) {
-        qDebug() << "ERROR: " << res.lastError().text() ;
-        return nullptr;
+//    const auto query_string = "SELECT source.value, source.format, source.hash, source.timestamp, temp.rank FROM one as source JOIN "
+//                              "(SELECT value, hash, rank FROM trigram_fts WHERE value MATCH " + sanitizeForSqlQuery(searchQuery) + " ORDER BY rank) temp "
+//        "ON source.hash = temp.hash ORDER by rank";
+    QSqlQuery query = QSqlQuery(db);
+    query.prepare(query_string);
+//    query.bindValue(":search_query", QString(searchQuery));
+    query.bindValue(":search_query", sanitizeForSqlQuery(QString(searchQuery)));
+
+    query.exec();
+    if(!query.isActive()) {
+        qDebug() << "ERROR: " << query.lastError().text() ;
+        return new QStringListModel();
     }else {
         const auto list = new QStringListModel();
-        // while(res.next()){
-        // list->insertRow(0,list->index(0));
-        // list->setData(list->index(0), "dummy");
-        for(int i = 0; res.next(); i++){
+        for(int i = 0; query.next(); i++){
             // QList<QVariant> res_row(cols_cnt); //optimisation possible here
             Clip temp(
-                res.value("value").toString(),
-                res.value("format").toString(),
-                res.value("hash").toString(),
-                res.value("timestamp").toLongLong()
+                query.value("value").toString(),
+                query.value("format").toString(),
+                query.value("hash").toString(),
+                query.value("timestamp").toLongLong()
             );
             list->insertRow(i,list->index(i));
-            list->setData(list->index(i), formatQString(res.value("value").toString()));
+            list->setData(list->index(i), formatQString(query.value("value").toString()));
             // list->insertRow()
             // list->insertRows(temp);
         }
         return list;
+    }
+}
+
+bool Database::updateTimestampOfClip(const QString& clip_hash, const qint64 new_timestamp){
+    const auto query = "UPDATE " + id.toStdString() + " SET timestamp = " + std::to_string(new_timestamp) + " WHERE hash = '" + clip_hash.toStdString() + "'";
+    auto res = db.exec(QString(query.c_str()));
+    if(!res.isActive()) {
+        qDebug() << "ERROR: " << res.lastError().text() ;
+        return false;
+    }else {
+        return true;
     }
 }
