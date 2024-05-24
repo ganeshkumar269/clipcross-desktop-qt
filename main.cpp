@@ -118,14 +118,6 @@ int main(int argc, char *argv[])
     
     QListView *list = new QListView();
     auto lineEdit = new QLineEdit(mainwindow);
-    // QStringListModel *sm = new QStringListModel();
-    // QLabel vcbLabel;
-    // vcbLabel.setText("vcb placeholder");
-    // vcbLabel.setStyleSheet("background-color:#2f3233; border: 2px solid gray; border-radius:10px;");
-    // lineEdit->setFixedWidth(150);
-    // lineEdit->setFixedHeight(30);
-    // lineEdit->setFixedSize(100,30);
-    // lineEdit->setAlignment(Qt::AlignCenter);
     layout->addWidget(lineEdit, 0,Qt::AlignCenter);
 
     QPalette defaultPalette;
@@ -142,8 +134,6 @@ int main(int argc, char *argv[])
     list->setAlternatingRowColors(true);
     list->setEditTriggers(QAbstractItemView::NoEditTriggers);
     
-
-    // mainwindow->connect(mainwindow, &MainWindow::registeredShortcutTriggered, &handler, &Handler::handleShortcutTrigger);
     MainWindow::connect(mainwindow, &MainWindow::registeredHotkeyActivated, &handler, &Handler::handleHotkeyActivation);
 
     QListView::connect(list,&QAbstractItemView::doubleClicked,&handler,
@@ -172,33 +162,17 @@ int main(int argc, char *argv[])
             }
         });
 
-
-    // handler.connect(&handler,&Handler::updateVcbId,&vcbLabel,[&](QString vcbIdString){
-    //     vcbLabel.setText(vcbIdString);
-    // });
-
-    //show the first vcb (hacky way of doing it)
-    // handler.goPrevious();
-
-    // infoBar->addWidget(&leftArrowActive, Qt::AlignCenter);
-    // infoBar->addWidget(&vcbLabel, Qt::AlignCenter);
-    // infoBar->addWidget(&rightArrowActive, Qt::AlignCenter);
-    // infoBar->addWidget(&menuIcon, Qt::AlignLeft);
-
     layout->addLayout(infoBar);
     layout->addWidget(list);
 
     mainwindow->setWindowTitle("Clippycross");
     mainwindow->setStyleSheet("background-color: #283742; color: #aaccff;");
     mainwindow->resize(windowSize.x(), windowSize.y());    
-    auto hotkey = new QHotkey(QKeySequence(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_C), true, &framelesswindow);//The hotkey will be automatically registered
-    qDebug() << "Is HotKey Registered Ctrl + Shift + C  " << hotkey->isRegistered() << " KeyCode : " << hotkey->keyCode();
+    auto hotkey = new QHotkey(QKeySequence(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_V), true, &framelesswindow);//The hotkey will be automatically registered
+    qDebug() << "Is HotKey Registered Ctrl + Shift + V  " << hotkey->isRegistered() << " KeyCode : " << hotkey->keyCode();
     QObject::connect(hotkey, &QHotkey::activated, &framelesswindow, [&](){
-        qDebug() << "Hotkey Activated - Ctrl + Shift + C";
-        framelesswindow.activateWindow();
-        framelesswindow.setVisible(true);
-        framelesswindow.showNormal();
-        // emit registeredHotkeyActivated(QKeySequence(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_C));
+        qDebug() << "Hotkey Activated - Ctrl + Shift + V";
+        framelesswindow.raise();
     });
 
     framelesswindow.setWindowIcon(logoIcon);
