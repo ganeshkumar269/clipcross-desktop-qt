@@ -14,7 +14,7 @@
 #include <QCryptographicHash>
 // #include <windows.h>
 // #include "database.h"
-//    void handleDataChangedEvent(QStringListModel&, QClipboard*, Database*,QByteArray&);
+
 QString formatQString(const QString& str){
     std::string no_newlines = str.toStdString();
     for(char &i : no_newlines)if(i == '\n')i = ' ';
