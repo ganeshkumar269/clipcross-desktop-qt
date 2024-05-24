@@ -1,12 +1,7 @@
 #include <QApplication>
-#include <QWidget>
 #include <QListView>
 #include <QStringListModel>
 #include <QVBoxLayout>
-#include <QPushButton>
-#include "database.h"
-#include "utils.h"
-#include <QSettings>
 #include <QObject>
 #include <QLabel>
 #include <QIcon>
@@ -17,30 +12,20 @@
 #include "framelesswindow/DarkStyle.h"
 #include <QLoggingCategory>
 #include <iostream>
-#include <QSystemTrayIcon>
-#include <QStyle>
-#include <QAction>
 #include <QMenu>
 #include <QAbstractItemView>
 #include "log4qt/logger.h"
-#include "log4qt/propertyconfigurator.h"
 #include "log4qt/loggerrepository.h"
 #include "log4qt/consoleappender.h"
 #include "log4qt/ttcclayout.h"
-#include "log4qt/logmanager.h"
 #include "log4qt/fileappender.h"
-#define WINVER 0x0500
-// #include <windows.h>
 #include "mainwindow.h"
 #include "handler.h"
-// #include "rightarroweventlistener.h" 
-// #include "leftarroweventlistener.h"
-// #include "menuiconeventlistener.h"
 #include <QHotkey>
 #include <QStandardPaths>
 #include <QLineEdit>
-#include "DarkStyle.h"
-#include "prefs.h"
+#include <QScroller>
+
 Q_LOGGING_CATEGORY(category1, "test.category1")
 
 void setUpLogger(){
@@ -89,8 +74,8 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     }
 }
 
-
-
+void executeFunction(const QModelIndex &index, QKeyEvent *event) {
+}
 int main(int argc, char *argv[])
 {
     qInstallMessageHandler(myMessageOutput);
@@ -144,6 +129,11 @@ int main(int argc, char *argv[])
             handler.doubleClickEvent(ind); 
     });
 
+    QScroller *scroller = QScroller::scroller(list->viewport());
+    QScrollerProperties scrollerProperties = scroller->scrollerProperties();
+    scrollerProperties.setScrollMetric(QScrollerProperties::VerticalOvershootPolicy, QScrollerProperties::OvershootAlwaysOff);
+    scroller->setScrollerProperties(scrollerProperties);
+
     Handler::connect(&handler,&Handler::updateListViewModel,list,[&](QStringListModel* slm){
         logger->debug("ListViewModel updated");
         list->setModel(slm);
@@ -155,11 +145,7 @@ int main(int argc, char *argv[])
         [&] {
             logger->debug("Enter clicked on Search Box");
             auto search_query = lineEdit->text();
-            if(search_query.isEmpty()) {
-                list->setModel(handler.getActiveStringListModel());
-            }else {
-                handler.onSearchQuery(search_query);
-            }
+            handler.onSearchQuery(search_query);
         });
 
     layout->addLayout(infoBar);

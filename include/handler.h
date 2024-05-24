@@ -11,7 +11,9 @@
     #define WINVER 0x0500
     // #include <windows.h>
     #include <QModelIndex>
-    class Handler: public QObject {
+#include <QKeyEvent>
+
+class Handler: public QObject {
         Q_OBJECT
 
         public:

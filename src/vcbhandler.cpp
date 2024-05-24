@@ -120,5 +120,20 @@ void VCBHandler::handleDoubleClickEvent(const QModelIndex& index){
 }
 
 QStringListModel* VCBHandler::onSearchQuery(const QString& search_query) {
-    return vcbList[visibleVCBId]->onSearchQuery(search_query);
+    QStringListModel* searchQueryResultSLM = vcbList[visibleVCBId]->onSearchQuery(search_query);
+    // make sure to clear any existing search result slm
+    if(getSearchQueryResultSLM() != nullptr){
+        delete getSearchQueryResultSLM();
+    }
+    // store the SLM for later deletion
+    setSearchQueryResultSLM(searchQueryResultSLM);
+    return searchQueryResultSLM;
+}
+
+void VCBHandler::setSearchQueryResultSLM(QStringListModel * slm) {
+    this->searchQueryResultSLM = slm;
+}
+
+QStringListModel *VCBHandler::getSearchQueryResultSLM() {
+    return this->searchQueryResultSLM;
 }

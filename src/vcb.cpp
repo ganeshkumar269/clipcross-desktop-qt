@@ -4,8 +4,8 @@ VCB::VCB(const QString& id,const QString& deviceId, QObject* parent)
 {
     slm = new QStringListModel();
     //show the first item as the vcbId
-    slm->insertRow(0,slm->index(0));
-    slm->setData(slm->index(0),id);
+//    slm->insertRow(0,slm->index(0));
+//    slm->setData(slm->index(0),id);
     clips = new QList<Clip>();
     db = new Database(id);
     clips = db->retrieveClips({});
