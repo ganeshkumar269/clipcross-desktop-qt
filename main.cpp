@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
     mainwindow->setWindowTitle("Clippycross");
     mainwindow->setStyleSheet("background-color: #283742; color: #aaccff;");
     mainwindow->resize(windowSize.x(), windowSize.y());    
-    auto hotkey = new QHotkey(QKeySequence(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_V), true, &framelesswindow);//The hotkey will be automatically registered
+    auto hotkey = new QHotkey(QKeySequence(Qt::ControlModifier | Qt::ShiftModifier | Qt::Key_C), true, &framelesswindow);//The hotkey will be automatically registered
     qDebug() << "Is HotKey Registered Ctrl + Shift + V  " << hotkey->isRegistered() << " KeyCode : " << hotkey->keyCode();
     QObject::connect(hotkey, &QHotkey::activated, &framelesswindow, [&](){
         qDebug() << "Hotkey Activated - Ctrl + Shift + V";
