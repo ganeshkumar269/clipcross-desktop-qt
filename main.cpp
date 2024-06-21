@@ -21,10 +21,12 @@
 #include "log4qt/fileappender.h"
 #include "mainwindow.h"
 #include "handler.h"
+#include "customlistview.h"
 #include <QHotkey>
 #include <QStandardPaths>
 #include <QLineEdit>
 #include <QScroller>
+#include <QToolTip>
 
 Q_LOGGING_CATEGORY(category1, "test.category1")
 
@@ -74,8 +76,16 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     }
 }
 
-void executeFunction(const QModelIndex &index, QKeyEvent *event) {
-}
+//void showTooltip(const QModelIndex &index, const QPoint &globalPos)
+//{
+//    QString text = index.data().toString();
+//    tooltipLabel->setText(text);
+//    tooltipLabel->adjustSize();
+//    QPoint tooltipPos = globalPos + QPoint(15, 15); // Adjust the position as needed
+//    tooltipLabel->move(tooltipPos);
+//    tooltipLabel->show();
+//}
+
 int main(int argc, char *argv[])
 {
     qInstallMessageHandler(myMessageOutput);
@@ -96,15 +106,20 @@ int main(int argc, char *argv[])
     QApplication::setStyle(new DarkStyle);
     FramelessWindow framelesswindow;
 
+    QLabel *tooltipLabel = new QLabel();
+    tooltipLabel->setAttribute(Qt::WA_TransparentForMouseEvents);
+    tooltipLabel->setStyleSheet("QLabel { background-color : lightyellow; border: 1px solid black; }");
+    tooltipLabel->hide();
+
     QVBoxLayout *layout = new QVBoxLayout(mainwindow);
     QHBoxLayout *infoBar = new QHBoxLayout();
 
     Handler handler;  
     
-    QListView *list = new QListView();
+//    QListView *list = new QListView();
+    auto *list = new CustomListView();
     auto lineEdit = new QLineEdit(mainwindow);
     layout->addWidget(lineEdit, 0,Qt::AlignCenter);
-
     QPalette defaultPalette;
     QBrush base; base.setColor(QColor("#283742"));
     QBrush alternateBase; alternateBase.setColor(QColor("#6784a3"));

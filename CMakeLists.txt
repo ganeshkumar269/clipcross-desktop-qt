@@ -7,6 +7,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(Qt6 REQUIRED COMPONENTS Core Sql Network WebSockets Widgets Concurrent)
 qt_standard_project_setup()
 
+#set(CMAKE_AUTOMOC ON)
+#set(CMAKE_AUTOUIC ON)
+#set(CMAKE_AUTORCC ON)
+
 # Include directories for header files
 include_directories(
         ${PROJECT_SOURCE_DIR}
@@ -70,6 +74,7 @@ set(HEADER_FILES
     ${PROJECT_SOURCE_DIR}/dependencies/framelesswindow/windowdragger.h
     ${PROJECT_SOURCE_DIR}/dependencies/framelesswindow/DarkStyle.h
     include/utils.h
+    include/customlistview.h
 )
 #
 ## Create executable
