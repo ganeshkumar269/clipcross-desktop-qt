@@ -166,8 +166,7 @@ bool Database::insert(const QString table,const QList<QString>& cols,const QList
     for(int i = 0; i < values.size(); i++) 
         values_string.append("\"" + values.at(i) + "\"" + (i == values.size() - 1 ? " " : ","));
     
-
-    QString query_string ="INSERT INTO " + table + "(" + cols_string + ")" + " VALUES(" + values_string + ")"; 
+    QString query_string ="INSERT INTO " + table + "(" + cols_string + ")" + " VALUES(" + values_string + ")";
 
     query.prepare(query_string);
     
@@ -225,7 +224,7 @@ bool Database::deleteClip(const QString& hash){
     }
 }
 
-QStringListModel* Database::onSearchQuery(const QString& searchQuery) {
+QList<Clip>* Database::onSearchQuery(const QString& searchQuery) {
     const auto query_string = "SELECT source.value, source.format, source.hash, source.timestamp, temp.rank FROM one as source JOIN "
         "(SELECT value, hash, rank FROM trigram_fts WHERE value MATCH :search_query ORDER BY rank) temp "
         "ON source.hash = temp.hash ORDER by rank";
@@ -240,9 +239,9 @@ QStringListModel* Database::onSearchQuery(const QString& searchQuery) {
     query.exec();
     if(!query.isActive()) {
         qDebug() << "ERROR: " << query.lastError().text() ;
-        return new QStringListModel();
+        return new QList<Clip>();
     }else {
-        const auto list = new QStringListModel();
+        const auto list = new QList<Clip>();
         for(int i = 0; query.next(); i++){
             // QList<QVariant> res_row(cols_cnt); //optimisation possible here
             Clip temp(
@@ -251,10 +250,7 @@ QStringListModel* Database::onSearchQuery(const QString& searchQuery) {
                 query.value("hash").toString(),
                 query.value("timestamp").toLongLong()
             );
-            list->insertRow(i,list->index(i));
-            list->setData(list->index(i), formatQString(query.value("value").toString()));
-            // list->insertRow()
-            // list->insertRows(temp);
+            list->append(temp);
         }
         return list;
     }

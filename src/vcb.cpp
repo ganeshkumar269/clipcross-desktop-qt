@@ -80,6 +80,6 @@ Clip VCB::getClipAtIndex(int index){
         return clips->at(index);
     }
 }
-QStringListModel* VCB::onSearchQuery(const QString& searchQuery) {
+QList<Clip>* VCB::onSearchQuery(const QString& searchQuery) {
     return db->onSearchQuery(searchQuery);
 }

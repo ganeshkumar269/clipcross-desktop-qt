@@ -66,6 +66,9 @@ QStringListModel* Handler::getActiveStringListModel() {
 
 void Handler::onSearchQuery(const QString& search_query) {
     if(search_query.trimmed().size() == 0){
+        if(vcbHandler->getSearchQueryResultSLM() != nullptr){
+            vcbHandler->clearSearchQueryResultData();
+        }
         emit updateListViewModel(vcbHandler->getModel());
     }else{
         auto searchQueryResultSLM =  vcbHandler->onSearchQuery(search_query);

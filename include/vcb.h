@@ -18,7 +18,7 @@
             Clip getTopClip();
             Clip getClipAtIndex(int);
             QStringListModel* getModel();
-            QStringListModel* onSearchQuery(const QString&);
+            QList<Clip>* onSearchQuery(const QString&);
         Q_SIGNALS:
 
         public Q_SLOTS:   

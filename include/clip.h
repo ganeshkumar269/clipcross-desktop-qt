@@ -10,10 +10,10 @@
 #include <QJsonObject>
 class Clip {
     private:
-        QString m_value;
-        QString m_format;
-        QString m_hash;
-        qint64 m_timestamp;
+        QString m_value; // actual text value of the clip
+        QString m_format; // format of the clip, usually just text
+        QString m_hash; // hash to easily comapare same texts, hash = (value + format)
+        qint64 m_timestamp; // time at which the clip was captured
     public:
         // friend QString getMd5Hash(const QString&);
         Clip():m_value(""),m_format(""),m_hash(""),m_timestamp(0){}
@@ -22,7 +22,6 @@ class Clip {
         Clip(const QString& value,const QString& format,qint64 timestamp)
             :m_value(value) , m_format(format), m_timestamp(timestamp)
         {
-            // QString temp = value + format + QString::number(timestamp);
             QString temp = value + format;
             QCryptographicHash qh(QCryptographicHash::Md5);
             qh.addData(temp.toUtf8());

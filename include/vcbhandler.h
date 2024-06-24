@@ -33,6 +33,7 @@ class VCBHandler : public QObject{
         QStringListModel* onSearchQuery(const QString&);
         QStringListModel* getSearchQueryResultSLM();
         void setSearchQueryResultSLM(QStringListModel*);
+        void clearSearchQueryResultData();
     Q_SIGNALS:
         void vcbDataChanged(const Clip&, QList<QString> /*vcbIds*/);
     public Q_SLOTS:
@@ -47,5 +48,6 @@ class VCBHandler : public QObject{
         QClipboard* cb;
         QTimer *clipboardTimer;
         QStringListModel* searchQueryResultSLM = nullptr;
+        QList<Clip>* searchQueryResultClips = nullptr;
 };
 #endif

@@ -136,13 +136,17 @@ int main(int argc, char *argv[])
     
     MainWindow::connect(mainwindow, &MainWindow::registeredHotkeyActivated, &handler, &Handler::handleHotkeyActivation);
 
-    QListView::connect(list,&QAbstractItemView::doubleClicked,&handler,
-        [&](const QModelIndex& ind){
+    QListView::connect(
+        list,
+        &QAbstractItemView::doubleClicked,
+        &handler,
+    [&](const QModelIndex& ind){
             logger->debug("Double Clicked");
             logger->debug() << list->model()->data(ind).toString();
             // send update to vcbHandler view handler
-            handler.doubleClickEvent(ind); 
-    });
+            handler.doubleClickEvent(ind);
+        }
+    );
 
     QScroller *scroller = QScroller::scroller(list->viewport());
     QScrollerProperties scrollerProperties = scroller->scrollerProperties();
@@ -157,11 +161,11 @@ int main(int argc, char *argv[])
     list->setModel(handler.getActiveStringListModel());
 
     QObject::connect(lineEdit, &QLineEdit::returnPressed, &handler,
-        [&] {
-            logger->debug("Enter clicked on Search Box");
-            auto search_query = lineEdit->text();
-            handler.onSearchQuery(search_query);
-        });
+    [&] {
+        logger->debug("Enter clicked on Search Box");
+        auto search_query = lineEdit->text();
+        handler.onSearchQuery(search_query);
+    });
 
     layout->addLayout(infoBar);
     layout->addWidget(list);

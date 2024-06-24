@@ -110,23 +110,40 @@ Clip VCBHandler::getClipAtIndex(int index){
     return vcbList[visibleVCBId]->getClipAtIndex(index);
 }
 void VCBHandler::setHandleClipboardUpdates(bool flag){
-    qDebug() << "Setting hanldeClipbardUpdate: " << flag;
+    qDebug() << "Setting hanldeClipboardUpdate: " << flag;
     handleClipboardUpdates = flag;
 }
 
 void VCBHandler::handleDoubleClickEvent(const QModelIndex& index){
-    vcbList[visibleVCBId]->add(index);
-    cb->setText(vcbList[visibleVCBId]->getTopClip().value());
+    // consider condition if the active SLM being a search query result slm
+    if(getSearchQueryResultSLM() != nullptr){
+        auto clip = searchQueryResultClips->at(index.row());
+//        QString clipText = getSearchQueryResultSLM()->data(index).toString();
+//        Clip clip = Clip(clipText, "text", getTimestamp());
+        vcbList[visibleVCBId]->add(clip);
+        cb->setText(vcbList[visibleVCBId]->getTopClip().value());
+    }else{
+        vcbList[visibleVCBId]->add(index);
+        cb->setText(vcbList[visibleVCBId]->getTopClip().value());
+    }
 }
 
 QStringListModel* VCBHandler::onSearchQuery(const QString& search_query) {
-    QStringListModel* searchQueryResultSLM = vcbList[visibleVCBId]->onSearchQuery(search_query);
+//    QStringListModel* searchQueryResultSLM = vcbList[visibleVCBId]->onSearchQuery(search_query);
+    auto list = vcbList[visibleVCBId]->onSearchQuery(search_query);
+    const auto pQStringListModel = new QStringListModel();
+    for(auto i = 0; i < list->size(); i++){
+        auto clip = list->at(i);
+        pQStringListModel->insertRow(i, pQStringListModel->index(i));
+        pQStringListModel->setData(pQStringListModel->index(i), formatQString(clip.value()));
+    }
     // make sure to clear any existing search result slm
     if(getSearchQueryResultSLM() != nullptr){
-        delete getSearchQueryResultSLM();
+        clearSearchQueryResultData();
     }
     // store the SLM for later deletion
-    setSearchQueryResultSLM(searchQueryResultSLM);
+    searchQueryResultClips = list;
+    setSearchQueryResultSLM(pQStringListModel);
     return searchQueryResultSLM;
 }
 
@@ -136,4 +153,10 @@ void VCBHandler::setSearchQueryResultSLM(QStringListModel * slm) {
 
 QStringListModel *VCBHandler::getSearchQueryResultSLM() {
     return this->searchQueryResultSLM;
+}
+void VCBHandler::clearSearchQueryResultData(){
+    delete this->searchQueryResultSLM;
+    this->searchQueryResultSLM = nullptr;
+    delete this->searchQueryResultClips;
+    this->searchQueryResultClips = nullptr;
 }
