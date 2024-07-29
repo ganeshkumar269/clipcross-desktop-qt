@@ -27,6 +27,7 @@
 #include <QLineEdit>
 #include <QScroller>
 #include <QToolTip>
+#include <QPushButton>
 
 Q_LOGGING_CATEGORY(category1, "test.category1")
 
@@ -102,14 +103,26 @@ int main(int argc, char *argv[])
     tooltipLabel->hide();
 
     QVBoxLayout *layout = new QVBoxLayout(mainwindow);
-    QHBoxLayout *infoBar = new QHBoxLayout();
+    QHBoxLayout *searchArea = new QHBoxLayout();
 
-    Handler handler;  
+    Handler handler;
     
 //    QListView *list = new QListView();
     auto *list = new CustomListView();
-    auto lineEdit = new QLineEdit(mainwindow);
-    layout->addWidget(lineEdit, 0,Qt::AlignCenter);
+    auto searchBox = new QLineEdit(mainwindow);
+    auto clearSearchBoxButton = new QPushButton("clear", mainwindow);
+    QPushButton::connect(clearSearchBoxButton, &QPushButton::clicked, &handler, [&](){
+        searchBox->clear();
+        handler.onClearSearchButton();
+    });
+
+
+    searchArea->addWidget(searchBox, 0, Qt::AlignCenter);
+    searchArea->addWidget(clearSearchBoxButton, 0, Qt::AlignCenter);
+//    searchBox->setContentsMargins(0,0,0,0);
+//    clearSearchBoxButton->setContentsMargins(0,0,0,0);
+//    searchArea->setContentsMargins(0, 0, 0, 0);
+
     QPalette defaultPalette;
     QBrush base; base.setColor(QColor("#283742"));
     QBrush alternateBase; alternateBase.setColor(QColor("#6784a3"));
@@ -150,14 +163,14 @@ int main(int argc, char *argv[])
     });
     list->setModel(handler.getActiveStringListModel());
 
-    QObject::connect(lineEdit, &QLineEdit::returnPressed, &handler,
-    [&] {
+    QObject::connect(searchBox, &QLineEdit::returnPressed, &handler,
+                     [&] {
         logger->debug("Enter clicked on Search Box");
-        auto search_query = lineEdit->text();
+        auto search_query = searchBox->text();
         handler.onSearchQuery(search_query);
     });
 
-    layout->addLayout(infoBar);
+    layout->addLayout(searchArea);
     layout->addWidget(list);
 
     mainwindow->setWindowTitle("Clippycross");
@@ -169,6 +182,19 @@ int main(int argc, char *argv[])
         qDebug() << "Hotkey Activated - Ctrl + Shift + V";
         framelesswindow.raise();
     });
+    auto enterKey = new QHotkey(QKeySequence(Qt::Key_Return), true, clearSearchBoxButton);
+//    clearSearchBoxButton->connect(enterKey, &QHotkey::activated, clearSearchBoxButton, [&]() {
+//        if(clearSearchBoxButton->hasFocus()){
+//            qDebug() << "enter key is pressed in clearSearchBoxButton" ;
+//            searchBox->clear();
+//            handler.onClearSearchButton();
+//        }else if(list->hasFocus()){
+//            qDebug() << "enter key is pressed in list" ;
+//        }else{
+//            qDebug() << "enter key is pressed" ;
+//        }
+//    });
+
 
     framelesswindow.setWindowIcon(logoIcon);
     framelesswindow.setWindowTitle("Clippycross");

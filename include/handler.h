@@ -32,6 +32,9 @@ class Handler: public QObject {
             void changeClipboardTemporarily(const Clip&);
             QStringListModel* getActiveStringListModel();
             void onSearchQuery(const QString&);
+            void onClearSearchButton();
+        private:
+            void clearSearchQueryResultAndShowVCB();
         Q_SIGNALS:
             void makeCBSignal();
             // void tokenExpired();

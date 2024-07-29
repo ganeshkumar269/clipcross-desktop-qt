@@ -64,14 +64,23 @@ QStringListModel* Handler::getActiveStringListModel() {
     return vcbHandler->getModel();
 }
 
+
+void Handler::clearSearchQueryResultAndShowVCB(){
+    if(vcbHandler->getSearchQueryResultSLM() != nullptr){
+        vcbHandler->clearSearchQueryResultData();
+    }
+    emit updateListViewModel(vcbHandler->getModel());
+}
+
 void Handler::onSearchQuery(const QString& search_query) {
     if(search_query.trimmed().size() == 0){
-        if(vcbHandler->getSearchQueryResultSLM() != nullptr){
-            vcbHandler->clearSearchQueryResultData();
-        }
-        emit updateListViewModel(vcbHandler->getModel());
+        clearSearchQueryResultAndShowVCB();
     }else{
         auto searchQueryResultSLM =  vcbHandler->onSearchQuery(search_query);
         emit updateListViewModel(searchQueryResultSLM);
     }
+}
+
+void Handler::onClearSearchButton() {
+    clearSearchQueryResultAndShowVCB();
 }
