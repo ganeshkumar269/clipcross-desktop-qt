@@ -76,16 +76,6 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     }
 }
 
-//void showTooltip(const QModelIndex &index, const QPoint &globalPos)
-//{
-//    QString text = index.data().toString();
-//    tooltipLabel->setText(text);
-//    tooltipLabel->adjustSize();
-//    QPoint tooltipPos = globalPos + QPoint(15, 15); // Adjust the position as needed
-//    tooltipLabel->move(tooltipPos);
-//    tooltipLabel->show();
-//}
-
 int main(int argc, char *argv[])
 {
     qInstallMessageHandler(myMessageOutput);
