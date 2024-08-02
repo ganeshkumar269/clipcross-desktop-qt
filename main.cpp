@@ -28,7 +28,7 @@
 #include <QScroller>
 #include <QToolTip>
 #include <QPushButton>
-
+#include <QShortcut>
 Q_LOGGING_CATEGORY(category1, "test.category1")
 
 void setUpLogger(){
@@ -86,28 +86,21 @@ int main(int argc, char *argv[])
     auto *mainwindow = new MainWindow();
     const auto logoIcon = QIcon(":clippycross_logo.jpg");
     a.setWindowIcon(logoIcon);
+
     QGuiApplication::setOrganizationName("ClippyCross");
     QGuiApplication::setOrganizationDomain("clippycross.com");
     QGuiApplication::setApplicationName("Clippycross");
-    qDebug() << "[main.cpp] main logger->debug Works";
-    std::cerr << "This is from standard error" << std::endl;
-    std::cout << "This is from standard output" << std::endl; 
+
     auto logger = Log4Qt::Logger::rootLogger();
-    logger->debug() << "This is debug";
+
     QApplication::setStyle(new DarkStyle);
     FramelessWindow framelesswindow;
-
-    QLabel *tooltipLabel = new QLabel();
-    tooltipLabel->setAttribute(Qt::WA_TransparentForMouseEvents);
-    tooltipLabel->setStyleSheet("QLabel { background-color : lightyellow; border: 1px solid black; }");
-    tooltipLabel->hide();
 
     QVBoxLayout *layout = new QVBoxLayout(mainwindow);
     QHBoxLayout *searchArea = new QHBoxLayout();
 
     Handler handler;
     
-//    QListView *list = new QListView();
     auto *list = new CustomListView();
     auto searchBox = new QLineEdit(mainwindow);
     auto clearSearchBoxButton = new QPushButton("clear", mainwindow);
@@ -116,12 +109,9 @@ int main(int argc, char *argv[])
         handler.onClearSearchButton();
     });
 
-
+    // TODO: make the clear button closer to the searchbox
     searchArea->addWidget(searchBox, 0, Qt::AlignCenter);
     searchArea->addWidget(clearSearchBoxButton, 0, Qt::AlignCenter);
-//    searchBox->setContentsMargins(0,0,0,0);
-//    clearSearchBoxButton->setContentsMargins(0,0,0,0);
-//    searchArea->setContentsMargins(0, 0, 0, 0);
 
     QPalette defaultPalette;
     QBrush base; base.setColor(QColor("#283742"));
@@ -163,13 +153,6 @@ int main(int argc, char *argv[])
     });
     list->setModel(handler.getActiveStringListModel());
 
-    QObject::connect(searchBox, &QLineEdit::returnPressed, &handler,
-                     [&] {
-        logger->debug("Enter clicked on Search Box");
-        auto search_query = searchBox->text();
-        handler.onSearchQuery(search_query);
-    });
-
     layout->addLayout(searchArea);
     layout->addWidget(list);
 
@@ -182,19 +165,26 @@ int main(int argc, char *argv[])
         qDebug() << "Hotkey Activated - Ctrl + Shift + V";
         framelesswindow.raise();
     });
-    auto enterKey = new QHotkey(QKeySequence(Qt::Key_Return), true, clearSearchBoxButton);
-//    clearSearchBoxButton->connect(enterKey, &QHotkey::activated, clearSearchBoxButton, [&]() {
-//        if(clearSearchBoxButton->hasFocus()){
-//            qDebug() << "enter key is pressed in clearSearchBoxButton" ;
-//            searchBox->clear();
-//            handler.onClearSearchButton();
-//        }else if(list->hasFocus()){
-//            qDebug() << "enter key is pressed in list" ;
-//        }else{
-//            qDebug() << "enter key is pressed" ;
-//        }
-//    });
 
+    auto *shortcut = new QShortcut(QKeySequence(QString("Return")), &framelesswindow);
+    QObject::connect(shortcut, &QShortcut::activated, &framelesswindow, [&]{
+        qDebug() << "Shortcut activated";
+        if(clearSearchBoxButton->hasFocus()){
+            qDebug() << "enter key is pressed in clearSearchBoxButton" ;
+            searchBox->clear();
+            handler.onClearSearchButton();
+        }
+        else if(list->hasFocus()){
+            // TODO: make the item active
+//            qDebug() << "enter key is pressed in list" ;
+        } else if(searchBox->hasFocus()){
+            logger->debug("Enter clicked on Search Box");
+            auto search_query = searchBox->text();
+            handler.onSearchQuery(search_query);
+        }else{
+            qDebug() << "enter key is pressed" ;
+        }
+    });
 
     framelesswindow.setWindowIcon(logoIcon);
     framelesswindow.setWindowTitle("Clippycross");
